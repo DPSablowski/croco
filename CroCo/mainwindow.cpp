@@ -25,9 +25,7 @@
 #include <CCfits/CCfits>
 #include <cpd.h>
 
-
 //running man icon from: https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/running_man.png
-//croco logo from: http://tux.crystalxp.net/de.id.1626-fcys14-tux-croco.html
 
 using namespace std;
 namespace fit=CCfits;
