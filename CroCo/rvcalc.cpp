@@ -58,6 +58,8 @@ RVCalc::RVCalc(QWidget *parent) :
     ui->comboBox->addItem("BAT99_113");
     ui->comboBox->addItem("BAT99_119");
     ui->comboBox->addItem("NGC 3603-A1");
+    ui->comboBox->addItem("NN Del");
+    ui->comboBox->addItem("PX Hya");
 }
 
 RVCalc::~RVCalc()
@@ -613,6 +615,28 @@ void RVCalc::on_pushButton_5_clicked()
         ui->doubleSpinBox_3->setValue(153.000);
         ui->doubleSpinBox_2->setValue(3765.25);
         ui->doubleSpinBox_6->setValue(120.00);
+    }
+
+    // NN Del
+    if(ui->comboBox->currentIndex()==12){
+        ui->doubleSpinBox->setValue(99.1648477);
+        ui->doubleSpinBox_8->setValue(0.5177);
+        ui->doubleSpinBox_4->setValue(36.2432);
+        ui->doubleSpinBox_5->setValue(39.4582);
+        ui->doubleSpinBox_3->setValue(-9.4046);
+        ui->doubleSpinBox_2->setValue(2456787.1095);
+        ui->doubleSpinBox_6->setValue(350.5696);
+    }
+
+    // PX Hya
+    if(ui->comboBox->currentIndex()==13){
+        ui->doubleSpinBox->setValue(36.1828518);
+        ui->doubleSpinBox_8->setValue(0.5652);
+        ui->doubleSpinBox_4->setValue(57.6967);
+        ui->doubleSpinBox_5->setValue(56.5568);
+        ui->doubleSpinBox_3->setValue(-14.9896);
+        ui->doubleSpinBox_2->setValue(2456743.2661);
+        ui->doubleSpinBox_6->setValue(325.1146);
     }
 }
 
