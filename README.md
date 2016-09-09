@@ -1,7 +1,7 @@
 # croco
 CroCo - 2dim cross-correlation
 
-Written in C++ with the Qt Creator. All files are stored in the folder croco.
+Written in C++ with the Qt Creator. All files are stored in the folder CroCo.
 
 you can run the command
 
