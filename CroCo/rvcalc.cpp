@@ -60,6 +60,7 @@ RVCalc::RVCalc(QWidget *parent) :
     ui->comboBox->addItem("NGC 3603-A1");
     ui->comboBox->addItem("NN Del");
     ui->comboBox->addItem("PX Hya");
+    ui->comboBox->addItem("HR5110");
 }
 
 RVCalc::~RVCalc()
@@ -637,6 +638,17 @@ void RVCalc::on_pushButton_5_clicked()
         ui->doubleSpinBox_3->setValue(-14.9896);
         ui->doubleSpinBox_2->setValue(2456743.2661);
         ui->doubleSpinBox_6->setValue(325.1146);
+    }
+
+    // HR5110
+    if(ui->comboBox->currentIndex()==14){
+        ui->doubleSpinBox->setValue(2.613214);
+        ui->doubleSpinBox_8->setValue(0.00);
+        ui->doubleSpinBox_4->setValue(8.9);
+        ui->doubleSpinBox_5->setValue(5.0);
+        ui->doubleSpinBox_3->setValue(8.6);
+        ui->doubleSpinBox_2->setValue(2445766.655);
+        ui->doubleSpinBox_6->setValue(89);
     }
 }
 
