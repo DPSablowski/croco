@@ -2840,6 +2840,7 @@
     <addaction name="actionRaname_Files"/>
     <addaction name="actionCPD"/>
     <addaction name="actionArithmetic"/>
+    <addaction name="actionCrop"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -3054,6 +3055,11 @@
   <action name="actionArithmetic">
    <property name="text">
     <string>Arithmetic</string>
+   </property>
+  </action>
+  <action name="actionCrop">
+   <property name="text">
+    <string>Crop</string>
    </property>
   </action>
  </widget>

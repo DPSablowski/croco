@@ -2128,3 +2128,9 @@ void MainWindow::on_actionArithmetic_triggered()
     qArith = new Arithmetic(this);
     qArith->show();
 }
+
+void MainWindow::on_actionCrop_triggered()
+{
+    qCrop = new Crop(this);
+    qCrop->show();
+}

@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     rvcalc.cpp \
     rename.cpp \
     cpd.cpp \
-    arithmetic.cpp
+    arithmetic.cpp \
+    crop.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -45,7 +46,8 @@ HEADERS  += mainwindow.h \
     rvcalc.h \
     rename.h \
     cpd.h \
-    arithmetic.h
+    arithmetic.h \
+    crop.h
 
 FORMS    += mainwindow.ui \
     plotspec.ui \
@@ -58,7 +60,8 @@ FORMS    += mainwindow.ui \
     rvcalc.ui \
     rename.ui \
     cpd.ui \
-    arithmetic.ui
+    arithmetic.ui \
+    crop.ui
 
 RESOURCES += \
     images.qrc

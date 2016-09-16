@@ -61,7 +61,8 @@ SOURCES       = main.cpp \
 		rvcalc.cpp \
 		rename.cpp \
 		cpd.cpp \
-		arithmetic.cpp qrc_images.cpp \
+		arithmetic.cpp \
+		crop.cpp qrc_images.cpp \
 		moc_mainwindow.cpp \
 		moc_qcustomplot.cpp \
 		moc_plotspec.cpp \
@@ -74,7 +75,8 @@ SOURCES       = main.cpp \
 		moc_rvcalc.cpp \
 		moc_rename.cpp \
 		moc_cpd.cpp \
-		moc_arithmetic.cpp
+		moc_arithmetic.cpp \
+		moc_crop.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		qcustomplot.o \
@@ -89,6 +91,7 @@ OBJECTS       = main.o \
 		rename.o \
 		cpd.o \
 		arithmetic.o \
+		crop.o \
 		qrc_images.o \
 		moc_mainwindow.o \
 		moc_qcustomplot.o \
@@ -102,7 +105,8 @@ OBJECTS       = main.o \
 		moc_rvcalc.o \
 		moc_rename.o \
 		moc_cpd.o \
-		moc_arithmetic.o
+		moc_arithmetic.o \
+		moc_crop.o
 DIST          = ../../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.5/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt/5.5/gcc_64/mkspecs/common/linux.conf \
@@ -250,7 +254,8 @@ DIST          = ../../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		rvcalc.h \
 		rename.h \
 		cpd.h \
-		arithmetic.h main.cpp \
+		arithmetic.h \
+		crop.h main.cpp \
 		mainwindow.cpp \
 		qcustomplot.cpp \
 		plotspec.cpp \
@@ -263,7 +268,8 @@ DIST          = ../../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		rvcalc.cpp \
 		rename.cpp \
 		cpd.cpp \
-		arithmetic.cpp
+		arithmetic.cpp \
+		crop.cpp
 QMAKE_TARGET  = CroCo
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = CroCo
@@ -291,7 +297,7 @@ first: all
 
 ####### Build rules
 
-$(TARGET): ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h $(OBJECTS)  
+$(TARGET): ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: CroCo.pro ../../../../Qt/5.5/gcc_64/mkspecs/linux-g++/qmake.conf ../../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
@@ -592,9 +598,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents images.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h qcustomplot.h plotspec.h plotsequ.h rvcurve.h template.h binarytool.h telluric.h mapplot.h rvcalc.h rename.h cpd.h arithmetic.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp qcustomplot.cpp plotspec.cpp plotsequ.cpp rvcurve.cpp template.cpp binarytool.cpp telluric.cpp mapplot.cpp rvcalc.cpp rename.cpp cpd.cpp arithmetic.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.ui plotspec.ui plotsequ.ui rvcurve.ui template.ui binarytool.ui telluric.ui mapplot.ui rvcalc.ui rename.ui cpd.ui arithmetic.ui $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h qcustomplot.h plotspec.h plotsequ.h rvcurve.h template.h binarytool.h telluric.h mapplot.h rvcalc.h rename.h cpd.h arithmetic.h crop.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp qcustomplot.cpp plotspec.cpp plotsequ.cpp rvcurve.cpp template.cpp binarytool.cpp telluric.cpp mapplot.cpp rvcalc.cpp rename.cpp cpd.cpp arithmetic.cpp crop.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.ui plotspec.ui plotsequ.ui rvcurve.ui template.ui binarytool.ui telluric.ui mapplot.ui rvcalc.ui rename.ui cpd.ui arithmetic.ui crop.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -635,9 +641,9 @@ qrc_images.cpp: images.qrc \
 		telluric.png
 	/home/daniels/Qt/5.5/gcc_64/bin/rcc -name images images.qrc -o qrc_images.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp moc_crop.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp moc_crop.cpp
 moc_mainwindow.cpp: ../../../../Qt/5.5/gcc_64/include/QtWidgets/QMainWindow \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qmainwindow.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qwidget.h \
@@ -2833,11 +2839,117 @@ moc_arithmetic.cpp: ../../../../Qt/5.5/gcc_64/include/QtWidgets/QDialog \
 		arithmetic.h
 	/home/daniels/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/daniels/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/daniels/Disentangling/CroCo/croco/CroCo -I/home/daniels/Qt/5.5/gcc_64/include -I/home/daniels/Qt/5.5/gcc_64/include/QtPrintSupport -I/home/daniels/Qt/5.5/gcc_64/include/QtWidgets -I/home/daniels/Qt/5.5/gcc_64/include/QtGui -I/home/daniels/Qt/5.5/gcc_64/include/QtCore arithmetic.h -o moc_arithmetic.cpp
 
+moc_crop.cpp: ../../../../Qt/5.5/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qfeatures.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qnumeric.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qisenum.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmargins.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qrect.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsize.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpalette.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qcolor.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qrgb.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qbrush.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qmatrix.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpolygon.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qregion.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qline.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qtransform.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qimage.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpixelformat.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpixmap.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qfont.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qcursor.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qevent.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qset.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qurl.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qurlquery.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qvector2d.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qtouchdevice.h \
+		crop.h
+	/home/daniels/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/daniels/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/daniels/Disentangling/CroCo/croco/CroCo -I/home/daniels/Qt/5.5/gcc_64/include -I/home/daniels/Qt/5.5/gcc_64/include/QtPrintSupport -I/home/daniels/Qt/5.5/gcc_64/include/QtWidgets -I/home/daniels/Qt/5.5/gcc_64/include/QtGui -I/home/daniels/Qt/5.5/gcc_64/include/QtCore crop.h -o moc_crop.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h
+compiler_uic_make_all: ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h
+	-$(DEL_FILE) ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h
 ui_mainwindow.h: mainwindow.ui \
 		qcustomplot.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QObject \
@@ -7130,6 +7242,9 @@ ui_cpd.h: cpd.ui
 
 ui_arithmetic.h: arithmetic.ui
 	/home/daniels/Qt/5.5/gcc_64/bin/uic arithmetic.ui -o ui_arithmetic.h
+
+ui_crop.h: crop.ui
+	/home/daniels/Qt/5.5/gcc_64/bin/uic crop.ui -o ui_crop.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -12913,6 +13028,116 @@ arithmetic.o: arithmetic.cpp arithmetic.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QFile
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o arithmetic.o arithmetic.cpp
 
+crop.o: crop.cpp crop.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qfeatures.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qnumeric.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qisenum.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmargins.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qrect.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsize.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpalette.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qcolor.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qrgb.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qbrush.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qmatrix.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpolygon.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qregion.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qline.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qtransform.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qimage.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpixelformat.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpixmap.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qfont.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qcursor.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qevent.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qset.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qurl.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qurlquery.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qvector2d.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qtouchdevice.h \
+		ui_crop.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qmessagebox.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QFile
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o crop.o crop.cpp
+
 qrc_images.o: qrc_images.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_images.o qrc_images.cpp
 
@@ -12954,6 +13179,9 @@ moc_cpd.o: moc_cpd.cpp
 
 moc_arithmetic.o: moc_arithmetic.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_arithmetic.o moc_arithmetic.cpp
+
+moc_crop.o: moc_crop.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_crop.o moc_crop.cpp
 
 ####### Install
 

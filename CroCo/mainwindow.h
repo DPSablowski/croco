@@ -19,6 +19,7 @@
 #include <rename.h>
 #include <cpd.h>
 #include <arithmetic.h>
+#include <crop.h>
 
 namespace Ui {
 class MainWindow;
@@ -129,6 +130,8 @@ private slots:
 
     void on_actionArithmetic_triggered();
 
+    void on_actionCrop_triggered();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;
@@ -144,6 +147,7 @@ private:
     Rename *qRename;
     CPD *qCPD;
     Arithmetic *qArith;
+    Crop *qCrop;
 };
 
 #endif // MAINWINDOW_H

@@ -58,6 +58,7 @@ public:
     QAction *actionRaname_Files;
     QAction *actionCPD;
     QAction *actionArithmetic;
+    QAction *actionCrop;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QScrollArea *scrollArea;
@@ -378,12 +379,12 @@ public:
         actionTelluric = new QAction(MainWindow);
         actionTelluric->setObjectName(QStringLiteral("actionTelluric"));
         QIcon icon9;
-        icon9.addFile(QStringLiteral(":/new/background/telluric.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon9.addFile(QStringLiteral(":/new/prefix1/telluric.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionTelluric->setIcon(icon9);
         action2D_Map_Plot = new QAction(MainWindow);
         action2D_Map_Plot->setObjectName(QStringLiteral("action2D_Map_Plot"));
         QIcon icon10;
-        icon10.addFile(QStringLiteral(":/new/background/ccfmap.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon10.addFile(QStringLiteral(":/new/prefix1/ccfmap.png"), QSize(), QIcon::Normal, QIcon::Off);
         action2D_Map_Plot->setIcon(icon10);
         actionRV_Calculator = new QAction(MainWindow);
         actionRV_Calculator->setObjectName(QStringLiteral("actionRV_Calculator"));
@@ -393,6 +394,8 @@ public:
         actionCPD->setObjectName(QStringLiteral("actionCPD"));
         actionArithmetic = new QAction(MainWindow);
         actionArithmetic->setObjectName(QStringLiteral("actionArithmetic"));
+        actionCrop = new QAction(MainWindow);
+        actionCrop->setObjectName(QStringLiteral("actionCrop"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -1735,6 +1738,7 @@ public:
         menuTools->addAction(actionRaname_Files);
         menuTools->addAction(actionCPD);
         menuTools->addAction(actionArithmetic);
+        menuTools->addAction(actionCrop);
         mainToolBar->addAction(actionPlot);
         mainToolBar->addAction(actionSequence_Plotter);
         mainToolBar->addAction(actionRV_Curve);
@@ -1769,6 +1773,7 @@ public:
         actionRaname_Files->setText(QApplication::translate("MainWindow", "Raname Files", 0));
         actionCPD->setText(QApplication::translate("MainWindow", "CPD", 0));
         actionArithmetic->setText(QApplication::translate("MainWindow", "Arithmetic", 0));
+        actionCrop->setText(QApplication::translate("MainWindow", "Crop", 0));
         label_6->setText(QString());
         label_37->setText(QString());
         label->setText(QApplication::translate("MainWindow", "Spectra from", 0));

@@ -60,7 +60,7 @@ void Arithmetic::on_pushButton_2_clicked()
 
     QFile checkfile2(datBName.c_str());
 
-    if(!checkfile1.exists()){
+    if(!checkfile2.exists()){
         QMessageBox::information(this, "Error", "File"+qAPath+"/"+inputB+" does not exist!");
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
