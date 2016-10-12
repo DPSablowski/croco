@@ -1,5 +1,7 @@
-# croco
+# CroCo
 CroCo - 2dim cross-correlation
+
+# installation
 
 Written in C++ with the Qt Creator. All files are stored in the folder CroCo.
 
