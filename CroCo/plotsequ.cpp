@@ -177,7 +177,7 @@ void PlotSequ::on_pushButton_3_clicked()
                   CCfits::Column& column2 = datavector.column(seIntenscol);
                   column2.read(seintens, 1, column2.rows());
 
-                  int bini=sewave.size();
+                  number_of_lines=sewave.size();
 
                   a.resize(bini);
                   b.resize(bini);
