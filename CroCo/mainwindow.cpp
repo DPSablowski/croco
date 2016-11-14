@@ -88,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
     ui->doubleSpinBox_16->setValue(0.5);
-    ui->lineEdit_15->setText("/home/daniels/Observations/Tomer/single");
+    ui->lineEdit_15->setText("/home/daniels/Observations/Capella/Set_1/Ca_UV");
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
@@ -350,6 +350,7 @@ void MainWindow::on_pushButton_clicked()
 
     //read measuremens
     MainWindow::ReadMeasured(gg);
+    cout<<"read spectrum no. "<<gg<<endl;
 
     if(check==1){
         check=0;

@@ -23,15 +23,14 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSpinBox>
-#include <QtWidgets/QWidget>
+#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_Crop
 {
 public:
-    QPushButton *pushButton;
-    QWidget *widget;
+    QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
     QLineEdit *lineEdit;
@@ -40,7 +39,7 @@ public:
     QLabel *label_3;
     QSpinBox *spinBox_2;
     QLineEdit *lineEdit_2;
-    QWidget *widget1;
+    QSpacerItem *horizontalSpacer_3;
     QHBoxLayout *horizontalLayout_2;
     QComboBox *comboBox;
     QLabel *label_5;
@@ -49,190 +48,239 @@ public:
     QLineEdit *lineEdit_3;
     QLabel *label_6;
     QLineEdit *lineEdit_5;
-    QWidget *widget2;
+    QSpacerItem *horizontalSpacer_4;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *pushButton_2;
     QLabel *label_7;
     QDoubleSpinBox *doubleSpinBox;
     QLabel *label_8;
     QDoubleSpinBox *doubleSpinBox_2;
-    QWidget *widget3;
+    QSpacerItem *horizontalSpacer_5;
+    QHBoxLayout *horizontalLayout_5;
+    QPushButton *pushButton_3;
+    QSpinBox *spinBox_3;
+    QLabel *label_11;
+    QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_9;
     QLineEdit *lineEdit_6;
     QLabel *label_10;
     QLineEdit *lineEdit_7;
     QSpacerItem *horizontalSpacer;
+    QPushButton *pushButton;
 
     void setupUi(QDialog *Crop)
     {
         if (Crop->objectName().isEmpty())
             Crop->setObjectName(QStringLiteral("Crop"));
-        Crop->resize(742, 315);
-        pushButton = new QPushButton(Crop);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(20, 240, 85, 30));
-        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
-        pushButton->setSizePolicy(sizePolicy);
-        widget = new QWidget(Crop);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(9, 9, 531, 34));
-        horizontalLayout = new QHBoxLayout(widget);
+        Crop->resize(736, 346);
+        verticalLayout = new QVBoxLayout(Crop);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(widget);
+        label = new QLabel(Crop);
         label->setObjectName(QStringLiteral("label"));
 
         horizontalLayout->addWidget(label);
 
-        lineEdit = new QLineEdit(widget);
+        lineEdit = new QLineEdit(Crop);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
         lineEdit->setSizePolicy(sizePolicy);
 
         horizontalLayout->addWidget(lineEdit);
 
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(Crop);
         label_2->setObjectName(QStringLiteral("label_2"));
 
         horizontalLayout->addWidget(label_2);
 
-        spinBox = new QSpinBox(widget);
+        spinBox = new QSpinBox(Crop);
         spinBox->setObjectName(QStringLiteral("spinBox"));
 
         horizontalLayout->addWidget(spinBox);
 
-        label_3 = new QLabel(widget);
+        label_3 = new QLabel(Crop);
         label_3->setObjectName(QStringLiteral("label_3"));
 
         horizontalLayout->addWidget(label_3);
 
-        spinBox_2 = new QSpinBox(widget);
+        spinBox_2 = new QSpinBox(Crop);
         spinBox_2->setObjectName(QStringLiteral("spinBox_2"));
 
         horizontalLayout->addWidget(spinBox_2);
 
-        lineEdit_2 = new QLineEdit(widget);
+        lineEdit_2 = new QLineEdit(Crop);
         lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
         sizePolicy.setHeightForWidth(lineEdit_2->sizePolicy().hasHeightForWidth());
         lineEdit_2->setSizePolicy(sizePolicy);
 
         horizontalLayout->addWidget(lineEdit_2);
 
-        widget1 = new QWidget(Crop);
-        widget1->setObjectName(QStringLiteral("widget1"));
-        widget1->setGeometry(QRect(9, 85, 702, 34));
-        horizontalLayout_2 = new QHBoxLayout(widget1);
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer_3);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
+        horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        comboBox = new QComboBox(widget1);
+        comboBox = new QComboBox(Crop);
         comboBox->setObjectName(QStringLiteral("comboBox"));
 
         horizontalLayout_2->addWidget(comboBox);
 
-        label_5 = new QLabel(widget1);
+        label_5 = new QLabel(Crop);
         label_5->setObjectName(QStringLiteral("label_5"));
 
         horizontalLayout_2->addWidget(label_5);
 
-        lineEdit_4 = new QLineEdit(widget1);
+        lineEdit_4 = new QLineEdit(Crop);
         lineEdit_4->setObjectName(QStringLiteral("lineEdit_4"));
         sizePolicy.setHeightForWidth(lineEdit_4->sizePolicy().hasHeightForWidth());
         lineEdit_4->setSizePolicy(sizePolicy);
 
         horizontalLayout_2->addWidget(lineEdit_4);
 
-        label_4 = new QLabel(widget1);
+        label_4 = new QLabel(Crop);
         label_4->setObjectName(QStringLiteral("label_4"));
 
         horizontalLayout_2->addWidget(label_4);
 
-        lineEdit_3 = new QLineEdit(widget1);
+        lineEdit_3 = new QLineEdit(Crop);
         lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
         sizePolicy.setHeightForWidth(lineEdit_3->sizePolicy().hasHeightForWidth());
         lineEdit_3->setSizePolicy(sizePolicy);
 
         horizontalLayout_2->addWidget(lineEdit_3);
 
-        label_6 = new QLabel(widget1);
+        label_6 = new QLabel(Crop);
         label_6->setObjectName(QStringLiteral("label_6"));
 
         horizontalLayout_2->addWidget(label_6);
 
-        lineEdit_5 = new QLineEdit(widget1);
+        lineEdit_5 = new QLineEdit(Crop);
         lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
         sizePolicy.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
         lineEdit_5->setSizePolicy(sizePolicy);
 
         horizontalLayout_2->addWidget(lineEdit_5);
 
-        widget2 = new QWidget(Crop);
-        widget2->setObjectName(QStringLiteral("widget2"));
-        widget2->setGeometry(QRect(20, 150, 408, 32));
-        horizontalLayout_3 = new QHBoxLayout(widget2);
+        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_4);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+        horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        pushButton_2 = new QPushButton(widget2);
+        pushButton_2 = new QPushButton(Crop);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
 
         horizontalLayout_3->addWidget(pushButton_2);
 
-        label_7 = new QLabel(widget2);
+        label_7 = new QLabel(Crop);
         label_7->setObjectName(QStringLiteral("label_7"));
 
         horizontalLayout_3->addWidget(label_7);
 
-        doubleSpinBox = new QDoubleSpinBox(widget2);
+        doubleSpinBox = new QDoubleSpinBox(Crop);
         doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
         doubleSpinBox->setDecimals(5);
         doubleSpinBox->setMaximum(9999.99);
 
         horizontalLayout_3->addWidget(doubleSpinBox);
 
-        label_8 = new QLabel(widget2);
+        label_8 = new QLabel(Crop);
         label_8->setObjectName(QStringLiteral("label_8"));
 
         horizontalLayout_3->addWidget(label_8);
 
-        doubleSpinBox_2 = new QDoubleSpinBox(widget2);
+        doubleSpinBox_2 = new QDoubleSpinBox(Crop);
         doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
         doubleSpinBox_2->setDecimals(5);
         doubleSpinBox_2->setMaximum(9999.99);
 
         horizontalLayout_3->addWidget(doubleSpinBox_2);
 
-        widget3 = new QWidget(Crop);
-        widget3->setObjectName(QStringLiteral("widget3"));
-        widget3->setGeometry(QRect(30, 200, 481, 34));
-        horizontalLayout_4 = new QHBoxLayout(widget3);
+        horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_5);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
+
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        pushButton_3 = new QPushButton(Crop);
+        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+
+        horizontalLayout_5->addWidget(pushButton_3);
+
+        spinBox_3 = new QSpinBox(Crop);
+        spinBox_3->setObjectName(QStringLiteral("spinBox_3"));
+
+        horizontalLayout_5->addWidget(spinBox_3);
+
+        label_11 = new QLabel(Crop);
+        label_11->setObjectName(QStringLiteral("label_11"));
+
+        horizontalLayout_5->addWidget(label_11);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_5->addItem(horizontalSpacer_2);
+
+
+        verticalLayout->addLayout(horizontalLayout_5);
+
+        horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
-        label_9 = new QLabel(widget3);
+        label_9 = new QLabel(Crop);
         label_9->setObjectName(QStringLiteral("label_9"));
 
         horizontalLayout_4->addWidget(label_9);
 
-        lineEdit_6 = new QLineEdit(widget3);
+        lineEdit_6 = new QLineEdit(Crop);
         lineEdit_6->setObjectName(QStringLiteral("lineEdit_6"));
+        sizePolicy.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
+        lineEdit_6->setSizePolicy(sizePolicy);
 
         horizontalLayout_4->addWidget(lineEdit_6);
 
-        label_10 = new QLabel(widget3);
+        label_10 = new QLabel(Crop);
         label_10->setObjectName(QStringLiteral("label_10"));
 
         horizontalLayout_4->addWidget(label_10);
 
-        lineEdit_7 = new QLineEdit(widget3);
+        lineEdit_7 = new QLineEdit(Crop);
         lineEdit_7->setObjectName(QStringLiteral("lineEdit_7"));
+        sizePolicy.setHeightForWidth(lineEdit_7->sizePolicy().hasHeightForWidth());
+        lineEdit_7->setSizePolicy(sizePolicy);
 
         horizontalLayout_4->addWidget(lineEdit_7);
 
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer);
+
+
+        verticalLayout->addLayout(horizontalLayout_4);
+
+        pushButton = new QPushButton(Crop);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy1);
+
+        verticalLayout->addWidget(pushButton);
 
 
         retranslateUi(Crop);
@@ -244,7 +292,6 @@ public:
     void retranslateUi(QDialog *Crop)
     {
         Crop->setWindowTitle(QApplication::translate("Crop", "Dialog", 0));
-        pushButton->setText(QApplication::translate("Crop", "Close", 0));
         label->setText(QApplication::translate("Crop", "Input Spectra", 0));
         label_2->setText(QApplication::translate("Crop", "from", 0));
         label_3->setText(QApplication::translate("Crop", "to", 0));
@@ -254,8 +301,11 @@ public:
         pushButton_2->setText(QApplication::translate("Crop", "Crop", 0));
         label_7->setText(QApplication::translate("Crop", "from", 0));
         label_8->setText(QApplication::translate("Crop", "to", 0));
+        pushButton_3->setText(QApplication::translate("Crop", "Bin", 0));
+        label_11->setText(QApplication::translate("Crop", "X", 0));
         label_9->setText(QApplication::translate("Crop", "Output", 0));
         label_10->setText(QApplication::translate("Crop", "Work Path:", 0));
+        pushButton->setText(QApplication::translate("Crop", "Close", 0));
     } // retranslateUi
 
 };

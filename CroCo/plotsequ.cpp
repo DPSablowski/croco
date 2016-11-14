@@ -21,11 +21,11 @@ PlotSequ::PlotSequ(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Sequence Plotter");
 
-    ui->lineEdit->setText("binary_");
+    ui->lineEdit->setText("reg1__");
     ui->customPlot->xAxis->setLabel("Wavelength [A]");
     ui->customPlot->yAxis->setLabel("normalized Intensity");
     ui->checkBox->setChecked(true);
-    ui->lineEdit_5->setText("/home/daniels/Disentangling/Artificial/ErrorTest/SN100");
+    ui->lineEdit_5->setText("/home/daniels/Observations/HR5110/reg1");
     qSeqPath=ui->lineEdit_5->text();
     seqPath = qSeqPath.toUtf8().constData();
     offset=ui->doubleSpinBox_5->value();
@@ -179,10 +179,10 @@ void PlotSequ::on_pushButton_3_clicked()
 
                   number_of_lines=sewave.size();
 
-                  a.resize(bini);
-                  b.resize(bini);
+                  a.resize(number_of_lines);
+                  b.resize(number_of_lines);
 
-                  for(int i=0; i<bini; i++){
+                  for(int i=0; i<number_of_lines; i++){
                   b[i]=seintens[i]+offset*(u-min);
                   a[i]=sewave[i];
                   }
