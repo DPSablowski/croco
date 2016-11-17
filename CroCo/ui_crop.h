@@ -224,6 +224,7 @@ public:
 
         spinBox_3 = new QSpinBox(Crop);
         spinBox_3->setObjectName(QStringLiteral("spinBox_3"));
+        spinBox_3->setMinimum(2);
 
         horizontalLayout_5->addWidget(spinBox_3);
 

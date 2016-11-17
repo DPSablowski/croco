@@ -217,7 +217,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="spinBox_3"/>
+      <widget class="QSpinBox" name="spinBox_3">
+       <property name="minimum">
+        <number>2</number>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_11">
