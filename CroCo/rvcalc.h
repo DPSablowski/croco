@@ -40,6 +40,8 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void findroot();
+
 private:
     Ui::RVCalc *ui;
 };

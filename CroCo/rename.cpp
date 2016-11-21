@@ -77,7 +77,6 @@ void Rename::on_pushButton_clicked()
         ui->tableWidget->setItem(e, 1, new QTableWidgetItem(qnew));
         e+=1;
 
-        //rename(OLDNAME, NEWNAME);
     }}
 
         else{
@@ -97,7 +96,6 @@ void Rename::on_pushButton_clicked()
             ui->tableWidget->setItem(e, 1, new QTableWidgetItem(qnew));
             e+=1;
 
-            //rename(OLDNAME, NEWNAME);
         }
         i+=1;
     }

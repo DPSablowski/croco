@@ -10,6 +10,8 @@
 
 using namespace std;
 
+double RVCP, RVCe, RVCt, RVCT0, RVCE;
+
 QString qRvPath;
 string rvPath;
 
@@ -68,53 +70,44 @@ RVCalc::~RVCalc()
     delete ui;
 }
 
+double function (double X[], double RVCt, double RVCT0, double RVCP, double RVCe){
+    double func;
 
+    func= abs(RVCe*sin(X[0])+2*M_PI*(RVCt-RVCT0)/RVCP-X[0]);
+
+    return func;
+
+    }
 
 //calculate RVs
 void RVCalc::on_doubleSpinBox_9_valueChanged()
 {
-    double P=ui->doubleSpinBox->value();
-    double T0=ui->doubleSpinBox_2->value();
+    RVCP=ui->doubleSpinBox->value();
+    RVCT0=ui->doubleSpinBox_2->value();
     double gamma=ui->doubleSpinBox_3->value();
     double KA=ui->doubleSpinBox_4->value();
     double KB=ui->doubleSpinBox_5->value();
     double WA=ui->doubleSpinBox_6->value()/180*M_PI;
     double WB=WA+M_PI;
-    double e=ui->doubleSpinBox_8->value();
-    double t=ui->doubleSpinBox_9->value();
-    double dE2, a1, a2, dE1, RVA, RVB, theta, xx, E1, E2, E;
-    double dx=0.00001;
+    RVCe=ui->doubleSpinBox_8->value();
+    RVCt=ui->doubleSpinBox_9->value();
+    double RVA, RVB, theta, E;
 
-    if(e!=0){
-    a1=2*M_PI*(t-T0)/P-2*e;
-    a2=2*M_PI*(t-T0)/P+2*e;
+    if(RVCe!=0){
 
-    dE2=0;
-    for(int i=0; i<(a2-a1)/dx; i++){
-    xx=a1+i*dx;
-    E1=xx;
-    E2=e*sin(xx)+2*M_PI*(t-T0)/P;
-    dE1=E1-E2;
-    if((dE1<0) & (dE2>0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    if((dE1>0) & (dE2<0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    dE2=E1-E2;
-    }
-    theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+        RVCalc::findroot();
+        E=RVCE;
+        theta=2*(atan(tan(E/2)*sqrt((1+RVCe)/(1-RVCe))));
+
     }
     else{
-        E = M_PI*(t-T0)/P;
+        E = M_PI*(RVCt-RVCT0)/RVCP;
         theta=2*(atan(tan(E/2)));
     }
 
 
-    RVA = gamma + KA*(cos(theta+WA)+e*cos(WA));
-    RVB = gamma + KB*(cos(theta+WB)+e*cos(WB));
+    RVA = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
+    RVB = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
 
     ui->doubleSpinBox_10->setValue(RVA);
     ui->doubleSpinBox_11->setValue(RVB);
@@ -129,19 +122,19 @@ void RVCalc::on_pushButton_2_clicked()
 
     ui->customPlot->clearGraphs();
 
-    double P=ui->doubleSpinBox->value();
-    double T0=ui->doubleSpinBox_2->value();
+    RVCP=ui->doubleSpinBox->value();
+    RVCT0=ui->doubleSpinBox_2->value();
     double gamma=ui->doubleSpinBox_3->value();
     double KA=ui->doubleSpinBox_4->value();
     double KB=ui->doubleSpinBox_5->value();
     double WA=ui->doubleSpinBox_6->value()/180*M_PI;
-    double WB=WA-M_PI;
-    double e=ui->doubleSpinBox_8->value();
+    double WB=WA+M_PI;
+    RVCe=ui->doubleSpinBox_8->value();
+
     double t1=ui->doubleSpinBox_12->value();
     double t2=ui->doubleSpinBox_13->value();
-    double dt = P/100;
-    double dE2, a1, a2, dE1, theta, xx, E1, E2, E;
-    double dx=0.00001;
+    double dt = RVCP/100;
+    double theta, E;
     int steps =(t2-t1)/dt;
     QVector<double> RVA(steps), RVB(steps), t(steps);
 
@@ -149,35 +142,20 @@ void RVCalc::on_pushButton_2_clicked()
     for(int m=0; m<steps; m++){
         t[m]=t1+m*dt;
 
-        if(e!=0){
-        a1=2*M_PI*(t[m]-T0)/P-4*e;
-        a2=2*M_PI*(t[m]-T0)/P+4*e;
-        dE2=0;
-
-    for(int i=0; i<(a2-a1)/dx; i++){
-    xx=a1+i*dx;
-    E1=xx;
-    E2=e*sin(xx)+2*M_PI*(t[m]-T0)/P;
-    dE1=E1-E2;
-    if((dE1<0) & (dE2>0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    if((dE1>0) & (dE2<0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    dE2=E1-E2;
-    }
-        theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+        if(RVCe!=0){
+            RVCt = t[m];
+            RVCalc::findroot();
+            E=RVCE;
+            theta=2*(atan(tan(E/2)*sqrt((1+RVCe)/(1-RVCe))));
         }
+
         else{
-            E = M_PI*(t[m]-T0)/P;
+            E = M_PI*(t[m]-RVCT0)/RVCP;
             theta=2*(atan(tan(E/2)));
         }
 
-    RVA[m] = gamma + KA*(cos(theta+WA)+e*cos(WA));
-    RVB[m] = gamma + KB*(cos(theta+WB)+e*cos(WB));
+    RVA[m] = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
+    RVB[m] = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
     t[m]=t[m]-ui->doubleSpinBox_14->value();
     }
 
@@ -229,7 +207,7 @@ void RVCalc::on_pushButton_2_clicked()
         QVector<double> at(lines), bt(lines), ct(lines);
 
         double at1;
-        int a=(t2-t1)/P;
+        int a=(t2-t1)/RVCP;
 
         for (int i=0; i<lines; i++){
         toplot1 >> one >>two>>three;
@@ -241,12 +219,12 @@ void RVCalc::on_pushButton_2_clicked()
         }
         if(ui->checkBox_2->isChecked()){
 
-            if(at[i]-at1>=P){
+            if(at[i]-at1>=RVCP){
             for(int e=0; e<a; e++){
 
-                at[i]=at[i]-P;
+                at[i]=at[i]-RVCP;
                 if(at[i]<at1){
-                    at[i]=at[i]+P;
+                    at[i]=at[i]+RVCP;
                     e=a;
                 }
             }
@@ -287,7 +265,7 @@ void RVCalc::on_pushButton_2_clicked()
         ui->customPlot->graph(3)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
         ui->customPlot->graph(3)->rescaleAxes(true);
         if(ui->checkBox_2->isChecked()){
-            ui->customPlot->xAxis->setRange(at1-5, at1+P);
+            ui->customPlot->xAxis->setRange(at1-5, at1+RVCP);
         }
 
         // looking for independent spectra
@@ -429,16 +407,15 @@ void RVCalc::on_pushButton_4_clicked()
         ist >> tim[i];
     }
 
-    double P=ui->doubleSpinBox->value();
-    double T0=ui->doubleSpinBox_2->value();
+    double RVCP=ui->doubleSpinBox->value();
+    double RVCT0=ui->doubleSpinBox_2->value();
     double gamma=ui->doubleSpinBox_3->value();
     double KA=ui->doubleSpinBox_4->value();
     double KB=ui->doubleSpinBox_5->value();
     double WA=ui->doubleSpinBox_6->value()/180*M_PI;
     double WB=WA-M_PI;
-    double e=ui->doubleSpinBox_8->value();
-    double dE2, a1, a2, dE1, theta, xx, E1, E2, E;
-    double dx=0.00001;
+    double RVCe=ui->doubleSpinBox_8->value();
+    double theta, E;
 
     QString qout=ui->lineEdit_7->text();
     string out = qout.toUtf8().constData();
@@ -449,34 +426,20 @@ void RVCalc::on_pushButton_4_clicked()
 
     for(int m=0; m<lines; m++){
 
-        if(e!=0){
-        a1=2*M_PI*(tim[m]-T0)/P-4*e;
-        a2=2*M_PI*(tim[m]-T0)/P+4*e;
-        dE2=0;
+        if(RVCe!=0){
 
-    for(int i=0; i<(a2-a1)/dx; i++){
-    xx=a1+i*dx;
-    E1=xx;
-    E2=e*sin(xx)+2*M_PI*(tim[m]-T0)/P;
-    dE1=E1-E2;
-    if((dE1<0) & (dE2>0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    if((dE1>0) & (dE2<0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    dE2=E1-E2;
-    }
-        theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+            RVCt = tim[m];
+            RVCalc::findroot();
+            E=RVCE;
+            theta=2*(atan(tan(E/2)*sqrt((1+RVCe)/(1-RVCe))));
+
         }
         else{
-            E = M_PI*(tim[m]-T0)/P;
+            E = M_PI*(tim[m]-RVCT0)/RVCP;
             theta=2*(atan(tan(E/2)));
         }
 
-    oout<<setprecision(12)<<tim[m]<<" "<<gamma + KA*(cos(theta+WA)+e*cos(WA))<<" "<<gamma + KB*(cos(theta+WB)+e*cos(WB))<<endl;
+    oout<<setprecision(12)<<tim[m]<<" "<<gamma + KA*(cos(theta+WA)+RVCe*cos(WA))<<" "<<gamma + KB*(cos(theta+WB)+RVCe*cos(WB))<<endl;
 
     }
 
@@ -652,7 +615,9 @@ void RVCalc::on_pushButton_5_clicked()
     }
 }
 
+//*****************************************
 // Residuum between calculated and data
+//*****************************************
 void RVCalc::on_pushButton_6_clicked()
 {
     string one, two, three, zeile;
@@ -697,50 +662,35 @@ void RVCalc::on_pushButton_6_clicked()
     }
     toplot1.close();
 
-    double P=ui->doubleSpinBox->value();
-    double T0=ui->doubleSpinBox_2->value();
+    double RVCP=ui->doubleSpinBox->value();
+    double RVCT0=ui->doubleSpinBox_2->value();
     double gamma=ui->doubleSpinBox_3->value();
     double KA=ui->doubleSpinBox_4->value();
     double KB=ui->doubleSpinBox_5->value();
     double WA=ui->doubleSpinBox_6->value()/180*M_PI;
     double WB=WA-M_PI;
-    double e=ui->doubleSpinBox_8->value();
-    double dE2, a1, a2, dE1, theta, xx, E1, E2, E;
-    double dx=0.00001;
+    double RVCe=ui->doubleSpinBox_8->value();
+    double theta, E;;
 
     double RVA, RVB, residuumA, residuumB;
 
     for(int m=0; m<lines; m++){
 
-        if(e!=0){
-        a1=2*M_PI*(at[m]-T0)/P-4*e;
-        a2=2*M_PI*(at[m]-T0)/P+4*e;
-        dE2=0;
+        if(RVCe!=0){
 
-    for(int i=0; i<(a2-a1)/dx; i++){
-    xx=a1+i*dx;
-    E1=xx;
-    E2=e*sin(xx)+2*M_PI*(at[m]-T0)/P;
-    dE1=E1-E2;
-    if((dE1<0) & (dE2>0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    if((dE1>0) & (dE2<0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    dE2=E1-E2;
-    }
-        theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+            RVCt=at[m];
+            RVCalc::findroot();
+            E=RVCE;
+            theta=2*(atan(tan(E/2)*sqrt((1+RVCe)/(1-RVCe))));
         }
+
         else{
-            E = M_PI*(at[m]-T0)/P;
+            E = M_PI*(at[m]-RVCT0)/RVCP;
             theta=2*(atan(tan(E/2)));
         }
 
-    RVA = gamma + KA*(cos(theta+WA)+e*cos(WA));
-    RVB = gamma + KB*(cos(theta+WB)+e*cos(WB));
+    RVA = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
+    RVB = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
 
     residuumA += pow((RVA - bt[m]),2);
     residuumB += pow((RVB - ct[m]),2);
@@ -754,4 +704,191 @@ void RVCalc::on_pushButton_6_clicked()
     QString ResB = QString::number(residuumB);
 
     ui->lineEdit_8->setText(ResA+" / "+ResB);
+}
+
+//**************************************
+// root finding
+//**************************************
+void RVCalc::findroot(){
+
+    int n=1, Ph, Pl, Psh, zaehler=40, eval=0;
+    double yh, ysh, yl, ym, yi, ys, yt;
+    double sigma = 1e-5;
+    double step=0.1;
+    double gamma=2.0;	//expansion coeff.
+    double alpha =1.0;	//reflection coeff.
+    double beta=0.5;	//contraction coeff.
+    double btot=0.5;	//total contraction coeff.
+    double y[n+1], Pm[n+1][n], Z[n], C[n], S[n], Em[n], X[n], e[n][n];
+
+
+        //initial points
+        Pm[0][0]=2*M_PI*(RVCt-RVCT0)/RVCP-2*RVCe;
+        for (int i=0; i<n+1; i++){
+        for (int j=0; j<n; j++){
+        if(i>0 & i==j+1){
+        e[i][j]=1;
+        }
+        else{
+        e[i][j]=0;
+        }
+        if(i==0){
+
+        X[j]=Pm[i][j];
+        }
+        if(i!=0){
+        Pm[i][j]=Pm[0][j]+step*e[i][j];
+        X[j]=Pm[i][j];
+        }
+        }
+        y[i]=function(X, RVCt, RVCT0, RVCP, RVCe);
+        eval++;
+        }
+
+        //start main loop
+        for (int tc=0; tc<zaehler; tc++){
+
+        //initialize next step
+        ym=0;
+        ys=0;
+        for (int i=0; i<n; i++){
+        Z[i]=0;
+        }
+
+        //looking for highest value
+        yh=y[0];
+        for (int j=0; j<n+1; j++){
+        if(y[j]>=yh){
+        yh = y[j];
+        Ph = j;
+        }}
+
+        //looking for smallest value
+        yl=yh;
+        for (int j=0; j<n+1; j++){
+        if(y[j]<yl){
+        yl=y[j];
+        Pl = j;
+        }}
+
+        // second highest value
+        ysh=yl;
+
+        yh=y[Ph];
+        yl=y[Pl];
+        ysh=y[Psh];
+
+        //computing mean and sigma
+        for (int i=0; i<n+1; i++){
+        ym+=y[i]/(n+1);
+        }
+        for (int i=0; i<n+1; i++){
+        ys+=sqrt(pow((y[i]-ym),2));
+        }
+        ys=ys/(n);
+
+        //compute centroid
+        for (int j=0; j<n; j++){
+        for (int i=0; i<n+1; i++){
+        if (i!=Ph){
+        Z[j]+=Pm[i][j]/n;
+        }}}
+
+        //reflect highest value at centroid
+        for (int i=0; i<n; i++){
+        C[i]=Z[i]+alpha*(Z[i]-Pm[Ph][i]);
+        }
+        yi=function(C, RVCt, RVCT0, RVCP, RVCe);
+        eval++;
+
+        if(yi<yl){
+        for (int i=0; i<n; i++){
+        Em[i]=Z[i]+gamma*(C[i]-Z[i]);
+        }
+        yt=function(Em, RVCt, RVCT0, RVCP, RVCe);
+        eval++;
+        if(yt<yl){
+        for (int i=0; i<n; i++){
+        Pm[Ph][i]=Em[i];
+        }
+        y[Ph]=yt;//function(E);
+        //eval++;
+        }
+        if (yt>=yl){
+        for (int i=0; i<n; i++){
+        Pm[Ph][i]=C[i];
+        }
+        eval++;
+        y[Ph]=function(C, RVCt, RVCT0, RVCP, RVCe);
+        }}
+
+        if(yi>=yl){
+        if(yi<=ysh){
+        for(int i=0; i<n; i++){
+        Pm[Ph][i]=C[i];
+        }
+        eval++;
+        y[Ph]=function(C, RVCt, RVCT0, RVCP, RVCe);
+        }
+        if(yi>ysh){
+        if(yi<=yh){
+        for(int i=0; i<n; i++){
+        Pm[Ph][i]=C[i];
+        }
+        eval++;
+        y[Ph]=function(C, RVCt, RVCT0, RVCP, RVCe);
+        yh=y[Ph];
+        }
+        for(int i=0; i<n; i++){
+        S[i]=Z[i]+beta*(Pm[Ph][i]-Z[i]);
+        }
+        yt=function(S, RVCt, RVCT0, RVCP, RVCe);
+        eval++;
+        if(yt>yh){
+        for (int j=0; j<n+1; j++){
+        for (int i=0; i<n; i++){
+        Pm[j][i]=Pm[Pl][i]+btot*(Pm[j][i]-Pm[Pl][i]); //total contraction
+        X[i]=Pm[j][i];
+        }
+        y[j]=function(X, RVCt, RVCT0, RVCP, RVCe);
+        eval++;
+        }}
+
+        if(yt<=yh){
+        for(int i=0; i<n; i++){
+        Pm[Ph][i]=S[i];
+        }
+        eval++;
+        y[Ph]=function(S, RVCt, RVCT0, RVCP, RVCe);
+        }}
+
+        }
+        }//end main loop
+
+        //looking for highest value
+        yh=y[0];
+        for (int j=0; j<n+1; j++){
+        if(y[j]>=yh){
+        yh = y[j];
+        Ph = j;
+        }}
+
+        //looking for smallest value
+        yl=yh;
+        for (int j=0; j<n+1; j++){
+        if(y[j]<yl){
+        yl=y[j];
+        Pl = j;
+        }}
+
+        //looking for second highest value
+        ysh=yl;
+        for (int j=0; j<n+1; j++){
+        if(y[j]>ysh & y[j]<yh){
+        ysh=y[j];
+        Psh=j;
+        }}
+
+        RVCE=Pm[Pl][0];
+
 }

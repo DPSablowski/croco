@@ -11,7 +11,7 @@
 
 using namespace std;
 
-double e, E1, E2, dE1, dE2, a1, dx=0.00001, xx, dphi, a2, t1, V, w1, w2, K1, K2, theta, E, IF, T0, P;
+double BTe, dphi, t1, V, w1, w2, K1, K2, theta, BTE, IF, BTT0, BTP, BTt, E;
 QVector<double> t(1), V1(1), V2(1);
 QString list1, list2;
 QString qBPath;
@@ -27,7 +27,7 @@ BinaryTool::BinaryTool(QWidget *parent) :
     this->setWindowTitle("Binary Tool");
 
     ui->doubleSpinBox_3->setValue(0.537);
-    e=ui->doubleSpinBox_3->value();
+    BTe=ui->doubleSpinBox_3->value();
 
     ui->doubleSpinBox_4->setValue(106.16);
     w1=ui->doubleSpinBox_4->value()*M_PI/180;
@@ -35,7 +35,7 @@ BinaryTool::BinaryTool(QWidget *parent) :
     w2=w1+M_PI;
 
     ui->doubleSpinBox_5->setValue(36997);
-    T0=ui->doubleSpinBox_5->value();
+    BTT0=ui->doubleSpinBox_5->value();
 
     ui->doubleSpinBox_6->setValue(68.6);
     K1=ui->doubleSpinBox_6->value();
@@ -53,7 +53,7 @@ BinaryTool::BinaryTool(QWidget *parent) :
     ui->doubleSpinBox_15->setValue(35);
 
     ui->doubleSpinBox_17->setValue(20.54);
-    P=ui->doubleSpinBox_17->value();
+    BTP=ui->doubleSpinBox_17->value();
 
     ui->doubleSpinBox_2->setValue(1);
     IF=ui->doubleSpinBox_2->value();
@@ -97,6 +97,15 @@ BinaryTool::~BinaryTool()
     delete ui;
 }
 
+double BTfunction (double X[], double RVCt, double RVCT0, double RVCP, double RVCe){
+    double func;
+
+    func= abs(RVCe*sin(X[0])+2*M_PI*(RVCt-RVCT0)/RVCP-X[0]);
+
+    return func;
+
+    }
+
 //********************************************************
 //show mouse coordinates
 //********************************************************
@@ -118,12 +127,12 @@ void BinaryTool::on_doubleSpinBox_4_valueChanged()
 
 void BinaryTool::on_doubleSpinBox_3_valueChanged()
 {
-   e=ui->doubleSpinBox_3->value();
+   BTe=ui->doubleSpinBox_3->value();
 }
 
 void BinaryTool::on_doubleSpinBox_5_valueChanged()
 {
-    T0=ui->doubleSpinBox_5->value();
+    BTT0=ui->doubleSpinBox_5->value();
 }
 
 void BinaryTool::on_doubleSpinBox_6_valueChanged()
@@ -186,45 +195,23 @@ void BinaryTool::on_pushButton_2_clicked()
 
     for(int m=0; m<phistep; m++){
 
-    t[m]=T0+(m+1)*dphi*P;
+    t[m]=BTT0+(m+1)*dphi*BTP;
 
-    if(e!=0){
-    a1=M_PI*(t[m]-T0)/P-3*e;
-    a2=2*M_PI*(t[m]-T0)/P+3*e;
-    dE2=0;
+    if(BTe!=0){
+        BTt=t[m];
+        BinaryTool::BTfindroot();
+        E=BTE;
 
-    for(int i=0; i<(a2-a1)/dx; i++){
-    xx=a1+i*dx;
-    E1=xx;
-    E2=e*sin(xx)+2*M_PI*(t[m]-T0)/P;
-    dE1=E1-E2;
-    //cout <<x<<"\t"<<E1-E2<<"\n";
-    /*if(m==0){
-       E=0;
-        i=(a2-a1)/dx;
-    }*/
-    if((dE1<0) & (dE2>0)){
-    E=xx-dx;
-    //cout <<"E = "<<x-dx-a1<<" + "<<a1<<"\n";
-    i=(a2-a1)/dx;
-    }
-    if((dE1>0) & (dE2<0)){
-    E=xx-dx;
-    //cout <<"E = "<<x-dx-a1<<" + "<<a1<<"\n";
-    i=(a2-a1)/dx;
-    }
-    dE2=E1-E2;
-    }
-    theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+    theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
     }
     else{
-        E = M_PI*(t[m]-T0)/P;
+        E = M_PI*(t[m]-BTT0)/BTP;
         theta=2*(atan(tan(E/2)));
     }
 
 
-    V1[m] = V + K1*(cos(theta+w1)+e*cos(w1));
-    V2[m] = V + K2*(cos(theta+w2)+e*cos(w2));
+    V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
+    V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
 
     file<<setprecision(14)<<t[m]<<" "<<V1[m]<<" "<<V2[m]<<endl;
     file2<<setprecision(14)<<V1[m]<<" "<<V2[m]<<endl;
@@ -582,38 +569,25 @@ void BinaryTool::on_pushButton_3_clicked()
 
 
     for(int m=0; m<1/dphi; m++){
-    t[m]=T0+(m+1)*dphi*P;
+    t[m]=BTT0+(m+1)*dphi*BTP;
 
     file4<<setprecision(14)<<t[m]<<endl;
 
-    if(e!=0){
-    a1=M_PI*(t[m]-T0)/P-2*e;
-    a2=2*M_PI*(t[m]-T0)/P+3*e;
-    dE2=0;
-    for(int i=0; i<(a2-a1)/dx; i++){
-    xx=a1+i*dx;
-    E1=xx;
-    E2=e*sin(xx)+2*M_PI*(t[m]-T0)/P;
-    dE1=E1-E2;
-    if((dE1<0) & (dE2>0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
+    if(BTe!=0){
+        BTt=t[m];
+        BinaryTool::BTfindroot();
+        E=BTE;
+
     }
-    if((dE1>0) & (dE2<0)){
-    E=xx-dx;
-    i=(a2-a1)/dx;
-    }
-    dE2=E1-E2;
-    }}
 
     else{
-        E = M_PI*(t[m]-T0)/P;
+        E = M_PI*(t[m]-BTT0)/BTP;
     }
 
-    theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+    theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
 
-    V1[m] = V + K1*(cos(theta+w1)+e*cos(w1));
-    V2[m] = V + K2*(cos(theta+w2)+e*cos(w2));
+    V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
+    V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
 
     for(int n=0; n < num_lines1; n++){
         linesw1[n]=(V1[m]/c+1)*linesw01[n];
@@ -1076,34 +1050,22 @@ void BinaryTool::on_pushButton_5_clicked()
                       }
                       else varii =1;*/
 
-                  t[m]=T0+(m+1)*dphi*P;
+                  t[m]=BTT0+(m+1)*dphi*BTP;
 
-                  if(e!=0){
-                  a1=M_PI*(t[m]-T0)/P-2*e;
-                  a2=2*M_PI*(t[m]-T0)/P+3*e;
-                  dE2=0;
-                  for(int i=0; i<(a2-a1)/dx; i++){
-                  xx=a1+i*dx;
-                  E1=xx;
-                  E2=e*sin(xx)+2*M_PI*(t[m]-T0)/P;
-                  dE1=E1-E2;
-                  if((dE1<0) & (dE2>0)){
-                  E=xx-dx;
-                  i=(a2-a1)/dx;
+                  if(BTe!=0){
+
+                      BTt=t[m];
+                      BinaryTool::BTfindroot();
+                      E=BTE;
+
                   }
-                  if((dE1>0) & (dE2<0)){
-                  E=xx-dx;
-                  i=(a2-a1)/dx;
-                  }
-                  dE2=E1-E2;
-                  }}
                   else{
-                      E=M_PI*(t[m]-T0)/P;
+                      E=M_PI*(t[m]-BTT0)/BTP;
                   }
 
-                  theta=2*(atan(tan(E/2)*sqrt((1+e)/(1-e))));
+                  theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
 
-                  V1[m] = V + K1*(cos(theta+w1)+e*cos(w1));
+                  V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
 
                   rv<<V1[m]<<endl;
 
@@ -1199,5 +1161,196 @@ void BinaryTool::on_spinBox_4_valueChanged()
 
 void BinaryTool::on_doubleSpinBox_17_valueChanged()
 {
-    P = ui->doubleSpinBox_17->value();
+    BTP = ui->doubleSpinBox_17->value();
 }
+
+//**************************************
+// root finding
+//**************************************
+void BinaryTool::BTfindroot(){
+
+    int n=1, Ph, Pl, Psh, zaehler=40, eval=0;
+    double yh, ysh, yl, ym, yi, ys, yt;
+    double sigma = 1e-5;
+    double step=0.1;
+    double gamma=2.0;	//expansion coeff.
+    double alpha =1.0;	//reflection coeff.
+    double beta=0.5;	//contraction coeff.
+    double btot=0.5;	//total contraction coeff.
+    double y[n+1], Pm[n+1][n], Z[n], C[n], S[n], Em[n], X[n], e[n][n];
+
+        //initial points
+        Pm[0][0]=2*M_PI*(BTt-BTT0)/BTP-2*BTe;
+        for (int i=0; i<n+1; i++){
+        for (int j=0; j<n; j++){
+        if(i>0 & i==j+1){
+        e[i][j]=1;
+        }
+        else{
+        e[i][j]=0;
+        }
+        if(i==0){
+
+        X[j]=Pm[i][j];
+        //cout <<X[j]<<"\t";
+        }
+        if(i!=0){
+        Pm[i][j]=Pm[0][j]+step*e[i][j];
+        X[j]=Pm[i][j];
+        //cout <<X[j]<<"\t";
+        }
+        }
+        y[i]=BTfunction(X, BTt, BTT0, BTP, BTe);
+        eval++;
+        //cout <<y[i]<<endl;
+        }
+
+        //start main loop
+        for (int tc=0; tc<zaehler; tc++){
+
+        //initialize next step
+        ym=0;
+        ys=0;
+        for (int i=0; i<n; i++){
+        Z[i]=0;
+        }
+
+        //looking for highest value
+        yh=y[0];
+        for (int j=0; j<n+1; j++){
+        if(y[j]>=yh){
+        yh = y[j];
+        Ph = j;
+        }}
+
+        //looking for smallest value
+        yl=yh;
+        for (int j=0; j<n+1; j++){
+        if(y[j]<yl){
+        yl=y[j];
+        Pl = j;
+        }}
+
+        // second highest value
+        ysh=yl;
+
+        yh=y[Ph];
+        yl=y[Pl];
+        ysh=y[Psh];
+
+        //computing mean and sigma
+        for (int i=0; i<n+1; i++){
+        ym+=y[i]/(n+1);
+        }
+        for (int i=0; i<n+1; i++){
+        ys+=sqrt(pow((y[i]-ym),2));
+        }
+        ys=ys/(n);
+
+        //compute centroid
+        for (int j=0; j<n; j++){
+        for (int i=0; i<n+1; i++){
+        if (i!=Ph){
+        Z[j]+=Pm[i][j]/n;
+        }}}
+
+        //reflect highest value at centroid
+        for (int i=0; i<n; i++){
+        C[i]=Z[i]+alpha*(Z[i]-Pm[Ph][i]);
+        }
+        yi=BTfunction(C, BTt, BTT0, BTP, BTe);
+        eval++;
+
+        if(yi<yl){
+        for (int i=0; i<n; i++){
+        Em[i]=Z[i]+gamma*(C[i]-Z[i]);
+        }
+        yt=BTfunction(Em, BTt, BTT0, BTP, BTe);
+        eval++;
+        if(yt<yl){
+        for (int i=0; i<n; i++){
+        Pm[Ph][i]=Em[i];
+        }
+        y[Ph]=yt;//BTfunction(E);
+        //eval++;
+        }
+        if (yt>=yl){
+        for (int i=0; i<n; i++){
+        Pm[Ph][i]=C[i];
+        }
+        eval++;
+        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
+        }}
+
+        if(yi>=yl){
+        if(yi<=ysh){
+        for(int i=0; i<n; i++){
+        Pm[Ph][i]=C[i];
+        }
+        eval++;
+        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
+        }
+        if(yi>ysh){
+        if(yi<=yh){
+        for(int i=0; i<n; i++){
+        Pm[Ph][i]=C[i];
+        }
+        eval++;
+        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
+        yh=y[Ph];
+        }
+        for(int i=0; i<n; i++){
+        S[i]=Z[i]+beta*(Pm[Ph][i]-Z[i]);
+        }
+        yt=BTfunction(S, BTt, BTT0, BTP, BTe);
+        eval++;
+        if(yt>yh){
+        for (int j=0; j<n+1; j++){
+        for (int i=0; i<n; i++){
+        Pm[j][i]=Pm[Pl][i]+btot*(Pm[j][i]-Pm[Pl][i]); //total contraction
+        X[i]=Pm[j][i];
+        }
+        y[j]=BTfunction(X, BTt, BTT0, BTP, BTe);
+        eval++;
+        }}
+
+        if(yt<=yh){
+        for(int i=0; i<n; i++){
+        Pm[Ph][i]=S[i];
+        }
+        eval++;
+        y[Ph]=BTfunction(S, BTt, BTT0, BTP, BTe);
+        }}
+
+        }
+
+        }//end main loop
+
+        //looking for highest value
+        yh=y[0];
+        for (int j=0; j<n+1; j++){
+        if(y[j]>=yh){
+        yh = y[j];
+        Ph = j;
+        }}
+
+        //looking for smallest value
+        yl=yh;
+        for (int j=0; j<n+1; j++){
+        if(y[j]<yl){
+        yl=y[j];
+        Pl = j;
+        }}
+
+        //looking for second highest value
+        ysh=yl;
+        for (int j=0; j<n+1; j++){
+        if(y[j]>ysh & y[j]<yh){
+        ysh=y[j];
+        Psh=j;
+        }}
+
+        BTE=Pm[Pl][0];
+
+}
+

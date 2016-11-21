@@ -55,6 +55,8 @@ private slots:
 
     void showPointToolTip(QMouseEvent *event);
 
+    void BTfindroot();
+
 
 private:
     Ui::BinaryTool *ui;
