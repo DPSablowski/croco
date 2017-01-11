@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1380</width>
-    <height>830</height>
+    <height>873</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -487,8 +487,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1792</width>
-         <height>718</height>
+         <width>1758</width>
+         <height>759</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_27">
@@ -815,7 +815,7 @@
                <double>0.100000000000000</double>
               </property>
               <property name="value">
-               <double>0.500000000000000</double>
+               <double>0.750000000000000</double>
               </property>
              </widget>
             </item>
@@ -908,6 +908,67 @@
               </property>
               <property name="value">
                <double>6000.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_14">
+              <property name="text">
+               <string>use step size:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_19">
+              <property name="decimals">
+               <number>4</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_30">
+            <item>
+             <widget class="QPushButton" name="pushButton_11">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Create Sequence</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_50">
+              <property name="text">
+               <string>max. # of bins:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBox_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+              <property name="value">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_13">
+              <property name="text">
+               <string>log-rebinning</string>
               </property>
              </widget>
             </item>
@@ -2806,7 +2867,7 @@
      <x>0</x>
      <y>0</y>
      <width>1380</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2841,6 +2902,7 @@
     <addaction name="actionCPD"/>
     <addaction name="actionArithmetic"/>
     <addaction name="actionCrop"/>
+    <addaction name="actionSpline_Fit"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -3060,6 +3122,11 @@
   <action name="actionCrop">
    <property name="text">
     <string>Crop</string>
+   </property>
+  </action>
+  <action name="actionSpline_Fit">
+   <property name="text">
+    <string>Spline Fit</string>
    </property>
   </action>
  </widget>

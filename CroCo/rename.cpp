@@ -21,6 +21,7 @@ Rename::Rename(QWidget *parent) :
 
     ui->lineEdit->setText("/home/daniels/test/test/");
     ui->lineEdit_3->setText(".dat");
+    ui->lineEdit_4->setText("table.dat");
 }
 
 Rename::~Rename()
@@ -116,10 +117,18 @@ void Rename::on_pushButton_2_clicked()
 
     QString qRPath=ui->lineEdit->text();
     QString qOld, qNew;
+    QString qTab=ui->lineEdit_4->text();
+    string Tab = qTab.toUtf8().constData();
     string rPath = qRPath.toUtf8().constData();
     QTableWidgetItem *qTOld, *qTNew;
     string Old, New;
     const char *OLD, *NEW;
+
+    ostringstream dat3NameStream(Tab);
+    dat3NameStream<<rPath<<"/"<<Tab;
+    std::string dat3Name = dat3NameStream.str();
+    ofstream outp(dat3Name.c_str());
+    outp<<"Old \t New"<<endl;
 
     for(int i=0; i<nfiles; i++){
         qTOld = ui->tableWidget->item(i,0);
@@ -138,6 +147,8 @@ void Rename::on_pushButton_2_clicked()
         dat2NameStream<<rPath<<"/"<<Newstr;
         New = dat2NameStream.str();
         NEW = New.c_str();
+
+        outp<<Old<<"\t"<<New<<endl;
 
         rename(OLD,NEW);
     }

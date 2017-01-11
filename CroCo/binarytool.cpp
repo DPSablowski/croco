@@ -1345,7 +1345,7 @@ void BinaryTool::BTfindroot(){
         //looking for second highest value
         ysh=yl;
         for (int j=0; j<n+1; j++){
-        if(y[j]>ysh & y[j]<yh){
+        if(y[j]>ysh & (y[j]<yh)){
         ysh=y[j];
         Psh=j;
         }}

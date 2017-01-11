@@ -51,6 +51,9 @@ public:
     QLineEdit *lineEdit_2;
     QLabel *label_3;
     QLineEdit *lineEdit_3;
+    QHBoxLayout *horizontalLayout_6;
+    QLabel *label_7;
+    QLineEdit *lineEdit_4;
     QTableWidget *tableWidget;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *pushButton;
@@ -170,6 +173,21 @@ public:
 
         verticalLayout->addLayout(horizontalLayout);
 
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        label_7 = new QLabel(Rename);
+        label_7->setObjectName(QStringLiteral("label_7"));
+
+        horizontalLayout_6->addWidget(label_7);
+
+        lineEdit_4 = new QLineEdit(Rename);
+        lineEdit_4->setObjectName(QStringLiteral("lineEdit_4"));
+
+        horizontalLayout_6->addWidget(lineEdit_4);
+
+
+        verticalLayout->addLayout(horizontalLayout_6);
+
         tableWidget = new QTableWidget(Rename);
         if (tableWidget->columnCount() < 2)
             tableWidget->setColumnCount(2);
@@ -229,6 +247,7 @@ public:
         label_6->setText(QApplication::translate("Rename", "and", 0));
         label_2->setText(QApplication::translate("Rename", "New Name:", 0));
         label_3->setText(QApplication::translate("Rename", "*", 0));
+        label_7->setText(QApplication::translate("Rename", "Save Table As:", 0));
         pushButton->setText(QApplication::translate("Rename", "List Files", 0));
         pushButton_2->setText(QApplication::translate("Rename", "Rename", 0));
         pushButton_3->setText(QApplication::translate("Rename", "Close", 0));

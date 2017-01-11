@@ -24,6 +24,7 @@
 #include "binarytool.h"
 #include <CCfits/CCfits>
 #include <cpd.h>
+#include <splinefit.h>
 
 //running man icon from: https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/running_man.png
 
@@ -68,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_4->setText("binarym_0.txt");
     ui->lineEdit_5->setText("croped_0.txt");
     ui->lineEdit_6->setText("tempmB.txt");
-    ui->lineEdit_7->setText("binarym_");
+    ui->lineEdit_7->setText("FLAMESm_");
     ui->lineEdit_8->setText("binaryrv_");
     ui->lineEdit_10->setText("tempmA");
     ui->lineEdit_11->setText("tempmB");
@@ -88,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
     ui->doubleSpinBox_16->setValue(0.5);
-    ui->lineEdit_15->setText("/home/daniels/Observations/Capella/Set_1/Ca_UV");
+    ui->lineEdit_15->setText("/home/daniels/Observations/Tomer/BAT019/Disentangled");
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
@@ -218,6 +219,7 @@ void MainWindow::on_spinBox_3_valueChanged()
     vshift=ui->spinBox_3->value();
 }
 
+// read data
 void MainWindow::ReadMeasured(int gg){
 
     QString fext = ui->lineEdit_21->text();
@@ -416,7 +418,18 @@ void MainWindow::on_pushButton_clicked()
             //cout<<diff<<endl;
         }
     }
+
+    cout<<"global min diff: "<<diff<<endl;
+
+    if(ui->checkBox_14->isChecked()){
+        diff = abs(log10(absminw+ui->doubleSpinBox_19->value())-log10(absminw));
+    }
+
+    else{
     diff=diff*increment;
+    }
+
+    cout<<"new step size: "<<diff<<endl;
 
     dv=(pow(10,diff)-1)*c0;
     QString Vsize=QString::number(dv);
@@ -725,7 +738,8 @@ void MainWindow::on_pushButton_clicked()
                  ui->customPlot->xAxis->setLabel("wavelength axis");
                  ui->customPlot->yAxis->setLabel("spectrum value");
                  ui->customPlot->xAxis->rescale();
-                 ui->customPlot->yAxis->setRange(yy1, yy2);
+                 ui->customPlot->graph(0)->rescaleAxes();
+                 ui->customPlot->graph(1)->rescaleAxes(true);
                  ui->customPlot->replot();
 
         }
@@ -924,7 +938,7 @@ void MainWindow::on_pushButton_clicked()
 }
 
 //*******************************************************************
-//Read fits header or extension header
+//Read fits header or extension header, from example program listhead.c
 //*******************************************************************
 void MainWindow::ReadHeader(int argc,   char *argv[])
 {
@@ -2134,4 +2148,187 @@ void MainWindow::on_actionCrop_triggered()
 {
     qCrop = new Crop(this);
     qCrop->show();
+}
+
+//*****************************************
+// Craete Sequence
+//*****************************************
+void MainWindow::on_pushButton_11_clicked()
+{
+    this->setCursor(QCursor(Qt::WaitCursor));
+
+    int maxbin = ui->spinBox_9->value();
+    double minwave, maxwave;
+
+    if(maxbin == 0){
+        QMessageBox::information(this, "Error", "Please give max number of bins.");
+        return;
+    }
+
+    int maxnu =0;
+    QString sequ;
+
+    num=ui->spinBox_8->value() - ui->spinBox->value()+1;
+
+    if(ui->checkBox_4->isChecked()){
+        num = 1;
+    }
+
+    for (int g=0; g<num; g++){
+
+        int gg = g+ui->spinBox->value();
+
+        if(ui->checkBox_4->isChecked()){
+            g=ui->spinBox->value();
+            gg=g;
+        }
+
+
+    //read measuremens
+    MainWindow::ReadMeasured(gg);
+    cout<<"read spectrum no. "<<gg<<endl;
+
+    if(check==1){
+        check=0;
+        return;
+    }
+
+    if(g==0){
+        minwave = measw[0];
+        maxwave = measw[bini-1];
+    }
+    else{
+        if(measw[0]>minwave){
+            minwave = measw[0];
+        }
+        if(measw[bini-1]<maxwave){
+            maxwave = measw[bini-1];
+        }
+    }
+
+    }
+
+    for (int g=0; g<num; g++){
+
+        int gg = g+ui->spinBox->value();
+
+        if(ui->checkBox_4->isChecked()){
+            g=ui->spinBox->value();
+            gg=g;
+        }
+
+
+    //read measuremens
+    MainWindow::ReadMeasured(gg);
+    cout<<"read spectrum no. "<<gg<<endl;
+
+    if(check==1){
+        check=0;
+        return;
+    }
+
+    QString output11="crspec_";
+    string output1 = output11.toUtf8().constData();
+    std::ostringstream output1NameStream(output1);
+    output1NameStream<<path<<"/"<<output1<<gg<<".txt";
+    std::string output1Name = output1NameStream.str();
+    ofstream file2(output1Name.c_str());
+
+    for(int i=0; i<bini; i++){
+        if(measw[i]>= minwave & measw[i]<=maxwave){
+            file2<<measw[i]<<"\t"<<measi[i]<<endl;
+        }
+    }
+
+    }
+
+    ui->lineEdit->setText("crspec_");
+
+    ui->comboBox->setCurrentIndex(1);
+    ui->lineEdit_21->setText(".txt");
+
+    QVector<double> lowave(1), upwave(1);
+
+    for (int g=0; g<num; g++){
+
+        int gg = g+ui->spinBox->value();
+
+        if(ui->checkBox_4->isChecked()){
+            g=ui->spinBox->value();
+            gg=g;
+        }
+
+
+    //read measuremens
+    MainWindow::ReadMeasured(gg);
+    cout<<"read spectrum no. "<<gg<<endl;
+
+    if(check==1){
+        check=0;
+        return;
+    }
+
+    if(g==0){
+
+        maxnu = bini/maxbin;
+        lowave.resize(maxnu);
+        upwave.resize(maxnu);
+
+        for(int s=0; s<maxnu; s++){
+            lowave[s]=measw[s*maxbin];
+            upwave[s]=measw[(s+1)*(maxbin-1)];
+            cout<<lowave[s]<<" "<<upwave[s]<<endl;
+        }
+    }
+
+     cout<<maxnu<<endl;
+
+    for (int s=0; s<maxnu; s++){
+
+        QString output11="sequence_";
+        string output1 = output11.toUtf8().constData();
+        std::ostringstream output1NameStream(output1);
+        output1NameStream<<path<<"/"<<output1<<s<<"_"<<gg<<".txt";
+        std::string output1Name = output1NameStream.str();
+        ofstream file1(output1Name.c_str());
+
+        for(int i =0; i<measw.size(); i++){
+
+            if((measw[i]>=lowave[s]) & (measw[i]<=upwave[s])){
+            file1<<measw[i]<<"\t"<<measi[i]<<endl;
+            }
+
+        }
+
+    }
+
+    }
+
+    if(ui->checkBox_13->isChecked()){
+
+        ui->checkBox_10->setChecked(true);
+        ui->checkBox_11->setChecked(false);
+        QString seqm = ui->lineEdit_7->text();
+
+        for(int s=0; s<maxnu; s++){
+
+            sequ = QString::number(s);
+
+            ui->lineEdit->setText("sequence_"+sequ+"_");
+            ui->lineEdit_7->setText(seqm+sequ+"_");
+
+            MainWindow::on_pushButton_clicked();
+
+        }
+    }
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
+
+
+}
+
+void MainWindow::on_actionSpline_Fit_triggered()
+{
+    qSpline = new SplineFit(this);
+    qSpline->show();
 }

@@ -59,6 +59,7 @@ public:
     QAction *actionCPD;
     QAction *actionArithmetic;
     QAction *actionCrop;
+    QAction *actionSpline_Fit;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QScrollArea *scrollArea;
@@ -97,6 +98,13 @@ public:
     QDoubleSpinBox *doubleSpinBox_17;
     QLabel *label_43;
     QDoubleSpinBox *doubleSpinBox_18;
+    QCheckBox *checkBox_14;
+    QDoubleSpinBox *doubleSpinBox_19;
+    QHBoxLayout *horizontalLayout_30;
+    QPushButton *pushButton_11;
+    QLabel *label_50;
+    QSpinBox *spinBox_9;
+    QCheckBox *checkBox_13;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_4;
     QLineEdit *lineEdit;
@@ -246,7 +254,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
-        MainWindow->resize(1380, 830);
+        MainWindow->resize(1380, 873);
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -396,6 +404,8 @@ public:
         actionArithmetic->setObjectName(QStringLiteral("actionArithmetic"));
         actionCrop = new QAction(MainWindow);
         actionCrop->setObjectName(QStringLiteral("actionCrop"));
+        actionSpline_Fit = new QAction(MainWindow);
+        actionSpline_Fit->setObjectName(QStringLiteral("actionSpline_Fit"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -414,7 +424,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1792, 718));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1758, 759));
         horizontalLayout_27 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_27->setSpacing(6);
         horizontalLayout_27->setContentsMargins(11, 11, 11, 11);
@@ -620,7 +630,7 @@ public:
         doubleSpinBox_12->setSizePolicy(sizePolicy3);
         doubleSpinBox_12->setMaximum(99.99);
         doubleSpinBox_12->setSingleStep(0.1);
-        doubleSpinBox_12->setValue(0.5);
+        doubleSpinBox_12->setValue(0.75);
 
         horizontalLayout_25->addWidget(doubleSpinBox_12);
 
@@ -672,8 +682,51 @@ public:
 
         horizontalLayout_26->addWidget(doubleSpinBox_18);
 
+        checkBox_14 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_14->setObjectName(QStringLiteral("checkBox_14"));
+
+        horizontalLayout_26->addWidget(checkBox_14);
+
+        doubleSpinBox_19 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_19->setObjectName(QStringLiteral("doubleSpinBox_19"));
+        doubleSpinBox_19->setDecimals(4);
+
+        horizontalLayout_26->addWidget(doubleSpinBox_19);
+
 
         verticalLayout_2->addLayout(horizontalLayout_26);
+
+        horizontalLayout_30 = new QHBoxLayout();
+        horizontalLayout_30->setSpacing(6);
+        horizontalLayout_30->setObjectName(QStringLiteral("horizontalLayout_30"));
+        pushButton_11 = new QPushButton(scrollAreaWidgetContents);
+        pushButton_11->setObjectName(QStringLiteral("pushButton_11"));
+        sizePolicy3.setHeightForWidth(pushButton_11->sizePolicy().hasHeightForWidth());
+        pushButton_11->setSizePolicy(sizePolicy3);
+
+        horizontalLayout_30->addWidget(pushButton_11);
+
+        label_50 = new QLabel(scrollAreaWidgetContents);
+        label_50->setObjectName(QStringLiteral("label_50"));
+
+        horizontalLayout_30->addWidget(label_50);
+
+        spinBox_9 = new QSpinBox(scrollAreaWidgetContents);
+        spinBox_9->setObjectName(QStringLiteral("spinBox_9"));
+        sizePolicy3.setHeightForWidth(spinBox_9->sizePolicy().hasHeightForWidth());
+        spinBox_9->setSizePolicy(sizePolicy3);
+        spinBox_9->setMaximum(9999);
+        spinBox_9->setValue(1000);
+
+        horizontalLayout_30->addWidget(spinBox_9);
+
+        checkBox_13 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_13->setObjectName(QStringLiteral("checkBox_13"));
+
+        horizontalLayout_30->addWidget(checkBox_13);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_30);
 
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
@@ -1645,7 +1698,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1380, 21));
+        menuBar->setGeometry(QRect(0, 0, 1380, 23));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuAbout = new QMenu(menuBar);
@@ -1739,6 +1792,7 @@ public:
         menuTools->addAction(actionCPD);
         menuTools->addAction(actionArithmetic);
         menuTools->addAction(actionCrop);
+        menuTools->addAction(actionSpline_Fit);
         mainToolBar->addAction(actionPlot);
         mainToolBar->addAction(actionSequence_Plotter);
         mainToolBar->addAction(actionRV_Curve);
@@ -1774,6 +1828,7 @@ public:
         actionCPD->setText(QApplication::translate("MainWindow", "CPD", 0));
         actionArithmetic->setText(QApplication::translate("MainWindow", "Arithmetic", 0));
         actionCrop->setText(QApplication::translate("MainWindow", "Crop", 0));
+        actionSpline_Fit->setText(QApplication::translate("MainWindow", "Spline Fit", 0));
         label_6->setText(QString());
         label_37->setText(QString());
         label->setText(QApplication::translate("MainWindow", "Spectra from", 0));
@@ -1787,6 +1842,10 @@ public:
         checkBox_10->setText(QApplication::translate("MainWindow", "crop to common wavelength range", 0));
         checkBox_11->setText(QApplication::translate("MainWindow", "crop from", 0));
         label_43->setText(QApplication::translate("MainWindow", "to", 0));
+        checkBox_14->setText(QApplication::translate("MainWindow", "use step size:", 0));
+        pushButton_11->setText(QApplication::translate("MainWindow", "Create Sequence", 0));
+        label_50->setText(QApplication::translate("MainWindow", "max. # of bins:", 0));
+        checkBox_13->setText(QApplication::translate("MainWindow", "log-rebinning", 0));
         label_4->setText(QApplication::translate("MainWindow", "Common name of spectra:", 0));
         label_44->setText(QApplication::translate("MainWindow", "*", 0));
         label_5->setText(QApplication::translate("MainWindow", "Continuum:", 0));

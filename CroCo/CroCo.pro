@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     rename.cpp \
     cpd.cpp \
     arithmetic.cpp \
-    crop.cpp
+    crop.cpp \
+    splinefit.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -47,7 +48,8 @@ HEADERS  += mainwindow.h \
     rename.h \
     cpd.h \
     arithmetic.h \
-    crop.h
+    crop.h \
+    splinefit.h
 
 FORMS    += mainwindow.ui \
     plotspec.ui \
@@ -61,7 +63,8 @@ FORMS    += mainwindow.ui \
     rename.ui \
     cpd.ui \
     arithmetic.ui \
-    crop.ui
+    crop.ui \
+    splinefit.ui
 
 RESOURCES += \
     images.qrc

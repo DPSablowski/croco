@@ -88,6 +88,7 @@ void PlotSequ::showPointToolTip(QMouseEvent *event)
 //****************************************************************
 void PlotSequ::on_pushButton_3_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
 
     string line, eins, zwei;
     int min=ui->spinBox->value();
@@ -232,6 +233,8 @@ void PlotSequ::on_pushButton_3_clicked()
      ui->doubleSpinBox_3->setValue(yse1);
      ui->doubleSpinBox_4->setValue(yse2);
 }
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 //****************************************************************
@@ -239,6 +242,8 @@ void PlotSequ::on_pushButton_3_clicked()
 //****************************************************************
 void PlotSequ::on_pushButton_2_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
+
     QPen pen1, pen2, pen3, pen4;
 
     ui->customPlot->clearGraphs();
@@ -630,6 +635,8 @@ void PlotSequ::on_pushButton_2_clicked()
     ui->customPlot->xAxis->setRange(xse1, xse2);
     ui->customPlot->yAxis->setRange(yse1, yse2);
     ui->customPlot->replot();
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 

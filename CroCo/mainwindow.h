@@ -20,6 +20,7 @@
 #include <cpd.h>
 #include <arithmetic.h>
 #include <crop.h>
+#include <splinefit.h>
 
 namespace Ui {
 class MainWindow;
@@ -132,6 +133,10 @@ private slots:
 
     void on_actionCrop_triggered();
 
+    void on_pushButton_11_clicked();
+
+    void on_actionSpline_Fit_triggered();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;
@@ -148,6 +153,8 @@ private:
     CPD *qCPD;
     Arithmetic *qArith;
     Crop *qCrop;
+    SplineFit *qSpline;
+
 };
 
 #endif // MAINWINDOW_H
