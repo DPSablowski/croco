@@ -23,7 +23,7 @@ Rename::Rename(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->lineEdit->setText("/home/daniels/test/test/");
+    ui->lineEdit->setText("/home/daniels/Observations/Capella/Set_13/spectra");
     ui->lineEdit_3->setText(".dat");
     ui->lineEdit_4->setText("table.dat");
 
@@ -33,6 +33,11 @@ Rename::Rename(QWidget *parent) :
 
     ui->comboBox->addItem("ASCII");
     ui->comboBox->addItem("fits");
+
+    ui->doubleSpinBox->setValue(3900);
+    ui->doubleSpinBox_2->setValue(8500);
+    ui->doubleSpinBox_3->setValue(0);
+    ui->doubleSpinBox_4->setValue(1.5);
 
     ui->customPlot->axisRect()->setupFullAxesBox(true);
 }
@@ -74,7 +79,7 @@ void Rename::on_pushButton_clicked()
     {
         if(ui->checkBox->isChecked()){
 
-        if(i!=ui->spinBox_2->value() & (i!=ui->spinBox_3->value()) & (i!=ui->spinBox_4->value())){
+        if(i!=ui->spinBox_2->value()-1 & (i!=ui->spinBox_3->value()-1) & (i!=ui->spinBox_4->value()-1)){
 
         // convert int i to str s
         string s = to_string(e);
@@ -173,7 +178,11 @@ void Rename::on_pushButton_2_clicked()
 void Rename::on_spinBox_5_valueChanged()
 {
     ui->customPlot->clearGraphs();
-    int i = ui->spinBox_5->value();
+    int i = ui->spinBox_5->value()-1;
+
+    if(i>ui->spinBox->value()-1){
+        return;
+    }
 
     QString qRPath=ui->lineEdit->text();
     string rPath = qRPath.toUtf8().constData();
@@ -184,6 +193,7 @@ void Rename::on_spinBox_5_valueChanged()
     QTableWidgetItem *qtoplot;
     qtoplot= ui->tableWidget->item(i, 0);
     QString qplot = qtoplot->text();
+    ui->lineEdit_8->setText(qplot);
     string toplot = qplot.toUtf8().constData();
     ostringstream dat4NameStream(toplot);
     dat4NameStream<<rPath<<"/"<<toplot;

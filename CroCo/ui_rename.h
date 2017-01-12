@@ -77,6 +77,7 @@ public:
     QHBoxLayout *horizontalLayout_8;
     QLabel *label_12;
     QSpinBox *spinBox_5;
+    QLineEdit *lineEdit_8;
     QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_9;
     QComboBox *comboBox;
@@ -343,8 +344,21 @@ public:
 
         spinBox_5 = new QSpinBox(Rename);
         spinBox_5->setObjectName(QStringLiteral("spinBox_5"));
+        spinBox_5->setMinimum(1);
+        spinBox_5->setMaximum(999);
 
         horizontalLayout_8->addWidget(spinBox_5);
+
+        lineEdit_8 = new QLineEdit(Rename);
+        lineEdit_8->setObjectName(QStringLiteral("lineEdit_8"));
+        lineEdit_8->setEnabled(false);
+        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(lineEdit_8->sizePolicy().hasHeightForWidth());
+        lineEdit_8->setSizePolicy(sizePolicy5);
+
+        horizontalLayout_8->addWidget(lineEdit_8);
 
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
