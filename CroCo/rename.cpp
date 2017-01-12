@@ -8,6 +8,10 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <QFile>
+#include <QMessageBox>
+#include <QDebug>
+#include <CCfits/CCfits>
 
 using namespace std;
 
@@ -22,6 +26,15 @@ Rename::Rename(QWidget *parent) :
     ui->lineEdit->setText("/home/daniels/test/test/");
     ui->lineEdit_3->setText(".dat");
     ui->lineEdit_4->setText("table.dat");
+
+    ui->lineEdit_5->setText("DataVector");
+    ui->lineEdit_6->setText("Arg");
+    ui->lineEdit_7->setText("Fun");
+
+    ui->comboBox->addItem("ASCII");
+    ui->comboBox->addItem("fits");
+
+    ui->customPlot->axisRect()->setupFullAxesBox(true);
 }
 
 Rename::~Rename()
@@ -152,5 +165,127 @@ void Rename::on_pushButton_2_clicked()
 
         rename(OLD,NEW);
     }
+
+}
+
+
+
+void Rename::on_spinBox_5_valueChanged()
+{
+    ui->customPlot->clearGraphs();
+    int i = ui->spinBox_5->value();
+
+    QString qRPath=ui->lineEdit->text();
+    string rPath = qRPath.toUtf8().constData();
+
+    QVector<double> a(2), b(2);
+
+
+    QTableWidgetItem *qtoplot;
+    qtoplot= ui->tableWidget->item(i, 0);
+    QString qplot = qtoplot->text();
+    string toplot = qplot.toUtf8().constData();
+    ostringstream dat4NameStream(toplot);
+    dat4NameStream<<rPath<<"/"<<toplot;
+    std::string dat4Name = dat4NameStream.str();
+    ifstream plot(dat4Name.c_str());
+
+    QFile checkfile(dat4Name.c_str());
+
+    if(!checkfile.exists()){
+        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error", "File "+qRPath+"/"+qplot+" does not exist!");
+       return;
+    }
+
+    if(ui->comboBox->currentIndex()==0){
+
+    string one, two, zeile;
+
+    int number_of_lines =0;
+
+    while(std::getline(plot, zeile))
+       ++ number_of_lines;
+
+    plot.clear();
+    plot.seekg(0, ios::beg);
+
+    a.resize(number_of_lines);
+    b.resize(number_of_lines);
+
+    for (int i=0; i<number_of_lines; i++){
+    plot >> one >>two;
+    istringstream ist(one);
+    ist >> a[i];
+    istringstream ist2(two);
+    ist2 >> b[i];
+    }
+    plot.close();
+    }
+
+    if(ui->comboBox->currentIndex()==1){
+
+        QString qspExtension, qspWavecol, qspIntenscol;
+        string spExtension, spWavecol, spIntenscol;
+        std::valarray<double> spwave;
+        std::valarray<double> spintens;
+
+
+        qspExtension=ui->lineEdit_5->text();
+        spExtension = qspExtension.toUtf8().constData();
+        qspWavecol=ui->lineEdit_6->text();
+        spWavecol = qspWavecol.toUtf8().constData();
+        qspIntenscol=ui->lineEdit_7->text();
+        spIntenscol = qspIntenscol.toUtf8().constData();
+
+
+        CCfits::FITS::setVerboseMode(true);
+
+        try
+        {
+
+            //open file for reading
+            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(dat4Name.c_str(),CCfits::Read,true));
+
+            // Create pointer to extension
+                CCfits::ExtHDU& datavector = input_file->extension(spExtension);
+
+              // Read rows
+              CCfits::Column& column = datavector.column(spWavecol);
+              column.read(spwave, 1, column.rows());
+
+              // Read rows
+              CCfits::Column& column2 = datavector.column(spIntenscol);
+              column2.read(spintens, 1, column2.rows());
+
+              int bini=spwave.size();
+
+              a.resize(bini);
+              b.resize(bini);
+
+              for(int i=0; i<bini; i++){
+              b[i]=spintens[i];
+              a[i]=spwave[i];
+              }
+
+
+        }
+            catch (CCfits::FitsException&)
+
+             {
+              std::cerr << " Fits Exception Thrown by test function \n";
+              }
+
+
+           // return;
+
+    }
+
+    ui->customPlot->addGraph();
+    ui->customPlot->graph(0)->setData(a, b);
+    ui->customPlot->xAxis->setRange(ui->doubleSpinBox->value(), ui->doubleSpinBox_2->value());
+    ui->customPlot->yAxis->setRange(ui->doubleSpinBox_3->value(), ui->doubleSpinBox_4->value());
+    ui->customPlot->replot();
+
 
 }

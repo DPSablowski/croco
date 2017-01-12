@@ -125,6 +125,7 @@ void PlotSpec::on_pushButton_2_clicked()
         std::string datName = datNameStream.str();
         ifstream dat(datName.c_str());
 
+
         QFile checkfile1(datName.c_str());
 
         if(!checkfile1.exists()){
