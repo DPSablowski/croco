@@ -424,6 +424,13 @@ void RVCalc::on_pushButton_4_clicked()
     std::string outName = outNameStream.str();
     ofstream oout(outName.c_str());
 
+    QString qout2=ui->lineEdit_9->text();
+    string out2 = qout2.toUtf8().constData();
+    std::ostringstream out2NameStream(out2);
+    out2NameStream<<rvPath<<"/"<<out2;
+    std::string out2Name = out2NameStream.str();
+    ofstream oout2(out2Name.c_str());
+
     for(int m=0; m<lines; m++){
 
         if(RVCe!=0){
@@ -440,6 +447,8 @@ void RVCalc::on_pushButton_4_clicked()
         }
 
     oout<<setprecision(12)<<gamma + KA*(cos(theta+WA)+RVCe*cos(WA))<<"\t"<<gamma + KB*(cos(theta+WB)+RVCe*cos(WB))<<endl;
+    oout2<<setprecision(14)<<tim[m]<<"\t"<<gamma + KA*(cos(theta+WA)+RVCe*cos(WA))<<"\t"<<gamma + KB*(cos(theta+WB)+RVCe*cos(WB))<<endl;
+
 
     }
 
