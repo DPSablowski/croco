@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1380</width>
-    <height>873</height>
+    <height>1005</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -488,7 +488,7 @@
          <x>0</x>
          <y>0</y>
          <width>1758</width>
-         <height>759</height>
+         <height>891</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_27">
@@ -1461,6 +1461,43 @@
                </sizepolicy>
               </property>
              </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_31">
+            <item>
+             <widget class="QPushButton" name="pushButton_12">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Write</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_51">
+              <property name="text">
+               <string>Keyword</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_22"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_52">
+              <property name="text">
+               <string>values to</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_23"/>
             </item>
            </layout>
           </item>

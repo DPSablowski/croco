@@ -142,6 +142,12 @@ public:
     QHBoxLayout *horizontalLayout_24;
     QLabel *label_38;
     QLineEdit *lineEdit_15;
+    QHBoxLayout *horizontalLayout_31;
+    QPushButton *pushButton_12;
+    QLabel *label_51;
+    QLineEdit *lineEdit_22;
+    QLabel *label_52;
+    QLineEdit *lineEdit_23;
     QLabel *label_39;
     QPlainTextEdit *plainTextEdit;
     QHBoxLayout *horizontalLayout_23;
@@ -254,7 +260,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
-        MainWindow->resize(1380, 873);
+        MainWindow->resize(1380, 1005);
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -424,7 +430,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1758, 759));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1758, 891));
         horizontalLayout_27 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_27->setSpacing(6);
         horizontalLayout_27->setContentsMargins(11, 11, 11, 11);
@@ -995,6 +1001,39 @@ public:
 
 
         verticalLayout_2->addLayout(horizontalLayout_24);
+
+        horizontalLayout_31 = new QHBoxLayout();
+        horizontalLayout_31->setSpacing(6);
+        horizontalLayout_31->setObjectName(QStringLiteral("horizontalLayout_31"));
+        pushButton_12 = new QPushButton(scrollAreaWidgetContents);
+        pushButton_12->setObjectName(QStringLiteral("pushButton_12"));
+        sizePolicy3.setHeightForWidth(pushButton_12->sizePolicy().hasHeightForWidth());
+        pushButton_12->setSizePolicy(sizePolicy3);
+
+        horizontalLayout_31->addWidget(pushButton_12);
+
+        label_51 = new QLabel(scrollAreaWidgetContents);
+        label_51->setObjectName(QStringLiteral("label_51"));
+
+        horizontalLayout_31->addWidget(label_51);
+
+        lineEdit_22 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_22->setObjectName(QStringLiteral("lineEdit_22"));
+
+        horizontalLayout_31->addWidget(lineEdit_22);
+
+        label_52 = new QLabel(scrollAreaWidgetContents);
+        label_52->setObjectName(QStringLiteral("label_52"));
+
+        horizontalLayout_31->addWidget(label_52);
+
+        lineEdit_23 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_23->setObjectName(QStringLiteral("lineEdit_23"));
+
+        horizontalLayout_31->addWidget(lineEdit_23);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_31);
 
         label_39 = new QLabel(scrollAreaWidgetContents);
         label_39->setObjectName(QStringLiteral("label_39"));
@@ -1862,6 +1901,9 @@ public:
         label_20->setText(QApplication::translate("MainWindow", "Output file for RV data:", 0));
         label_21->setText(QApplication::translate("MainWindow", ".txt", 0));
         label_38->setText(QApplication::translate("MainWindow", "Path to work folder:", 0));
+        pushButton_12->setText(QApplication::translate("MainWindow", "Write", 0));
+        label_51->setText(QApplication::translate("MainWindow", "Keyword", 0));
+        label_52->setText(QApplication::translate("MainWindow", "values to", 0));
         label_39->setText(QString());
         pushButton_10->setText(QApplication::translate("MainWindow", "Read Header", 0));
         pushButton_2->setText(QApplication::translate("MainWindow", "Close", 0));

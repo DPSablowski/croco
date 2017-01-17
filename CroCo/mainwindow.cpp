@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
     ui->doubleSpinBox_16->setValue(0.5);
-    ui->lineEdit_15->setText("/home/daniels/Observations/Tomer/BAT019/Disentangled");
+    ui->lineEdit_15->setText("/home/daniels/Observations/Capella/Set_7/Ca_IR_2");
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
@@ -419,6 +419,7 @@ void MainWindow::on_pushButton_clicked()
         }
     }
 
+
     cout<<"global min diff: "<<diff<<endl;
 
     if(ui->checkBox_14->isChecked()){
@@ -430,6 +431,12 @@ void MainWindow::on_pushButton_clicked()
     }
 
     cout<<"new step size: "<<diff<<endl;
+
+    if(diff==0){
+        cout<<"step size is zero! Rebinning aborted."<<endl;
+        QMessageBox::information(this, "Error", "Step size is zero! Rebinning aborted.");
+        return;
+    }
 
     dv=(pow(10,diff)-1)*c0;
     QString Vsize=QString::number(dv);
@@ -2331,4 +2338,88 @@ void MainWindow::on_actionSpline_Fit_triggered()
 {
     qSpline = new SplineFit(this);
     qSpline->show();
+}
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    QString kword = ui->lineEdit_22->text();
+
+    QString output12=ui->lineEdit_23->text();
+    string output2 = output12.toUtf8().constData();
+    std::ostringstream output2NameStream(output2);
+    output2NameStream<<path<<"/"<<output2;
+    std::string output2Name = output2NameStream.str();
+    ofstream file2(output2Name.c_str());
+
+    QString fext = ui->lineEdit_21->text();
+
+    for(int i = ui->spinBox->value(); i<=ui->spinBox_8->value(); i++){
+
+        QString s = QString::number(i);
+    QString output11=qpath+"/"+ui->lineEdit->text()+s+fext;
+    QByteArray qfits = output11.toLatin1();
+    char *c_qfits=qfits.data();
+
+    char *testf[]={"",c_qfits};
+    int argc=3;
+    cout<<c_qfits<<"\t"<<testf<<endl;
+
+
+    fitsfile *fptr;         /* FITS file pointer, defined in fitsio.h */
+    char card[FLEN_CARD], newcard[FLEN_CARD];
+    char oldvalue[FLEN_VALUE], comment[FLEN_COMMENT];
+    int status = 0;   /*  CFITSIO status value MUST be initialized to zero!  */
+    int iomode=READONLY, keytype;
+
+    if (!fits_open_file(&fptr, testf[1], iomode, &status))
+    {
+      if (fits_read_card(fptr,testf[2], card, &status))
+      {
+        printf("Keyword does not exist\n");
+        card[0] = '\0';
+        comment[0] = '\0';
+        status = 0;  /* reset status after error */
+      }
+      else
+        printf("%s\n",card);
+
+      if (argc == 4)  /* write or overwrite the keyword */
+      {
+          /* check if this is a protected keyword that must not be changed */
+          if (*card && fits_get_keyclass(card) == TYP_STRUC_KEY)
+          {
+            printf("Protected keyword cannot be modified.\n");
+          }
+          else
+          {
+            /* get the comment string */
+            if (*card)fits_parse_value(card, oldvalue, comment, &status);
+
+            /* construct template for new keyword */
+            strcpy(newcard, testf[2]);     /* copy keyword name */
+            strcat(newcard, " = ");       /* '=' value delimiter */
+            strcat(newcard, testf[3]);     /* new value */
+            if (*comment) {
+              strcat(newcard, " / ");  /* comment delimiter */
+              strcat(newcard, comment);     /* append the comment */
+            }
+
+            /* reformat the keyword string to conform to FITS rules */
+            fits_parse_template(newcard, card, &keytype, &status);
+
+            /* overwrite the keyword with the new value */
+            fits_update_card(fptr, testf[2], card, &status);
+
+            printf("Keyword has been changed to:\n");
+            printf("%s\n",card);
+          }
+      }  /* if argc == 4 */
+      fits_close_file(fptr, &status);
+    }    /* open_file */
+
+    /* if error occured, print out error message */
+    if (status) fits_report_error(stderr, status);
+    return;
+
+    }
 }

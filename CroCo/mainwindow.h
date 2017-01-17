@@ -137,6 +137,8 @@ private slots:
 
     void on_actionSpline_Fit_triggered();
 
+    void on_pushButton_12_clicked();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;

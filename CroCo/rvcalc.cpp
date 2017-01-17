@@ -22,13 +22,13 @@ RVCalc::RVCalc(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("RV Calculator");
 
-    ui->doubleSpinBox->setValue(159.0886);
-    ui->doubleSpinBox_2->setValue(56582.3536);
-    ui->doubleSpinBox_3->setValue(277);
-    ui->doubleSpinBox_4->setValue(101);
-    ui->doubleSpinBox_5->setValue(100);
-    ui->doubleSpinBox_6->setValue(1.4835);
-    ui->doubleSpinBox_8->setValue(0.82);
+    ui->doubleSpinBox->setValue(104.0217);
+    ui->doubleSpinBox_8->setValue(0.00089);
+    ui->doubleSpinBox_4->setValue(25.9611);
+    ui->doubleSpinBox_5->setValue(26.8400);
+    ui->doubleSpinBox_3->setValue(29.9378);
+    ui->doubleSpinBox_2->setValue(54389);
+    ui->doubleSpinBox_6->setValue(327.40);
     ui->doubleSpinBox_12->setValue(36997.00);
     ui->doubleSpinBox_13->setValue(37018.00);
     ui->doubleSpinBox_14->setValue(0.00);
@@ -407,14 +407,14 @@ void RVCalc::on_pushButton_4_clicked()
         ist >> tim[i];
     }
 
-    double RVCP=ui->doubleSpinBox->value();
-    double RVCT0=ui->doubleSpinBox_2->value();
+    RVCP=ui->doubleSpinBox->value();
+    RVCT0=ui->doubleSpinBox_2->value();
     double gamma=ui->doubleSpinBox_3->value();
     double KA=ui->doubleSpinBox_4->value();
     double KB=ui->doubleSpinBox_5->value();
     double WA=ui->doubleSpinBox_6->value()/180*M_PI;
     double WB=WA-M_PI;
-    double RVCe=ui->doubleSpinBox_8->value();
+    RVCe=ui->doubleSpinBox_8->value();
     double theta, E;
 
     QString qout=ui->lineEdit_7->text();
@@ -439,7 +439,7 @@ void RVCalc::on_pushButton_4_clicked()
             theta=2*(atan(tan(E/2)));
         }
 
-    oout<<setprecision(12)<<tim[m]<<" "<<gamma + KA*(cos(theta+WA)+RVCe*cos(WA))<<" "<<gamma + KB*(cos(theta+WB)+RVCe*cos(WB))<<endl;
+    oout<<setprecision(12)<<gamma + KA*(cos(theta+WA)+RVCe*cos(WA))<<"\t"<<gamma + KB*(cos(theta+WB)+RVCe*cos(WB))<<endl;
 
     }
 
@@ -662,14 +662,14 @@ void RVCalc::on_pushButton_6_clicked()
     }
     toplot1.close();
 
-    double RVCP=ui->doubleSpinBox->value();
-    double RVCT0=ui->doubleSpinBox_2->value();
+    RVCP=ui->doubleSpinBox->value();
+    RVCT0=ui->doubleSpinBox_2->value();
     double gamma=ui->doubleSpinBox_3->value();
     double KA=ui->doubleSpinBox_4->value();
     double KB=ui->doubleSpinBox_5->value();
     double WA=ui->doubleSpinBox_6->value()/180*M_PI;
     double WB=WA-M_PI;
-    double RVCe=ui->doubleSpinBox_8->value();
+    RVCe=ui->doubleSpinBox_8->value();
     double theta, E;;
 
     double RVA, RVB, residuumA, residuumB;
@@ -890,5 +890,76 @@ void RVCalc::findroot(){
         }}
 
         RVCE=Pm[Pl][0];
+
+}
+
+
+//number of independent spectra
+void RVCalc::on_pushButton_7_clicked()
+{
+    string one, two, three, zeile;
+
+    double reso = ui->doubleSpinBox_15->value();
+
+    if(reso==0){
+        return;
+    }
+
+    QString plot1=ui->lineEdit->text();
+    string plot11 = plot1.toUtf8().constData();
+    std::ostringstream datNameStream(plot11);
+    datNameStream<<rvPath<<"/"<<plot11;
+    std::string datName = datNameStream.str();
+    ifstream toplot1(datName.c_str());
+
+    QFile checkfile(datName.c_str());
+
+    if(!checkfile.exists()){
+        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error", "File "+qRvPath+"/"+plot1+" does not exist!");
+       return;
+    }
+
+    int lines =0;
+
+    while(std::getline(toplot1, zeile))
+       ++ lines;
+
+    toplot1.clear();
+    toplot1.seekg(0, ios::beg);
+
+    QVector<double> at(lines), bt(lines), ct(lines);
+
+    for (int i=0; i<lines; i++){
+    toplot1 >> one >>two>>three;
+    istringstream ist(one);
+    ist >> at[i];
+
+    istringstream ist2(two);
+    ist2 >> bt[i];
+
+    istringstream ist3(three);
+    ist3 >> ct[i];
+    }
+    toplot1.close();
+
+    int count=0;
+    int indep=0;
+
+    for(int i = 0; i<lines; i++){
+        for(int n =0; n<lines-1; n++){
+            if(n!=i){
+                if(bt[i]-bt[n]>=reso){
+                    ++count;
+                }
+
+            }
+
+        }
+        if(count==lines-1){
+            ++indep;
+        }
+        count=0;
+    }
 
 }
