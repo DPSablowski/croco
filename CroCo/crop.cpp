@@ -136,6 +136,7 @@ void Crop::on_pushButton_2_clicked()
 
         if(!checkfile1.exists()){
             QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+input+ +i+ " does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
 
@@ -306,6 +307,7 @@ void Crop::on_pushButton_3_clicked()
 
         if(!checkfile1.exists()){
             QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+input+ +i+ " does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
 

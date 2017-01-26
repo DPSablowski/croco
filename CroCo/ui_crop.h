@@ -100,6 +100,7 @@ public:
 
         spinBox = new QSpinBox(Crop);
         spinBox->setObjectName(QStringLiteral("spinBox"));
+        spinBox->setMaximum(999);
 
         horizontalLayout->addWidget(spinBox);
 
@@ -110,6 +111,7 @@ public:
 
         spinBox_2 = new QSpinBox(Crop);
         spinBox_2->setObjectName(QStringLiteral("spinBox_2"));
+        spinBox_2->setMaximum(9999);
 
         horizontalLayout->addWidget(spinBox_2);
 

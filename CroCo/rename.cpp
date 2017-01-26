@@ -177,6 +177,8 @@ void Rename::on_pushButton_2_clicked()
 
 void Rename::on_spinBox_5_valueChanged()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
+
     ui->customPlot->clearGraphs();
     int i = ui->spinBox_5->value()-1;
 
@@ -205,6 +207,7 @@ void Rename::on_spinBox_5_valueChanged()
     if(!checkfile.exists()){
         qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+qRPath+"/"+qplot+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
 
@@ -296,6 +299,48 @@ void Rename::on_spinBox_5_valueChanged()
     ui->customPlot->xAxis->setRange(ui->doubleSpinBox->value(), ui->doubleSpinBox_2->value());
     ui->customPlot->yAxis->setRange(ui->doubleSpinBox_3->value(), ui->doubleSpinBox_4->value());
     ui->customPlot->replot();
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
+}
+
+//***********************************
+// Renumerate
+//***********************************
+void Rename::on_pushButton_4_clicked()
+{
+    QString direc=ui->lineEdit->text();
+    string directory = direc.toUtf8().constData();
+
+    QString qRExt = ui->lineEdit_10->text();
+    string rExt = qRExt.toUtf8().constData();
+
+    QString qRFil = ui->lineEdit_9->text();
+    string rFil = qRFil.toUtf8().constData();
+
+        const char *OLD, *NEW;
+
+
+    int minf = ui->spinBox_6->value();
+    int maxf = ui->spinBox_7->value();
+    int nstart = ui->spinBox_8->value();
+
+    for(int i =0; i<maxf-minf+1; i++){
+
+        ostringstream dat1NameStream(rFil);
+        dat1NameStream<<directory<<"/"<<rFil<<minf+i<<rExt;
+        std::string dat1Name = dat1NameStream.str();
+
+         OLD = dat1Name.c_str();
+
+         ostringstream dat2NameStream(rFil);
+         dat2NameStream<<directory<<"/"<<rFil<<nstart+i<<rExt;
+         std::string dat2Name = dat2NameStream.str();
+
+         NEW = dat2Name.c_str();
+
+                 rename(OLD,NEW);
+
+    }
 
 
 }

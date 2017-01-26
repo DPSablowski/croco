@@ -248,6 +248,7 @@ void BinaryTool::on_pushButton_2_clicked()
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QString fError= QString::number(u);
             QMessageBox::information(this, "Error", "File "+qBPath+"/"+input+fError+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
 
@@ -280,6 +281,7 @@ void BinaryTool::on_pushButton_2_clicked()
     if(!checkfile2.exists()){
         qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "Time file "+qBPath+"/"+inputt+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
 

@@ -76,6 +76,8 @@ double xs1, xs2, ys1, ys2;
 //****************************************************************
 void PlotSpec::on_pushButton_2_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
+
     ui->customPlot_3->clearGraphs();
 
     QVector<double> a(1), b(1);
@@ -93,6 +95,7 @@ void PlotSpec::on_pushButton_2_clicked()
     if(!checkfile.exists()){
         qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+qSpPath+"/"+plot1+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
 
@@ -131,6 +134,7 @@ void PlotSpec::on_pushButton_2_clicked()
         if(!checkfile1.exists()){
             qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
             //check=1;
            return;
         }
@@ -191,6 +195,8 @@ void PlotSpec::on_pushButton_2_clicked()
     ui->customPlot_3->xAxis->setRange(xs1, xs2);
     ui->customPlot_3->yAxis->setRange(ys1, ys2);
     ui->customPlot_3->replot();
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 //****************************************************************
@@ -198,6 +204,8 @@ void PlotSpec::on_pushButton_2_clicked()
 //****************************************************************
 void PlotSpec::on_pushButton_3_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
+
     QVector<double> a(1), b(1);
     int number_of_lines=0;
 
@@ -214,6 +222,7 @@ void PlotSpec::on_pushButton_3_clicked()
     if(!checkfile.exists()){
         qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+qSpPath+"/"+plot1+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
 
@@ -249,6 +258,7 @@ void PlotSpec::on_pushButton_3_clicked()
         if(!checkfile1.exists()){
             qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
             //check=1;
            return;
         }
@@ -329,6 +339,8 @@ void PlotSpec::on_pushButton_3_clicked()
 
     ui->doubleSpinBox_3->setValue(ys1);
     ui->doubleSpinBox_4->setValue(ys2);
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 

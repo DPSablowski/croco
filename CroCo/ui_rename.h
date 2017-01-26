@@ -88,12 +88,28 @@ public:
     QLabel *label_15;
     QLineEdit *lineEdit_7;
     QSpacerItem *horizontalSpacer_3;
+    QVBoxLayout *verticalLayout_3;
+    QLabel *label_16;
+    QHBoxLayout *horizontalLayout_10;
+    QLineEdit *lineEdit_9;
+    QLabel *label_17;
+    QLineEdit *lineEdit_10;
+    QHBoxLayout *horizontalLayout_11;
+    QLabel *label_18;
+    QSpinBox *spinBox_6;
+    QLabel *label_19;
+    QSpinBox *spinBox_7;
+    QHBoxLayout *horizontalLayout_12;
+    QLabel *label_20;
+    QSpinBox *spinBox_8;
+    QPushButton *pushButton_4;
+    QSpacerItem *verticalSpacer;
 
     void setupUi(QDialog *Rename)
     {
         if (Rename->objectName().isEmpty())
             Rename->setObjectName(QStringLiteral("Rename"));
-        Rename->resize(1236, 556);
+        Rename->resize(1516, 556);
         gridLayout = new QGridLayout(Rename);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         verticalLayout = new QVBoxLayout();
@@ -425,6 +441,104 @@ public:
 
         gridLayout->addLayout(verticalLayout_2, 0, 1, 1, 1);
 
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        label_16 = new QLabel(Rename);
+        label_16->setObjectName(QStringLiteral("label_16"));
+
+        verticalLayout_3->addWidget(label_16);
+
+        horizontalLayout_10 = new QHBoxLayout();
+        horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
+        lineEdit_9 = new QLineEdit(Rename);
+        lineEdit_9->setObjectName(QStringLiteral("lineEdit_9"));
+        sizePolicy.setHeightForWidth(lineEdit_9->sizePolicy().hasHeightForWidth());
+        lineEdit_9->setSizePolicy(sizePolicy);
+
+        horizontalLayout_10->addWidget(lineEdit_9);
+
+        label_17 = new QLabel(Rename);
+        label_17->setObjectName(QStringLiteral("label_17"));
+        sizePolicy1.setHeightForWidth(label_17->sizePolicy().hasHeightForWidth());
+        label_17->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_10->addWidget(label_17);
+
+        lineEdit_10 = new QLineEdit(Rename);
+        lineEdit_10->setObjectName(QStringLiteral("lineEdit_10"));
+        sizePolicy.setHeightForWidth(lineEdit_10->sizePolicy().hasHeightForWidth());
+        lineEdit_10->setSizePolicy(sizePolicy);
+
+        horizontalLayout_10->addWidget(lineEdit_10);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_10);
+
+        horizontalLayout_11 = new QHBoxLayout();
+        horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
+        label_18 = new QLabel(Rename);
+        label_18->setObjectName(QStringLiteral("label_18"));
+
+        horizontalLayout_11->addWidget(label_18);
+
+        spinBox_6 = new QSpinBox(Rename);
+        spinBox_6->setObjectName(QStringLiteral("spinBox_6"));
+        sizePolicy.setHeightForWidth(spinBox_6->sizePolicy().hasHeightForWidth());
+        spinBox_6->setSizePolicy(sizePolicy);
+        spinBox_6->setMaximum(9999);
+
+        horizontalLayout_11->addWidget(spinBox_6);
+
+        label_19 = new QLabel(Rename);
+        label_19->setObjectName(QStringLiteral("label_19"));
+        sizePolicy1.setHeightForWidth(label_19->sizePolicy().hasHeightForWidth());
+        label_19->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_11->addWidget(label_19);
+
+        spinBox_7 = new QSpinBox(Rename);
+        spinBox_7->setObjectName(QStringLiteral("spinBox_7"));
+        sizePolicy.setHeightForWidth(spinBox_7->sizePolicy().hasHeightForWidth());
+        spinBox_7->setSizePolicy(sizePolicy);
+        spinBox_7->setMaximum(9999);
+
+        horizontalLayout_11->addWidget(spinBox_7);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_11);
+
+        horizontalLayout_12 = new QHBoxLayout();
+        horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
+        label_20 = new QLabel(Rename);
+        label_20->setObjectName(QStringLiteral("label_20"));
+
+        horizontalLayout_12->addWidget(label_20);
+
+        spinBox_8 = new QSpinBox(Rename);
+        spinBox_8->setObjectName(QStringLiteral("spinBox_8"));
+        sizePolicy5.setHeightForWidth(spinBox_8->sizePolicy().hasHeightForWidth());
+        spinBox_8->setSizePolicy(sizePolicy5);
+        spinBox_8->setMaximum(9999);
+
+        horizontalLayout_12->addWidget(spinBox_8);
+
+        pushButton_4 = new QPushButton(Rename);
+        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+        sizePolicy.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
+        pushButton_4->setSizePolicy(sizePolicy);
+
+        horizontalLayout_12->addWidget(pushButton_4);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_12);
+
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_3->addItem(verticalSpacer);
+
+
+        gridLayout->addLayout(verticalLayout_3, 0, 2, 1, 1);
+
 
         retranslateUi(Rename);
         QObject::connect(pushButton_3, SIGNAL(clicked()), Rename, SLOT(close()));
@@ -454,6 +568,12 @@ public:
         label_13->setText(QApplication::translate("Rename", "Extension:", 0));
         label_14->setText(QApplication::translate("Rename", "W-Col:", 0));
         label_15->setText(QApplication::translate("Rename", "I.Col", 0));
+        label_16->setText(QApplication::translate("Rename", "Renumerate", 0));
+        label_17->setText(QApplication::translate("Rename", "*", 0));
+        label_18->setText(QApplication::translate("Rename", "from", 0));
+        label_19->setText(QApplication::translate("Rename", "to", 0));
+        label_20->setText(QApplication::translate("Rename", "New start from", 0));
+        pushButton_4->setText(QApplication::translate("Rename", "Do", 0));
     } // retranslateUi
 
 };

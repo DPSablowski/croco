@@ -1637,29 +1637,19 @@ void RVCalc::on_pushButton_8_clicked()
 
 void RVCalc::on_pushButton_9_clicked()
 {
-    int linesn=0, lineso=0;
+    int linesn=0;
     string one, two, three, zeile;
 
-    string oldf = "times_rv13.dat";
-    string newf = "rv13.dat";
-    string timf = "times13.dat";
+    string oldf = "SWP_";
+    string ext = ".dat";
+    numb = 143;
+    
+    for(int i = 0; i<numb; i++){
 
     std::ostringstream dat1NameStream(oldf);
-    dat1NameStream<<rvPath<<"/"<<oldf;
+    dat1NameStream<<rvPath<<"/"<<oldf<<i<<ext;
     std::string dat1Name = dat1NameStream.str();
     ifstream inold(dat1Name.c_str());
-
-    std::ostringstream dat2NameStream(newf);
-    dat2NameStream<<rvPath<<"/"<<newf;
-    std::string dat2Name = dat2NameStream.str();
-    ifstream innew(dat2Name.c_str());
-
-    std::ostringstream dat3NameStream(timf);
-    dat3NameStream<<rvPath<<"/"<<timf;
-    std::string dat3Name = dat3NameStream.str();
-    ofstream outt(dat3Name.c_str());
-
-    ofstream tes("test.dat");
 
     while(std::getline(innew, zeile))
        ++ linesn;
@@ -1667,78 +1657,27 @@ void RVCalc::on_pushButton_9_clicked()
     innew.clear();
     innew.seekg(0, ios::beg);
 
-    QVector<double> nrv1(linesn), nrv2(linesn);
+    QVector<double> W1(linesn), I1(linesn), N1(linesn);
+   
 
     for (int q=0; q<linesn; q++){
-        innew >> one>>two;
+        inold >> one>>two, three;
         istringstream ist1(one);
+        ist1 >> N1[q];
         istringstream ist2(two);
-        ist1 >>nrv1[q];
-        ist2 >>nrv2[q];
-        tes<<fixed<<setprecision(5)<<nrv1[q]<<"\t"<<nrv2[q]<<endl;
-    }
-    innew.close();
-    tes.close();
-
-    ifstream tes2("test.dat");
-
-    for (int q=0; q<linesn; q++){
-        tes2 >> one>>two;
-        istringstream ist1(one);
-        istringstream ist2(two);
-        ist1 >>nrv1[q];
-        ist2 >>nrv2[q];
-        cout<<setprecision(14)<<nrv1[q]<<"\t"<<nrv2[q]<<endl;
-    }
-    tes2.close();
-
-    while(std::getline(inold, zeile))
-       ++ lineso;
-
-    inold.clear();
-    inold.seekg(0, ios::beg);
-
-    QVector<double> otimes(lineso), orv1(lineso), orv2(lineso);
-
-    ofstream tes3("test.dat");
-
-    for (int q=0; q<lineso; q++){
-        inold >> one>>two>>three;
-        istringstream ist1(one);
-        istringstream ist2(two);
+        ist2 >>W1[q];
         istringstream ist3(three);
-        ist2 >> orv1[q];
-        ist3 >> orv2[q];
-        ist1 >> otimes[q];
-        tes3<<fixed<<setprecision(5)<<orv1[q]<<"\t"<<orv2[q]<<endl;
+        ist2 >>I1[q];
     }
     inold.close();
-    tes3.close();
-
-    ifstream tes4("test.dat");
-
-    for (int q=0; q<lineso; q++){
-        tes4 >> one>>two;
-        istringstream ist1(one);
-        istringstream ist2(two);
-        ist1 >>orv1[q];
-        ist2 >>orv2[q];
-        cout<<setprecision(14)<<orv1[q]<<"\t"<<orv2[q]<<endl;
-    }
-    tes4.close();
-
-    for(int i = 0; i<linesn; i++){
-        for(int q = 0; q<lineso; q++){
-            if(nrv1[i]==orv1[q]){
-                outt<<setprecision(14)<<otimes[q]<<endl;
-                q=lineso;
-            }
-            else{
-                q=q;
-            }
-        }
+    
+    ofstream out(dat1Name.c_str());
+    
+    for(int q = 0; q<linesn; q++){
+        out<<W1[q]<<"\t"<<I1[q]<<endl;
     }
 
-    cout<<orv1[1]<<"\t"<<orv2[1]<<endl;
+
+    }
 
 }

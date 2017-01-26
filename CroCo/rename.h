@@ -24,6 +24,8 @@ private slots:
 
     void on_spinBox_5_valueChanged();
 
+    void on_pushButton_4_clicked();
+
 private:
     Ui::Rename *ui;
 };

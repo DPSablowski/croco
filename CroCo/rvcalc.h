@@ -44,6 +44,14 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void on_checkBox_6_clicked();
+
+    void on_checkBox_7_clicked();
+
+    void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
+
 private:
     Ui::RVCalc *ui;
 };

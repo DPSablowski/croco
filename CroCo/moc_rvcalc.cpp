@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_RVCalc_t {
-    QByteArrayData data[16];
-    char stringdata0[337];
+    QByteArrayData data[20];
+    char stringdata0[429];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,7 +44,11 @@ QT_MOC_LITERAL(11, 232, 23), // "on_pushButton_4_clicked"
 QT_MOC_LITERAL(12, 256, 23), // "on_pushButton_5_clicked"
 QT_MOC_LITERAL(13, 280, 23), // "on_pushButton_6_clicked"
 QT_MOC_LITERAL(14, 304, 8), // "findroot"
-QT_MOC_LITERAL(15, 313, 23) // "on_pushButton_7_clicked"
+QT_MOC_LITERAL(15, 313, 23), // "on_pushButton_7_clicked"
+QT_MOC_LITERAL(16, 337, 21), // "on_checkBox_6_clicked"
+QT_MOC_LITERAL(17, 359, 21), // "on_checkBox_7_clicked"
+QT_MOC_LITERAL(18, 381, 23), // "on_pushButton_8_clicked"
+QT_MOC_LITERAL(19, 405, 23) // "on_pushButton_9_clicked"
 
     },
     "RVCalc\0on_doubleSpinBox_9_valueChanged\0"
@@ -56,7 +60,9 @@ QT_MOC_LITERAL(15, 313, 23) // "on_pushButton_7_clicked"
     "on_lineEdit_5_textEdited\0"
     "on_pushButton_4_clicked\0on_pushButton_5_clicked\0"
     "on_pushButton_6_clicked\0findroot\0"
-    "on_pushButton_7_clicked"
+    "on_pushButton_7_clicked\0on_checkBox_6_clicked\0"
+    "on_checkBox_7_clicked\0on_pushButton_8_clicked\0"
+    "on_pushButton_9_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -66,7 +72,7 @@ static const uint qt_meta_data_RVCalc[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -74,22 +80,30 @@ static const uint qt_meta_data_RVCalc[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   84,    2, 0x08 /* Private */,
-       3,    0,   85,    2, 0x08 /* Private */,
-       4,    0,   86,    2, 0x08 /* Private */,
-       5,    0,   87,    2, 0x08 /* Private */,
-       6,    0,   88,    2, 0x08 /* Private */,
-       7,    0,   89,    2, 0x08 /* Private */,
-       8,    0,   90,    2, 0x08 /* Private */,
-       9,    0,   91,    2, 0x08 /* Private */,
-      10,    0,   92,    2, 0x08 /* Private */,
-      11,    0,   93,    2, 0x08 /* Private */,
-      12,    0,   94,    2, 0x08 /* Private */,
-      13,    0,   95,    2, 0x08 /* Private */,
-      14,    0,   96,    2, 0x08 /* Private */,
-      15,    0,   97,    2, 0x08 /* Private */,
+       1,    0,  104,    2, 0x08 /* Private */,
+       3,    0,  105,    2, 0x08 /* Private */,
+       4,    0,  106,    2, 0x08 /* Private */,
+       5,    0,  107,    2, 0x08 /* Private */,
+       6,    0,  108,    2, 0x08 /* Private */,
+       7,    0,  109,    2, 0x08 /* Private */,
+       8,    0,  110,    2, 0x08 /* Private */,
+       9,    0,  111,    2, 0x08 /* Private */,
+      10,    0,  112,    2, 0x08 /* Private */,
+      11,    0,  113,    2, 0x08 /* Private */,
+      12,    0,  114,    2, 0x08 /* Private */,
+      13,    0,  115,    2, 0x08 /* Private */,
+      14,    0,  116,    2, 0x08 /* Private */,
+      15,    0,  117,    2, 0x08 /* Private */,
+      16,    0,  118,    2, 0x08 /* Private */,
+      17,    0,  119,    2, 0x08 /* Private */,
+      18,    0,  120,    2, 0x08 /* Private */,
+      19,    0,  121,    2, 0x08 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -128,6 +142,10 @@ void RVCalc::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 11: _t->on_pushButton_6_clicked(); break;
         case 12: _t->findroot(); break;
         case 13: _t->on_pushButton_7_clicked(); break;
+        case 14: _t->on_checkBox_6_clicked(); break;
+        case 15: _t->on_checkBox_7_clicked(); break;
+        case 16: _t->on_pushButton_8_clicked(); break;
+        case 17: _t->on_pushButton_9_clicked(); break;
         default: ;
         }
     }
@@ -159,13 +177,13 @@ int RVCalc::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 18)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 18;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 18)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 14;
+        _id -= 18;
     }
     return _id;
 }

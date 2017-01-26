@@ -21,11 +21,11 @@ PlotSequ::PlotSequ(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Sequence Plotter");
 
-    ui->lineEdit->setText("reg1__");
+    ui->lineEdit->setText("cab_");
     ui->customPlot->xAxis->setLabel("Wavelength [A]");
     ui->customPlot->yAxis->setLabel("normalized Intensity");
     ui->checkBox->setChecked(true);
-    ui->lineEdit_5->setText("/home/daniels/Observations/HR5110/reg1");
+    ui->lineEdit_5->setText("/home/daniels/Observations/Capella/Set_13/Ca_UV/prepared");
     qSeqPath=ui->lineEdit_5->text();
     seqPath = qSeqPath.toUtf8().constData();
     offset=ui->doubleSpinBox_5->value();
@@ -33,7 +33,7 @@ PlotSequ::PlotSequ(QWidget *parent) :
     ui->lineEdit_6->setText("DataVector");
     ui->lineEdit_7->setText("Arg");
     ui->lineEdit_8->setText("Fun");
-    ui->lineEdit_9->setText(".txt");
+    ui->lineEdit_9->setText(".dat");
     ui->lineEdit_10->setText("added.dat");
     qseExtension=ui->lineEdit_6->text();
     seExtension = qseExtension.toUtf8().constData();
@@ -116,6 +116,7 @@ void PlotSequ::on_pushButton_3_clicked()
         qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
         QString fError= QString::number(u);
         QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
        return;
         }
 
@@ -155,6 +156,7 @@ void PlotSequ::on_pushButton_3_clicked()
             if(!checkfile1.exists()){
                 qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
                 //check=1;
                return;
             }
@@ -275,6 +277,7 @@ void PlotSequ::on_pushButton_2_clicked()
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QString fError= QString::number(u);
             QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
             }
 
@@ -314,6 +317,7 @@ void PlotSequ::on_pushButton_2_clicked()
             if(!checkfile1.exists()){
                 qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
                 //check=1;
                return;
             }
@@ -397,6 +401,7 @@ void PlotSequ::on_pushButton_2_clicked()
             if(!checkfile.exists()){
                 qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input1+".txt does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
                return;
                 }
 
@@ -444,6 +449,7 @@ void PlotSequ::on_pushButton_2_clicked()
             if(!checkfile.exists()){
                 qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input2+".txt does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
                return;
                 }
 
@@ -491,6 +497,7 @@ void PlotSequ::on_pushButton_2_clicked()
         if(!checkfile.exists()){
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input1+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
             }
 
@@ -540,6 +547,7 @@ void PlotSequ::on_pushButton_2_clicked()
         if(!checkfile.exists()){
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input2+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
             }
 
@@ -590,6 +598,7 @@ void PlotSequ::on_pushButton_2_clicked()
             if(!checkfile.exists()){
                 qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input3+".txt does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
                return;
                 }
 
@@ -735,6 +744,7 @@ void PlotSequ::on_spinBox_3_valueChanged()
 //***************************************************
 void PlotSequ::on_pushButton_5_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
 
     string line, eins, zwei;
     int min=ui->spinBox->value();
@@ -763,6 +773,7 @@ void PlotSequ::on_pushButton_5_clicked()
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QString fError= QString::number(u);
             QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
             }
 
@@ -835,6 +846,7 @@ void PlotSequ::on_pushButton_5_clicked()
         for(int i =0; i <b2d.size(); i++){
             out<<aad[i]<<" "<<bad[i]<<endl;
         }
+        this->setCursor(QCursor(Qt::ArrowCursor));
 
 
 }
@@ -844,6 +856,8 @@ void PlotSequ::on_pushButton_5_clicked()
 //***************************************************
 void PlotSequ::on_pushButton_6_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
+
     string line, eins, zwei;
     int min=ui->spinBox->value();
     int max=ui->spinBox_2->value();
@@ -871,6 +885,7 @@ void PlotSequ::on_pushButton_6_clicked()
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QString fError= QString::number(u);
             QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
             }
 
@@ -943,6 +958,8 @@ void PlotSequ::on_pushButton_6_clicked()
         for(int i =0; i <b2d.size(); i++){
             out<<aad[i]<<" "<<bad[i]/(max-min+1)<<endl;
         }
+
+        this->setCursor(QCursor(Qt::ArrowCursor));
 
 }
 

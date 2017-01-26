@@ -347,7 +347,7 @@ public:
 
         spinBox = new QSpinBox(scrollAreaWidgetContents);
         spinBox->setObjectName(QStringLiteral("spinBox"));
-        spinBox->setMaximum(999);
+        spinBox->setMaximum(9999);
         spinBox->setValue(0);
 
         horizontalLayout_2->addWidget(spinBox);
@@ -359,7 +359,7 @@ public:
 
         spinBox_2 = new QSpinBox(scrollAreaWidgetContents);
         spinBox_2->setObjectName(QStringLiteral("spinBox_2"));
-        spinBox_2->setMaximum(999);
+        spinBox_2->setMaximum(9999);
         spinBox_2->setValue(1);
 
         horizontalLayout_2->addWidget(spinBox_2);

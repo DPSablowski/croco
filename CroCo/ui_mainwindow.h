@@ -260,7 +260,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
-        MainWindow->resize(1380, 1005);
+        MainWindow->resize(1788, 878);
         QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -430,7 +430,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1758, 891));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1768, 777));
         horizontalLayout_27 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_27->setSpacing(6);
         horizontalLayout_27->setContentsMargins(11, 11, 11, 11);
@@ -1737,7 +1737,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1380, 23));
+        menuBar->setGeometry(QRect(0, 0, 1788, 23));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuAbout = new QMenu(menuBar);
