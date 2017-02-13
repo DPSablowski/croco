@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_BinaryTool_t {
-    QByteArrayData data[24];
-    char stringdata0[536];
+    QByteArrayData data[25];
+    char stringdata0[560];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -52,7 +52,8 @@ QT_MOC_LITERAL(19, 456, 32), // "on_doubleSpinBox_17_valueChanged"
 QT_MOC_LITERAL(20, 489, 16), // "showPointToolTip"
 QT_MOC_LITERAL(21, 506, 12), // "QMouseEvent*"
 QT_MOC_LITERAL(22, 519, 5), // "event"
-QT_MOC_LITERAL(23, 525, 10) // "BTfindroot"
+QT_MOC_LITERAL(23, 525, 10), // "BTfindroot"
+QT_MOC_LITERAL(24, 536, 23) // "on_pushButton_7_clicked"
 
     },
     "BinaryTool\0on_doubleSpinBox_4_valueChanged\0"
@@ -70,7 +71,7 @@ QT_MOC_LITERAL(23, 525, 10) // "BTfindroot"
     "on_spinBox_4_valueChanged\0"
     "on_doubleSpinBox_17_valueChanged\0"
     "showPointToolTip\0QMouseEvent*\0event\0"
-    "BTfindroot"
+    "BTfindroot\0on_pushButton_7_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -80,7 +81,7 @@ static const uint qt_meta_data_BinaryTool[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      20,   14, // methods
+      21,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -88,26 +89,27 @@ static const uint qt_meta_data_BinaryTool[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  114,    2, 0x08 /* Private */,
-       3,    0,  115,    2, 0x08 /* Private */,
-       4,    0,  116,    2, 0x08 /* Private */,
-       5,    0,  117,    2, 0x08 /* Private */,
-       6,    0,  118,    2, 0x08 /* Private */,
-       7,    0,  119,    2, 0x08 /* Private */,
-       8,    0,  120,    2, 0x08 /* Private */,
-       9,    0,  121,    2, 0x08 /* Private */,
-      10,    0,  122,    2, 0x08 /* Private */,
-      11,    0,  123,    2, 0x08 /* Private */,
-      12,    0,  124,    2, 0x08 /* Private */,
-      13,    0,  125,    2, 0x08 /* Private */,
-      14,    0,  126,    2, 0x08 /* Private */,
-      15,    0,  127,    2, 0x08 /* Private */,
-      16,    0,  128,    2, 0x08 /* Private */,
-      17,    0,  129,    2, 0x08 /* Private */,
-      18,    0,  130,    2, 0x08 /* Private */,
-      19,    0,  131,    2, 0x08 /* Private */,
-      20,    1,  132,    2, 0x08 /* Private */,
-      23,    0,  135,    2, 0x08 /* Private */,
+       1,    0,  119,    2, 0x08 /* Private */,
+       3,    0,  120,    2, 0x08 /* Private */,
+       4,    0,  121,    2, 0x08 /* Private */,
+       5,    0,  122,    2, 0x08 /* Private */,
+       6,    0,  123,    2, 0x08 /* Private */,
+       7,    0,  124,    2, 0x08 /* Private */,
+       8,    0,  125,    2, 0x08 /* Private */,
+       9,    0,  126,    2, 0x08 /* Private */,
+      10,    0,  127,    2, 0x08 /* Private */,
+      11,    0,  128,    2, 0x08 /* Private */,
+      12,    0,  129,    2, 0x08 /* Private */,
+      13,    0,  130,    2, 0x08 /* Private */,
+      14,    0,  131,    2, 0x08 /* Private */,
+      15,    0,  132,    2, 0x08 /* Private */,
+      16,    0,  133,    2, 0x08 /* Private */,
+      17,    0,  134,    2, 0x08 /* Private */,
+      18,    0,  135,    2, 0x08 /* Private */,
+      19,    0,  136,    2, 0x08 /* Private */,
+      20,    1,  137,    2, 0x08 /* Private */,
+      23,    0,  140,    2, 0x08 /* Private */,
+      24,    0,  141,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -129,6 +131,7 @@ static const uint qt_meta_data_BinaryTool[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 21,   22,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -162,6 +165,7 @@ void BinaryTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 17: _t->on_doubleSpinBox_17_valueChanged(); break;
         case 18: _t->showPointToolTip((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
         case 19: _t->BTfindroot(); break;
+        case 20: _t->on_pushButton_7_clicked(); break;
         default: ;
         }
     }
@@ -192,13 +196,13 @@ int BinaryTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 20)
+        if (_id < 21)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 20;
+        _id -= 21;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 20)
+        if (_id < 21)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 20;
+        _id -= 21;
     }
     return _id;
 }

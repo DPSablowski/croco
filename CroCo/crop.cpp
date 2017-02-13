@@ -97,7 +97,6 @@ void Crop::on_pushButton_2_clicked()
         std::ostringstream outNameStream(out);
         outNameStream<<crPath<<"/"<<out<<i<<".dat";
         std::string outName = outNameStream.str();
-        ofstream outp(outName.c_str());
 
         for(int g=0; g<numpix; g++){
         inA >> eins >>zwei;
@@ -105,9 +104,13 @@ void Crop::on_pushButton_2_clicked()
         ist >> a[g];
         istringstream ist2(zwei);
         ist2 >> b[g];
+        }
 
+        ofstream outp(outName.c_str());
+
+        for(int g =0; g<numpix;g++){
         if((a[g]>=wlow) & (a[g]<=wupp)){
-            outp<<setprecision(12)<<a[g]<<"\t"<<b[g]<<endl;
+            outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
         }
         }
         numpix=0;
@@ -130,7 +133,6 @@ void Crop::on_pushButton_2_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<crPath<<"/"<<data<<i<<ext;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile1(datName.c_str());
 
@@ -145,7 +147,6 @@ void Crop::on_pushButton_2_clicked()
         std::ostringstream outNameStream(out);
         outNameStream<<crPath<<"/"<<out<<i<<".dat";
         std::string outName = outNameStream.str();
-        ofstream outp(outName.c_str());
 
         CCfits::FITS::setVerboseMode(true);
 
@@ -168,9 +169,11 @@ void Crop::on_pushButton_2_clicked()
 
               numpix=cwave.size();
 
+              ofstream outp(outName.c_str());
+
               for(int i=0; i<numpix; i++){
                   if(cwave[i]>=wlow & (cwave[i]<=wupp)){
-                outp<<setprecision(12)<<cwave[i]<<"\t"<<cintens[i]<<endl;
+                outp<<setprecision(14)<<cwave[i]<<"\t"<<cintens[i]<<endl;
                   }
               }
 
@@ -205,9 +208,6 @@ void Crop::on_pushButton_3_clicked()
     int min=ui->spinBox->value();
     int max=ui->spinBox_2->value();
     int numpix=0;
-
-    double wlow=ui->doubleSpinBox->value();
-    double wupp=ui->doubleSpinBox_2->value();
 
     QString qCrPath = ui->lineEdit_7->text();
     string crPath = qCrPath.toUtf8().constData();
@@ -256,7 +256,6 @@ void Crop::on_pushButton_3_clicked()
         std::ostringstream outNameStream(out);
         outNameStream<<crPath<<"/"<<out<<i<<".dat";
         std::string outName = outNameStream.str();
-        ofstream outp(outName.c_str());
 
         for(int g=0; g<numpix; g++){
         inA >> eins >>zwei;
@@ -269,6 +268,8 @@ void Crop::on_pushButton_3_clicked()
         double binint=0, biniwa=0;
         double binst=ui->spinBox_3->value();
 
+        ofstream outp(outName.c_str());
+
         for(int g =0; g<numpix-(binst-1); g++){
             for(int i=0; i<binst; i++){
                 biniwa+=a[g+i];
@@ -277,7 +278,7 @@ void Crop::on_pushButton_3_clicked()
             g=g+binst-1;
             binint=binint/binst;
             biniwa=biniwa/binst;
-            outp<<setprecision(12)<<biniwa<<"\t"<<binint<<endl;
+            outp<<setprecision(14)<<biniwa<<"\t"<<binint<<endl;
             binint=0;
             biniwa=0;
         }
@@ -301,7 +302,6 @@ void Crop::on_pushButton_3_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<crPath<<"/"<<data<<i<<ext;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile1(datName.c_str());
 
@@ -316,7 +316,6 @@ void Crop::on_pushButton_3_clicked()
         std::ostringstream outNameStream(out);
         outNameStream<<crPath<<"/"<<out<<i<<".dat";
         std::string outName = outNameStream.str();
-        ofstream outp(outName.c_str());
 
         CCfits::FITS::setVerboseMode(true);
 
@@ -342,6 +341,8 @@ void Crop::on_pushButton_3_clicked()
               double binint=0, biniwa=0;
               double binst=ui->spinBox_3->value();
 
+              ofstream outp(outName.c_str());
+
               for(int g =0; g<numpix-(binst-1); g++){
                   for(int i=0; i<binst; i++){
                       biniwa+=cwave[g+i];
@@ -350,7 +351,7 @@ void Crop::on_pushButton_3_clicked()
                   g=g+binst-1;
                   binint=binint/binst;
                   biniwa=biniwa/binst;
-                  outp<<setprecision(12)<<biniwa<<"\t"<<binint<<endl;
+                  outp<<setprecision(14)<<biniwa<<"\t"<<binint<<endl;
                   binint=0;
                   biniwa=0;
               }

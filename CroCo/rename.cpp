@@ -324,6 +324,25 @@ void Rename::on_pushButton_4_clicked()
     int maxf = ui->spinBox_7->value();
     int nstart = ui->spinBox_8->value();
 
+    if(nstart>minf){
+        for(int i = 0; i<maxf-minf+1; i++){
+
+            ostringstream dat1NameStream(rFil);
+            dat1NameStream<<directory<<"/"<<rFil<<maxf-i<<rExt;
+            std::string dat1Name = dat1NameStream.str();
+
+             OLD = dat1Name.c_str();
+
+             ostringstream dat2NameStream(rFil);
+             dat2NameStream<<directory<<"/"<<rFil<<nstart+maxf-i-minf<<rExt;
+             std::string dat2Name = dat2NameStream.str();
+
+             NEW = dat2Name.c_str();
+
+             rename(OLD,NEW);
+        }
+    }
+    else{
     for(int i =0; i<maxf-minf+1; i++){
 
         ostringstream dat1NameStream(rFil);
@@ -338,8 +357,9 @@ void Rename::on_pushButton_4_clicked()
 
          NEW = dat2Name.c_str();
 
-                 rename(OLD,NEW);
+         rename(OLD,NEW);
 
+    }
     }
 
 

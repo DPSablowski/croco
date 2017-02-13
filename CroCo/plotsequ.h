@@ -56,6 +56,8 @@ private slots:
 
     void showPointToolTip(QMouseEvent *event);
 
+    void on_pushButton_8_clicked();
+
 private:
     Ui::PlotSequ *ui;
 };

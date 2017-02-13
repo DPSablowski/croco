@@ -12,6 +12,7 @@
 using namespace std;
 
 double RVCP, RVCe, RVCt, RVCT0, RVCE;
+QVector<double> PER(1), ECC(1), AMPA(1), AMPB(1), GAM(1), PERI(1), LPERI(1);
 
 QString qRvPath;
 string rvPath;
@@ -23,16 +24,6 @@ RVCalc::RVCalc(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("RV Calculator");
 
-    ui->doubleSpinBox->setValue(104.0217);
-    ui->doubleSpinBox_8->setValue(0.00089);
-    ui->doubleSpinBox_4->setValue(25.9611);
-    ui->doubleSpinBox_5->setValue(26.8400);
-    ui->doubleSpinBox_3->setValue(29.9378);
-    ui->doubleSpinBox_2->setValue(54389);
-    ui->doubleSpinBox_6->setValue(327.40);
-    ui->doubleSpinBox_12->setValue(36997.00);
-    ui->doubleSpinBox_13->setValue(37018.00);
-    ui->doubleSpinBox_14->setValue(0.00);
 
     ui->checkBox_7->setChecked(true);
 
@@ -55,21 +46,67 @@ RVCalc::RVCalc(QWidget *parent) :
     ui->customPlot->yAxis->setLabel("Velocity [km/s]");
     ui->customPlot->xAxis->setLabel("HJD");
 
-    ui->comboBox->addItem("Capella");
-    ui->comboBox->addItem("Mizar");
-    ui->comboBox->addItem("BAT99_12");
-    ui->comboBox->addItem("BAT99_32");
-    ui->comboBox->addItem("BAT99_77");
-    ui->comboBox->addItem("BAT99_92");
-    ui->comboBox->addItem("BAT99_95");
-    ui->comboBox->addItem("BAT99_99");
-    ui->comboBox->addItem("BAT99_103");
-    ui->comboBox->addItem("BAT99_113");
-    ui->comboBox->addItem("BAT99_119");
-    ui->comboBox->addItem("NGC 3603-A1");
-    ui->comboBox->addItem("NN Del");
-    ui->comboBox->addItem("PX Hya");
-    ui->comboBox->addItem("HR5110");
+    string sbin = "BinaryData.dat";
+    ifstream binaries(sbin.c_str());
+
+    QFile qBin(sbin.c_str());
+
+    if(!qBin.exists()){
+        qDebug()<<"No data base file for orbits of binaries present.";
+        QMessageBox::information(this, "Error", "Data base of orbital elements not present.");
+    }
+
+
+    else{
+        int lines=0;
+        string zeile1, eins1, zwei1, drei1, vier1, fuenf1, sechs1, sieben1, acht1;
+
+        while(std::getline(binaries, zeile1))
+        ++ lines;
+
+        binaries.clear();
+        binaries.seekg(0, ios::beg);
+
+        QVector<string> names(lines);
+
+        PER.resize(lines);
+        ECC.resize(lines);
+        AMPA.resize(lines);
+        AMPB.resize(lines);
+        GAM.resize(lines);
+        PERI.resize(lines);
+        LPERI.resize(lines);
+
+        for(int i=0; i < lines; i++){
+            binaries >> eins1 >> zwei1 >> drei1 >> vier1 >> fuenf1 >> sechs1 >> sieben1 >> acht1;
+            istringstream str1(eins1);
+            str1 >> names[i];
+            QString qstr = QString::fromStdString(str1.str());
+            ui->comboBox->addItem(qstr);
+            istringstream str2(zwei1);
+            str2 >> PER[i];
+            istringstream str3(drei1);
+            str3 >> ECC[i];
+            istringstream str4(vier1);
+            str4 >> AMPA[i];
+            istringstream str5(fuenf1);
+            str5 >> AMPB[i];
+            istringstream str6(sechs1);
+            str6 >> GAM[i];
+            istringstream str7(sieben1);
+            str7 >> PERI[i];
+            istringstream str8(acht1);
+            str8 >> LPERI[i];
+        }
+
+        ui->doubleSpinBox->setValue(PER[0]);
+        ui->doubleSpinBox_8->setValue(ECC[0]);
+        ui->doubleSpinBox_4->setValue(AMPA[0]);
+        ui->doubleSpinBox_5->setValue(AMPB[0]);
+        ui->doubleSpinBox_3->setValue(GAM[0]);
+        ui->doubleSpinBox_2->setValue(PERI[0]);
+        ui->doubleSpinBox_6->setValue(LPERI[0]);
+    }
 }
 
 RVCalc::~RVCalc()
@@ -471,171 +508,15 @@ void RVCalc::on_pushButton_4_clicked()
 // load orbit parameter
 void RVCalc::on_pushButton_5_clicked()
 {
-    // Capella
-    if(ui->comboBox->currentIndex()==0){
-        ui->doubleSpinBox->setValue(104.0217);
-        ui->doubleSpinBox_8->setValue(0.00089);
-        ui->doubleSpinBox_4->setValue(25.9611);
-        ui->doubleSpinBox_5->setValue(26.8400);
-        ui->doubleSpinBox_3->setValue(29.9378);
-        ui->doubleSpinBox_2->setValue(2454389);
-        ui->doubleSpinBox_6->setValue(327.40);
-    }
+    int dey=ui->comboBox->currentIndex();
+    ui->doubleSpinBox->setValue(PER[dey]);
+    ui->doubleSpinBox_8->setValue(ECC[dey]);
+    ui->doubleSpinBox_4->setValue(AMPA[dey]);
+    ui->doubleSpinBox_5->setValue(AMPB[dey]);
+    ui->doubleSpinBox_3->setValue(GAM[dey]);
+    ui->doubleSpinBox_2->setValue(PERI[dey]);
+    ui->doubleSpinBox_6->setValue(LPERI[dey]);
 
-    // Mizar
-    if(ui->comboBox->currentIndex()==1){
-        ui->doubleSpinBox->setValue(20.54);
-        ui->doubleSpinBox_8->setValue(0.537);
-        ui->doubleSpinBox_4->setValue(68.6);
-        ui->doubleSpinBox_5->setValue(67.6);
-        ui->doubleSpinBox_3->setValue(-5.6);
-        ui->doubleSpinBox_2->setValue(36997);
-        ui->doubleSpinBox_6->setValue(106.16);
-    }
-
-    // BAT99_12
-    if(ui->comboBox->currentIndex()==2){
-        ui->doubleSpinBox->setValue(3.2358);
-        ui->doubleSpinBox_8->setValue(0.34);
-        ui->doubleSpinBox_4->setValue(74);
-        ui->doubleSpinBox_5->setValue(68);
-        ui->doubleSpinBox_3->setValue(646);
-        ui->doubleSpinBox_2->setValue(2452269.84);
-        ui->doubleSpinBox_6->setValue(-29);
-    }
-
-    // BAT99_32
-    if(ui->comboBox->currentIndex()==3){
-        ui->doubleSpinBox->setValue(1.90756);
-        ui->doubleSpinBox_8->setValue(0.06);
-        ui->doubleSpinBox_4->setValue(120);
-        ui->doubleSpinBox_5->setValue(120);
-        ui->doubleSpinBox_3->setValue(288);
-        ui->doubleSpinBox_2->setValue(2453011.57);
-        ui->doubleSpinBox_6->setValue(250);
-    }
-
-    // BAT99_77
-    if(ui->comboBox->currentIndex()==4){
-        ui->doubleSpinBox->setValue(3.00303);
-        ui->doubleSpinBox_8->setValue(0.32);
-        ui->doubleSpinBox_4->setValue(144);
-        ui->doubleSpinBox_5->setValue(144);
-        ui->doubleSpinBox_3->setValue(339);
-        ui->doubleSpinBox_2->setValue(2452631.87);
-        ui->doubleSpinBox_6->setValue(7);
-    }
-
-    // BAT99_92
-    if(ui->comboBox->currentIndex()==5){
-        ui->doubleSpinBox->setValue(4.3125);
-        ui->doubleSpinBox_8->setValue(0.02);
-        ui->doubleSpinBox_4->setValue(204);
-        ui->doubleSpinBox_5->setValue(204);
-        ui->doubleSpinBox_3->setValue(332);
-        ui->doubleSpinBox_2->setValue(2452998.03);
-        ui->doubleSpinBox_6->setValue(109);
-    }
-
-    // BAT99_95
-    if(ui->comboBox->currentIndex()==6){
-        ui->doubleSpinBox->setValue(2.1110);
-        ui->doubleSpinBox_8->setValue(0.07);
-        ui->doubleSpinBox_4->setValue(107);
-        ui->doubleSpinBox_5->setValue(107);
-        ui->doubleSpinBox_3->setValue(274);
-        ui->doubleSpinBox_2->setValue(2452999.87);
-        ui->doubleSpinBox_6->setValue(285);
-    }
-
-    // BAT99_99
-    if(ui->comboBox->currentIndex()==7){
-        ui->doubleSpinBox->setValue(92.60);
-        ui->doubleSpinBox_8->setValue(0);
-        ui->doubleSpinBox_4->setValue(91);
-        ui->doubleSpinBox_5->setValue(0);
-        ui->doubleSpinBox_3->setValue(337);
-        ui->doubleSpinBox_2->setValue(2453007.8);
-        ui->doubleSpinBox_6->setValue(0);
-    }
-
-
-    // BAT99_103
-    if(ui->comboBox->currentIndex()==8){
-        ui->doubleSpinBox->setValue(2.75975);
-        ui->doubleSpinBox_8->setValue(0.23);
-        ui->doubleSpinBox_4->setValue(158);
-        ui->doubleSpinBox_5->setValue(156);
-        ui->doubleSpinBox_3->setValue(388);
-        ui->doubleSpinBox_2->setValue(2453007.8);
-        ui->doubleSpinBox_6->setValue(-41);
-    }
-
-    // BAT99_113
-    if(ui->comboBox->currentIndex()==9){
-        ui->doubleSpinBox->setValue(4.699);
-        ui->doubleSpinBox_8->setValue(0.20);
-        ui->doubleSpinBox_4->setValue(130);
-        ui->doubleSpinBox_5->setValue(125);
-        ui->doubleSpinBox_3->setValue(390);
-        ui->doubleSpinBox_2->setValue(2452993.07);
-        ui->doubleSpinBox_6->setValue(308);
-    }
-
-    // BAT99_119
-    if(ui->comboBox->currentIndex()==10){
-        ui->doubleSpinBox->setValue(159.0886);
-        ui->doubleSpinBox_8->setValue(0.8191);
-        ui->doubleSpinBox_4->setValue(101.2374);
-        ui->doubleSpinBox_5->setValue(100);
-        ui->doubleSpinBox_3->setValue(290);
-        ui->doubleSpinBox_2->setValue(2456501.2889);
-        ui->doubleSpinBox_6->setValue(240.8657);
-    }
-
-    // NGC 3603-A1
-    if(ui->comboBox->currentIndex()==11){
-        ui->doubleSpinBox->setValue(3.77240);
-        ui->doubleSpinBox_8->setValue(0.0000);
-        ui->doubleSpinBox_4->setValue(330.000);
-        ui->doubleSpinBox_5->setValue(433.000);
-        ui->doubleSpinBox_3->setValue(153.000);
-        ui->doubleSpinBox_2->setValue(3765.25);
-        ui->doubleSpinBox_6->setValue(120.00);
-    }
-
-    // NN Del
-    if(ui->comboBox->currentIndex()==12){
-        ui->doubleSpinBox->setValue(99.1648477);
-        ui->doubleSpinBox_8->setValue(0.5177);
-        ui->doubleSpinBox_4->setValue(36.2432);
-        ui->doubleSpinBox_5->setValue(39.4582);
-        ui->doubleSpinBox_3->setValue(-9.4046);
-        ui->doubleSpinBox_2->setValue(2456787.1095);
-        ui->doubleSpinBox_6->setValue(350.5696);
-    }
-
-    // PX Hya
-    if(ui->comboBox->currentIndex()==13){
-        ui->doubleSpinBox->setValue(36.1828518);
-        ui->doubleSpinBox_8->setValue(0.5652);
-        ui->doubleSpinBox_4->setValue(57.6967);
-        ui->doubleSpinBox_5->setValue(56.5568);
-        ui->doubleSpinBox_3->setValue(-14.9896);
-        ui->doubleSpinBox_2->setValue(2456743.2661);
-        ui->doubleSpinBox_6->setValue(325.1146);
-    }
-
-    // HR5110
-    if(ui->comboBox->currentIndex()==14){
-        ui->doubleSpinBox->setValue(2.613214);
-        ui->doubleSpinBox_8->setValue(0.00);
-        ui->doubleSpinBox_4->setValue(8.9);
-        ui->doubleSpinBox_5->setValue(5.0);
-        ui->doubleSpinBox_3->setValue(8.6);
-        ui->doubleSpinBox_2->setValue(2445766.655);
-        ui->doubleSpinBox_6->setValue(89);
-    }
 }
 
 //*****************************************
@@ -1177,7 +1058,7 @@ void RVCalc::on_pushButton_7_clicked()
                     out3<<bb+cc<<"\t"<<bb+cc<<endl;
                 }
                 else{
-                    out3<<setprecision(12)<<W1[q]<<"\t"<<I1[q]<<endl;
+                    out3<<setprecision(14)<<W1[q]<<"\t"<<I1[q]<<endl;
                 }
             }
             out3.close();
@@ -1272,7 +1153,7 @@ void RVCalc::on_pushButton_7_clicked()
             ofstream out(datName.c_str());
 
             for(int i =1; i<pixe-1; i++){
-                out<<setprecision(12)<<WW[i]<<"\t"<<II[i]<<endl;
+                out<<setprecision(14)<<WW[i]<<"\t"<<II[i]<<endl;
             }
             cout<<bt[e]<<"\t"<<at[e]<<endl;
         }
@@ -1494,7 +1375,7 @@ void RVCalc::on_pushButton_7_clicked()
             ofstream out(datName.c_str());
 
             for(int l = 0; l<lines1; l++){
-                out<<setprecision(12)<<W1[l]<<"\t"<<I1[l]/ndiv<<endl;
+                out<<setprecision(14)<<W1[l]<<"\t"<<I1[l]/ndiv<<endl;
             }
         }
         }
@@ -1637,108 +1518,86 @@ void RVCalc::on_pushButton_8_clicked()
 
 void RVCalc::on_pushButton_9_clicked()
 {
-    int linesn=0, lineso=0;
-    string one, two, three, zeile;
+    this->setCursor(QCursor(Qt::WaitCursor));
 
-    string oldf = "times_rv13.dat";
-    string newf = "rv13.dat";
-    string timf = "times13.dat";
+    int linesn=0;
+    string one, two, three, four, five, six, zeile;
 
-    std::ostringstream dat1NameStream(oldf);
-    dat1NameStream<<rvPath<<"/"<<oldf;
+    string inA = "hst_c0f_6.dat";
+    string inB = "hst_c1f_6.dat";
+    string outA = "hst_";
+    string ext = "_6.dat";
+    int numb = 18;
+
+    double I=0, W=0, N;
+
+    std::ostringstream dat1NameStream(inA);
+    dat1NameStream<<rvPath<<"/"<<inA;
     std::string dat1Name = dat1NameStream.str();
-    ifstream inold(dat1Name.c_str());
+    ifstream in1(dat1Name.c_str());
 
-    std::ostringstream dat2NameStream(newf);
-    dat2NameStream<<rvPath<<"/"<<newf;
-    std::string dat2Name = dat2NameStream.str();
-    ifstream innew(dat2Name.c_str());
-
-    std::ostringstream dat3NameStream(timf);
-    dat3NameStream<<rvPath<<"/"<<timf;
-    std::string dat3Name = dat3NameStream.str();
-    ofstream outt(dat3Name.c_str());
-
-    ofstream tes("test.dat");
-
-    while(std::getline(innew, zeile))
+    while(std::getline(in1, zeile))
        ++ linesn;
 
-    innew.clear();
-    innew.seekg(0, ios::beg);
+    in1.clear();
+    in1.seekg(0, ios::beg);
 
-    QVector<double> nrv1(linesn), nrv2(linesn);
+    std::ostringstream dat2NameStream(inB);
+    dat2NameStream<<rvPath<<"/"<<inB;
+    std::string dat2Name = dat2NameStream.str();
+    ifstream in2(dat2Name.c_str());
+
+    std::ostringstream dat3NameStream(outA);
+
+
+    for(int i = 1; i<=numb; i++){
+
+        linesn=0;
+        int count =0;
+
 
     for (int q=0; q<linesn; q++){
-        innew >> one>>two;
-        istringstream ist1(one);
-        istringstream ist2(two);
-        ist1 >>nrv1[q];
-        ist2 >>nrv2[q];
-        tes<<fixed<<setprecision(5)<<nrv1[q]<<"\t"<<nrv2[q]<<endl;
-    }
-    innew.close();
-    tes.close();
 
-    ifstream tes2("test.dat");
+        if(q == (1+count)*1999){
 
-    for (int q=0; q<linesn; q++){
-        tes2 >> one>>two;
-        istringstream ist1(one);
-        istringstream ist2(two);
-        ist1 >>nrv1[q];
-        ist2 >>nrv2[q];
-        cout<<setprecision(14)<<nrv1[q]<<"\t"<<nrv2[q]<<endl;
-    }
-    tes2.close();
-
-    while(std::getline(inold, zeile))
-       ++ lineso;
-
-    inold.clear();
-    inold.seekg(0, ios::beg);
-
-    QVector<double> otimes(lineso), orv1(lineso), orv2(lineso);
-
-    ofstream tes3("test.dat");
-
-    for (int q=0; q<lineso; q++){
-        inold >> one>>two>>three;
-        istringstream ist1(one);
-        istringstream ist2(two);
-        istringstream ist3(three);
-        ist2 >> orv1[q];
-        ist3 >> orv2[q];
-        ist1 >> otimes[q];
-        tes3<<fixed<<setprecision(5)<<orv1[q]<<"\t"<<orv2[q]<<endl;
-    }
-    inold.close();
-    tes3.close();
-
-    ifstream tes4("test.dat");
-
-    for (int q=0; q<lineso; q++){
-        tes4 >> one>>two;
-        istringstream ist1(one);
-        istringstream ist2(two);
-        ist1 >>orv1[q];
-        ist2 >>orv2[q];
-        cout<<setprecision(14)<<orv1[q]<<"\t"<<orv2[q]<<endl;
-    }
-    tes4.close();
-
-    for(int i = 0; i<linesn; i++){
-        for(int q = 0; q<lineso; q++){
-            if(nrv1[i]==orv1[q]){
-                outt<<setprecision(14)<<otimes[q]<<endl;
-                q=lineso;
-            }
-            else{
-                q=q;
-            }
+            dat3NameStream<<rvPath<<"/"<<outA<<count<<ext;
+            std::string dat3Name = dat3NameStream.str();
+            ofstream ouA(dat3Name.c_str());
         }
+
+        in1 >> one >> two >> three >> four >> five >> six;
+        istringstream istA1(one);
+        istA1 >> N;
+        istringstream istA2(two);
+        istA2 >>W;
+        //ouA<<W<<"\t";
+
+        in2 >> one >> two >> three >> four >> five >> six;
+        istringstream istB1(one);
+        istB1 >> N;
+        istringstream istB2(two);
+        istB2 >>I;
+        //outA<<I<<endl;
+
+        istringstream istA3(three);
+        istA3 >>W;
+        istringstream istA4(four);
+        istA4 >>W;
+        istringstream istA5(five);
+        istA5 >>W;
+        istringstream istA6(six);
+        istA6 >>W;
+    }
+    in1.close();
+
+    ofstream out(dat1Name.c_str());
+
+    for(int q = 0; q<linesn; q++){
+        //out<<setprecision(12)<<W1[q]<<"\t"<<I1[q]<<endl;
     }
 
-    cout<<orv1[1]<<"\t"<<orv2[1]<<endl;
+
+    }
+    this->setCursor(QCursor(Qt::ArrowCursor));
 
 }

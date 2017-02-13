@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QFile>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -36,6 +37,72 @@ void Arithmetic::on_pushButton_2_clicked()
 
     this->setCursor(QCursor(Qt::WaitCursor));
 
+    if(ui->checkBox_7->isChecked()){
+
+        QString qValue = ui->lineEdit_5->text();
+        bool ok = false;
+        double value = qValue.toDouble(&ok);
+
+        QString inputA=ui->lineEdit->text();
+        string dataA = inputA.toUtf8().constData();
+
+        QString qExt=ui->lineEdit_6->text();
+        string ext = qExt.toUtf8().constData();
+
+        QString output=ui->lineEdit_3->text();
+        string out = output.toUtf8().constData();
+
+        int minf = ui->spinBox->value();
+        int maxf = ui->spinBox_2->value();
+
+        for(int i = 0; i<maxf-minf+1; i++){
+
+            std::ostringstream datANameStream(dataA);
+            datANameStream<<aPath<<"/"<<dataA<<minf+i<<ext;
+            std::string datAName = datANameStream.str();
+            ifstream inA(datAName.c_str());
+
+            QFile checkfile1(datAName.c_str());
+
+            if(!checkfile1.exists()){
+                QMessageBox::information(this, "Error", "File"+qAPath+"/"+inputA+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+               return;
+            }
+
+            int numpixA=0;
+
+            string line, eins, zwei;
+
+            while(std::getline(inA, line))
+               ++numpixA;
+
+            inA.clear();
+            inA.seekg(0, ios::beg);
+
+            QVector<double> a(numpixA), b(numpixA);
+
+            std::ostringstream outNameStream(out);
+            outNameStream<<aPath<<"/"<<out<<minf+i<<ext;
+            std::string outName = outNameStream.str();
+            ofstream outp(outName.c_str());
+
+            for(int g=0; g<numpixA; g++){
+            inA >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> a[g];
+            istringstream ist2(zwei);
+            ist2 >> b[g];
+            b[g] = b[g]*value;
+            outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
+            }
+            inA.close();
+
+        }
+
+    }
+
+    else{
     QString inputA=ui->lineEdit->text();
     string dataA = inputA.toUtf8().constData();
     std::ostringstream datANameStream(dataA);
@@ -117,32 +184,33 @@ void Arithmetic::on_pushButton_2_clicked()
     std::string outName = outNameStream.str();
     ofstream outp(outName.c_str());
 
-    for(int g=0; g<numpixA; g++){
-        if(ui->checkBox->isChecked()){
-        f[g]=b[g]+d[g];
+        for(int g=0; g<numpixA; g++){
+            if(ui->checkBox->isChecked()){
+                f[g]=b[g]+d[g];
+            }
+            if(ui->checkBox_2->isChecked()){
+                f[g]=b[g]-d[g];
+            }
+            if(ui->checkBox_3->isChecked()){
+                f[g]=b[g]*d[g];
+            }
+            if(ui->checkBox_4->isChecked()){
+                f[g]=b[g]/d[g];
+            }
+            if(ui->checkBox_5->isChecked()){
+                QString qValue = ui->lineEdit_5->text();
+                bool ok = false;
+                double value = qValue.toDouble(&ok);
+                f[g]=b[g]+value;
+            }
+            if(ui->checkBox_6->isChecked()){
+                QString qValue = ui->lineEdit_5->text();
+                bool ok = false;
+                double value = qValue.toDouble(&ok);
+                f[g]=b[g]*value;
+            }
+            outp<<scientific<<e[g]<<" "<<f[g]<<endl;
         }
-        if(ui->checkBox_2->isChecked()){
-        f[g]=b[g]-d[g];
-        }
-        if(ui->checkBox_3->isChecked()){
-        f[g]=b[g]*d[g];
-        }
-        if(ui->checkBox_4->isChecked()){
-        f[g]=b[g]/d[g];
-        }
-        if(ui->checkBox_5->isChecked()){
-            QString qValue = ui->lineEdit_5->text();
-            bool ok = false;
-            double value = qValue.toDouble(&ok);
-        f[g]=b[g]+value;
-        }
-        if(ui->checkBox_6->isChecked()){
-            QString qValue = ui->lineEdit_5->text();
-            bool ok = false;
-            double value = qValue.toDouble(&ok);
-        f[g]=b[g]*value;
-        }
-        outp<<scientific<<e[g]<<" "<<f[g]<<endl;
     }
 
 

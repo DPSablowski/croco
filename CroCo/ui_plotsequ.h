@@ -17,6 +17,7 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -38,10 +39,8 @@ public:
     QGridLayout *gridLayout;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
-    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout_3;
     QCustomPlot *customPlot;
-    QHBoxLayout *horizontalLayout_4;
-    QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_3;
     QLabel *label;
@@ -79,6 +78,9 @@ public:
     QLineEdit *lineEdit_8;
     QComboBox *comboBox_2;
     QSpinBox *spinBox_4;
+    QFrame *line_2;
+    QHBoxLayout *horizontalLayout_8;
+    QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_5;
     QCheckBox *checkBox_10;
     QCheckBox *checkBox_4;
@@ -88,13 +90,6 @@ public:
     QCheckBox *checkBox_6;
     QDoubleSpinBox *doubleSpinBox_8;
     QLabel *label_18;
-    QCheckBox *checkBox_8;
-    QLineEdit *lineEdit_13;
-    QLabel *label_22;
-    QDoubleSpinBox *doubleSpinBox_10;
-    QCheckBox *checkBox_9;
-    QDoubleSpinBox *doubleSpinBox_11;
-    QSpacerItem *horizontalSpacer;
     QHBoxLayout *horizontalLayout_6;
     QCheckBox *checkBox_11;
     QCheckBox *checkBox_5;
@@ -104,12 +99,28 @@ public:
     QCheckBox *checkBox_7;
     QDoubleSpinBox *doubleSpinBox_9;
     QLabel *label_19;
-    QSpacerItem *horizontalSpacer_4;
-    QHBoxLayout *horizontalLayout_3;
+    QFrame *line;
+    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout_7;
     QPushButton *pushButton_5;
     QPushButton *pushButton_6;
     QPushButton *pushButton_7;
+    QPushButton *pushButton_8;
+    QCheckBox *checkBox_13;
+    QHBoxLayout *horizontalLayout_4;
     QLineEdit *lineEdit_10;
+    QCheckBox *checkBox_12;
+    QLineEdit *lineEdit_14;
+    QLabel *label_23;
+    QLineEdit *lineEdit_15;
+    QSpacerItem *horizontalSpacer_4;
+    QHBoxLayout *horizontalLayout_3;
+    QCheckBox *checkBox_8;
+    QLineEdit *lineEdit_13;
+    QLabel *label_22;
+    QDoubleSpinBox *doubleSpinBox_10;
+    QCheckBox *checkBox_9;
+    QDoubleSpinBox *doubleSpinBox_11;
     QSpacerItem *horizontalSpacer_6;
     QLabel *label_11;
     QLineEdit *lineEdit_5;
@@ -127,7 +138,7 @@ public:
     {
         if (PlotSequ->objectName().isEmpty())
             PlotSequ->setObjectName(QStringLiteral("PlotSequ"));
-        PlotSequ->resize(1237, 466);
+        PlotSequ->resize(1333, 651);
         QPalette palette;
         QBrush brush(QColor(0, 0, 0, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -203,9 +214,9 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1217, 446));
-        verticalLayout_2 = new QVBoxLayout(scrollAreaWidgetContents);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1313, 631));
+        verticalLayout_3 = new QVBoxLayout(scrollAreaWidgetContents);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         customPlot = new QCustomPlot(scrollAreaWidgetContents);
         customPlot->setObjectName(QStringLiteral("customPlot"));
         QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -214,12 +225,8 @@ public:
         sizePolicy.setHeightForWidth(customPlot->sizePolicy().hasHeightForWidth());
         customPlot->setSizePolicy(sizePolicy);
 
-        verticalLayout_2->addWidget(customPlot);
+        verticalLayout_3->addWidget(customPlot);
 
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -260,6 +267,7 @@ public:
 
         doubleSpinBox_3 = new QDoubleSpinBox(scrollAreaWidgetContents);
         doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
+        doubleSpinBox_3->setDecimals(11);
         doubleSpinBox_3->setMinimum(-999);
         doubleSpinBox_3->setMaximum(9999.99);
 
@@ -272,6 +280,7 @@ public:
 
         doubleSpinBox_4 = new QDoubleSpinBox(scrollAreaWidgetContents);
         doubleSpinBox_4->setObjectName(QStringLiteral("doubleSpinBox_4"));
+        doubleSpinBox_4->setDecimals(11);
         doubleSpinBox_4->setMinimum(-999);
         doubleSpinBox_4->setMaximum(9999);
 
@@ -320,7 +329,7 @@ public:
         horizontalLayout->addWidget(pushButton_2);
 
 
-        verticalLayout->addLayout(horizontalLayout);
+        verticalLayout_3->addLayout(horizontalLayout);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -383,7 +392,7 @@ public:
 
         doubleSpinBox_5 = new QDoubleSpinBox(scrollAreaWidgetContents);
         doubleSpinBox_5->setObjectName(QStringLiteral("doubleSpinBox_5"));
-        doubleSpinBox_5->setDecimals(4);
+        doubleSpinBox_5->setDecimals(13);
         doubleSpinBox_5->setMinimum(-99);
         doubleSpinBox_5->setSingleStep(0.1);
 
@@ -444,8 +453,19 @@ public:
         horizontalLayout_2->addWidget(spinBox_4);
 
 
-        verticalLayout->addLayout(horizontalLayout_2);
+        verticalLayout_3->addLayout(horizontalLayout_2);
 
+        line_2 = new QFrame(scrollAreaWidgetContents);
+        line_2->setObjectName(QStringLiteral("line_2"));
+        line_2->setFrameShape(QFrame::HLine);
+        line_2->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout_3->addWidget(line_2);
+
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
         checkBox_10 = new QCheckBox(scrollAreaWidgetContents);
@@ -495,49 +515,8 @@ public:
 
         horizontalLayout_5->addWidget(label_18);
 
-        checkBox_8 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_8->setObjectName(QStringLiteral("checkBox_8"));
 
-        horizontalLayout_5->addWidget(checkBox_8);
-
-        lineEdit_13 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_13->setObjectName(QStringLiteral("lineEdit_13"));
-        sizePolicy1.setHeightForWidth(lineEdit_13->sizePolicy().hasHeightForWidth());
-        lineEdit_13->setSizePolicy(sizePolicy1);
-
-        horizontalLayout_5->addWidget(lineEdit_13);
-
-        label_22 = new QLabel(scrollAreaWidgetContents);
-        label_22->setObjectName(QStringLiteral("label_22"));
-
-        horizontalLayout_5->addWidget(label_22);
-
-        doubleSpinBox_10 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_10->setObjectName(QStringLiteral("doubleSpinBox_10"));
-        doubleSpinBox_10->setDecimals(3);
-        doubleSpinBox_10->setMinimum(-99.99);
-
-        horizontalLayout_5->addWidget(doubleSpinBox_10);
-
-        checkBox_9 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
-
-        horizontalLayout_5->addWidget(checkBox_9);
-
-        doubleSpinBox_11 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_11->setObjectName(QStringLiteral("doubleSpinBox_11"));
-        doubleSpinBox_11->setDecimals(4);
-        doubleSpinBox_11->setMinimum(-9999.99);
-        doubleSpinBox_11->setMaximum(9999.99);
-
-        horizontalLayout_5->addWidget(doubleSpinBox_11);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_5->addItem(horizontalSpacer);
-
-
-        verticalLayout->addLayout(horizontalLayout_5);
+        verticalLayout_2->addLayout(horizontalLayout_5);
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
@@ -588,28 +567,36 @@ public:
 
         horizontalLayout_6->addWidget(label_19);
 
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_6->addItem(horizontalSpacer_4);
+        verticalLayout_2->addLayout(horizontalLayout_6);
 
 
-        verticalLayout->addLayout(horizontalLayout_6);
+        horizontalLayout_8->addLayout(verticalLayout_2);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        line = new QFrame(scrollAreaWidgetContents);
+        line->setObjectName(QStringLiteral("line"));
+        line->setFrameShape(QFrame::VLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        horizontalLayout_8->addWidget(line);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
         pushButton_5 = new QPushButton(scrollAreaWidgetContents);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
         sizePolicy2.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
         pushButton_5->setSizePolicy(sizePolicy2);
 
-        horizontalLayout_3->addWidget(pushButton_5);
+        horizontalLayout_7->addWidget(pushButton_5);
 
         pushButton_6 = new QPushButton(scrollAreaWidgetContents);
         pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
         sizePolicy2.setHeightForWidth(pushButton_6->sizePolicy().hasHeightForWidth());
         pushButton_6->setSizePolicy(sizePolicy2);
 
-        horizontalLayout_3->addWidget(pushButton_6);
+        horizontalLayout_7->addWidget(pushButton_6);
 
         pushButton_7 = new QPushButton(scrollAreaWidgetContents);
         pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
@@ -617,14 +604,107 @@ public:
         sizePolicy2.setHeightForWidth(pushButton_7->sizePolicy().hasHeightForWidth());
         pushButton_7->setSizePolicy(sizePolicy2);
 
-        horizontalLayout_3->addWidget(pushButton_7);
+        horizontalLayout_7->addWidget(pushButton_7);
 
+        pushButton_8 = new QPushButton(scrollAreaWidgetContents);
+        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+        sizePolicy2.setHeightForWidth(pushButton_8->sizePolicy().hasHeightForWidth());
+        pushButton_8->setSizePolicy(sizePolicy2);
+
+        horizontalLayout_7->addWidget(pushButton_8);
+
+        checkBox_13 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_13->setObjectName(QStringLiteral("checkBox_13"));
+
+        horizontalLayout_7->addWidget(checkBox_13);
+
+
+        verticalLayout->addLayout(horizontalLayout_7);
+
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         lineEdit_10 = new QLineEdit(scrollAreaWidgetContents);
         lineEdit_10->setObjectName(QStringLiteral("lineEdit_10"));
         sizePolicy1.setHeightForWidth(lineEdit_10->sizePolicy().hasHeightForWidth());
         lineEdit_10->setSizePolicy(sizePolicy1);
 
-        horizontalLayout_3->addWidget(lineEdit_10);
+        horizontalLayout_4->addWidget(lineEdit_10);
+
+        checkBox_12 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_12->setObjectName(QStringLiteral("checkBox_12"));
+
+        horizontalLayout_4->addWidget(checkBox_12);
+
+        lineEdit_14 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_14->setObjectName(QStringLiteral("lineEdit_14"));
+        sizePolicy1.setHeightForWidth(lineEdit_14->sizePolicy().hasHeightForWidth());
+        lineEdit_14->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_4->addWidget(lineEdit_14);
+
+        label_23 = new QLabel(scrollAreaWidgetContents);
+        label_23->setObjectName(QStringLiteral("label_23"));
+
+        horizontalLayout_4->addWidget(label_23);
+
+        lineEdit_15 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_15->setObjectName(QStringLiteral("lineEdit_15"));
+        sizePolicy1.setHeightForWidth(lineEdit_15->sizePolicy().hasHeightForWidth());
+        lineEdit_15->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_4->addWidget(lineEdit_15);
+
+
+        verticalLayout->addLayout(horizontalLayout_4);
+
+
+        horizontalLayout_8->addLayout(verticalLayout);
+
+        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_8->addItem(horizontalSpacer_4);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_8);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        checkBox_8 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_8->setObjectName(QStringLiteral("checkBox_8"));
+
+        horizontalLayout_3->addWidget(checkBox_8);
+
+        lineEdit_13 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_13->setObjectName(QStringLiteral("lineEdit_13"));
+        sizePolicy1.setHeightForWidth(lineEdit_13->sizePolicy().hasHeightForWidth());
+        lineEdit_13->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_3->addWidget(lineEdit_13);
+
+        label_22 = new QLabel(scrollAreaWidgetContents);
+        label_22->setObjectName(QStringLiteral("label_22"));
+
+        horizontalLayout_3->addWidget(label_22);
+
+        doubleSpinBox_10 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_10->setObjectName(QStringLiteral("doubleSpinBox_10"));
+        doubleSpinBox_10->setDecimals(3);
+        doubleSpinBox_10->setMinimum(-99.99);
+
+        horizontalLayout_3->addWidget(doubleSpinBox_10);
+
+        checkBox_9 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
+
+        horizontalLayout_3->addWidget(checkBox_9);
+
+        doubleSpinBox_11 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_11->setObjectName(QStringLiteral("doubleSpinBox_11"));
+        doubleSpinBox_11->setDecimals(4);
+        doubleSpinBox_11->setMinimum(-9999.99);
+        doubleSpinBox_11->setMaximum(9999.99);
+
+        horizontalLayout_3->addWidget(doubleSpinBox_11);
 
         horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -693,13 +773,7 @@ public:
         horizontalLayout_3->addWidget(pushButton);
 
 
-        verticalLayout->addLayout(horizontalLayout_3);
-
-
-        horizontalLayout_4->addLayout(verticalLayout);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_4);
+        verticalLayout_3->addLayout(horizontalLayout_3);
 
         scrollArea->setWidget(scrollAreaWidgetContents);
 
@@ -736,9 +810,6 @@ public:
         label_20->setText(QApplication::translate("PlotSequ", "Add", 0));
         checkBox_6->setText(QApplication::translate("PlotSequ", "Shift", 0));
         label_18->setText(QApplication::translate("PlotSequ", "km/s", 0));
-        checkBox_8->setText(QApplication::translate("PlotSequ", "DIfferences:", 0));
-        label_22->setText(QApplication::translate("PlotSequ", "Add", 0));
-        checkBox_9->setText(QApplication::translate("PlotSequ", "Shift", 0));
         checkBox_11->setText(QApplication::translate("PlotSequ", "Plot above", 0));
         checkBox_5->setText(QApplication::translate("PlotSequ", "Overplot 2:", 0));
         label_21->setText(QApplication::translate("PlotSequ", "Add", 0));
@@ -747,6 +818,13 @@ public:
         pushButton_5->setText(QApplication::translate("PlotSequ", "Add", 0));
         pushButton_6->setText(QApplication::translate("PlotSequ", "Average", 0));
         pushButton_7->setText(QApplication::translate("PlotSequ", "Median", 0));
+        pushButton_8->setText(QApplication::translate("PlotSequ", "EW", 0));
+        checkBox_13->setText(QApplication::translate("PlotSequ", "Minimum", 0));
+        checkBox_12->setText(QApplication::translate("PlotSequ", "/w List", 0));
+        label_23->setText(QApplication::translate("PlotSequ", "RVs", 0));
+        checkBox_8->setText(QApplication::translate("PlotSequ", "DIfferences:", 0));
+        label_22->setText(QApplication::translate("PlotSequ", "Add", 0));
+        checkBox_9->setText(QApplication::translate("PlotSequ", "Shift", 0));
         label_11->setText(QApplication::translate("PlotSequ", "work path", 0));
         label_10->setText(QApplication::translate("PlotSequ", "Save as", 0));
         checkBox->setText(QApplication::translate("PlotSequ", "pdf", 0));

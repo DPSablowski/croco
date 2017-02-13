@@ -78,6 +78,9 @@ void PlotSpec::on_pushButton_2_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
 
+    qSpPath=ui->lineEdit_5->text();
+    spPath = qSpPath.toUtf8().constData();
+
     ui->customPlot_3->clearGraphs();
 
     QVector<double> a(1), b(1);
@@ -205,6 +208,9 @@ void PlotSpec::on_pushButton_2_clicked()
 void PlotSpec::on_pushButton_3_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
+
+    qSpPath=ui->lineEdit_5->text();
+    spPath = qSpPath.toUtf8().constData();
 
     QVector<double> a(1), b(1);
     int number_of_lines=0;

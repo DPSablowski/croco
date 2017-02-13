@@ -12,6 +12,7 @@ QString qSeqPath, qseExtension, qseWavecol, qseIntenscol;
 string seqPath, seExtension, seWavecol, seIntenscol;
 std::valarray<double> sewave;
 std::valarray<double> seintens;
+const double c0=299792.458;
 
 
 PlotSequ::PlotSequ(QWidget *parent) :
@@ -21,11 +22,11 @@ PlotSequ::PlotSequ(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Sequence Plotter");
 
-    ui->lineEdit->setText("cab_");
+    ui->lineEdit->setText("Set13_");
     ui->customPlot->xAxis->setLabel("Wavelength [A]");
     ui->customPlot->yAxis->setLabel("normalized Intensity");
     ui->checkBox->setChecked(true);
-    ui->lineEdit_5->setText("/home/daniels/Observations/Capella/Set_13/Ca_UV/prepared");
+    ui->lineEdit_5->setText("/home/daniels/Observations/Capella/Set_13/spectrar");
     qSeqPath=ui->lineEdit_5->text();
     seqPath = qSeqPath.toUtf8().constData();
     offset=ui->doubleSpinBox_5->value();
@@ -33,8 +34,8 @@ PlotSequ::PlotSequ(QWidget *parent) :
     ui->lineEdit_6->setText("DataVector");
     ui->lineEdit_7->setText("Arg");
     ui->lineEdit_8->setText("Fun");
-    ui->lineEdit_9->setText(".dat");
-    ui->lineEdit_10->setText("added.dat");
+    ui->lineEdit_9->setText(".nor");
+    ui->lineEdit_10->setText("Ha_EW_13.dat");
     qseExtension=ui->lineEdit_6->text();
     seExtension = qseExtension.toUtf8().constData();
     qseWavecol=ui->lineEdit_7->text();
@@ -89,6 +90,9 @@ void PlotSequ::showPointToolTip(QMouseEvent *event)
 void PlotSequ::on_pushButton_3_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
+
+    qSeqPath=ui->lineEdit_5->text();
+    seqPath=qSeqPath.toUtf8().constData();
 
     string line, eins, zwei;
     int min=ui->spinBox->value();
@@ -245,6 +249,9 @@ void PlotSequ::on_pushButton_3_clicked()
 void PlotSequ::on_pushButton_2_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
+
+    qSeqPath=ui->lineEdit_5->text();
+    seqPath=qSeqPath.toUtf8().constData();
 
     QPen pen1, pen2, pen3, pen4;
 
@@ -751,6 +758,9 @@ void PlotSequ::on_pushButton_5_clicked()
     int max=ui->spinBox_2->value();
     int number_of_lines =0;
 
+    qSeqPath=ui->lineEdit_5->text();
+    seqPath=qSeqPath.toUtf8().constData();
+
     QString qext=ui->lineEdit_9->text();
     string sext = qext.toUtf8().constData();
 
@@ -841,11 +851,28 @@ void PlotSequ::on_pushButton_5_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<seqPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ofstream out(datName.c_str());
 
-        for(int i =0; i <b2d.size(); i++){
-            out<<aad[i]<<" "<<bad[i]<<endl;
+        QFile qOut(datName.c_str());
+
+        if(qOut.exists()){
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Warning!", "The file already exists. \n\n Do you want to overwrite it?",
+                                          QMessageBox::Yes|QMessageBox::No);
+            if (reply == QMessageBox::Yes) {
+              qDebug() << "Yes was clicked";
+              ofstream out(datName.c_str());
+
+      for(int i =0; i <b2d.size(); i++){
+          out<<aad[i]<<" "<<bad[i]<<endl;
+      }
+            }
         }
+        else {
+          qDebug() << "Yes was *not* clicked";
+          this->setCursor(QCursor(Qt::ArrowCursor));
+          return;
+        }
+
         this->setCursor(QCursor(Qt::ArrowCursor));
 
 
@@ -866,6 +893,9 @@ void PlotSequ::on_pushButton_6_clicked()
     QString qext=ui->lineEdit_9->text();
     string sext = qext.toUtf8().constData();
 
+    qSeqPath=ui->lineEdit_5->text();
+    seqPath=qSeqPath.toUtf8().constData();
+
     QVector<double> aad(1), bad(1), a2d(1), b2d(1);
 
     for (int u=min; u<=max; u++){
@@ -928,6 +958,8 @@ void PlotSequ::on_pushButton_6_clicked()
             }
         int aa=0;
 
+        cout<<"test"<<endl;
+
         for(int i = 0; i<number_of_lines-1; i++){
 
             for(int e=aa; e<aa+5; e++){
@@ -936,9 +968,15 @@ void PlotSequ::on_pushButton_6_clicked()
                     bad[i]+=b2d[e];
                     aa=e;
                 }
-                if((a2d[e]<aad[i])&(a2d[e+1]>aad[i])){
+                else{
+                    if((a2d[e]<aad[i])&(a2d[e+1]>aad[i])){
                     bad[i]+=b2d[e]+(aad[i]-a2d[e])/(a2d[e+1]-a2d[e])*(b2d[e+1]-b2d[e]);
                     aa=e;
+                    }
+                    else {
+                        bad[i]=bad[i];
+                        aa=e;
+                    }
                 }
             }
 
@@ -947,16 +985,33 @@ void PlotSequ::on_pushButton_6_clicked()
 
 
         }}
+    cout<<"test"<<endl;
 
         QString input=ui->lineEdit_10->text();
         string data = input.toUtf8().constData();
         std::ostringstream datNameStream(data);
         datNameStream<<seqPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ofstream out(datName.c_str());
 
-        for(int i =0; i <b2d.size(); i++){
-            out<<aad[i]<<" "<<bad[i]/(max-min+1)<<endl;
+        QFile qOut(datName.c_str());
+
+        if(qOut.exists()){
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Warning!", "The file already exists. \n\n Do you want to overwrite it?",
+                                          QMessageBox::Yes|QMessageBox::No);
+            if (reply == QMessageBox::Yes) {
+              qDebug() << "Yes was clicked";
+              ofstream out(datName.c_str());
+
+      for(int i =0; i <b2d.size(); i++){
+          out<<aad[i]<<" "<<bad[i]/(max-min+1)<<endl;
+      }
+            }
+        }
+        else {
+          qDebug() << "Yes was *not* clicked";
+          this->setCursor(QCursor(Qt::ArrowCursor));
+          return;
         }
 
         this->setCursor(QCursor(Qt::ArrowCursor));
@@ -968,6 +1023,8 @@ void PlotSequ::on_pushButton_6_clicked()
 //***************************************************
 void PlotSequ::on_pushButton_7_clicked()
 {
+    qSeqPath=ui->lineEdit_5->text();
+    seqPath=qSeqPath.toUtf8().constData();
 
 }
 
@@ -985,4 +1042,354 @@ void PlotSequ::on_comboBox_2_currentIndexChanged()
     if(ui->comboBox_2->currentIndex()==3){
         pcolor = 4;
     }
+}
+
+//***************************************************
+// EW
+//***************************************************
+void PlotSequ::on_pushButton_8_clicked()
+{
+    this->setCursor(QCursor(Qt::WaitCursor));
+
+    qSeqPath=ui->lineEdit_5->text();
+    seqPath=qSeqPath.toUtf8().constData();
+
+    QString input=ui->lineEdit_10->text();
+    string data = input.toUtf8().constData();
+    std::ostringstream datNameStream(data);
+    datNameStream<<seqPath<<"/"<<data;
+    std::string datName = datNameStream.str();
+
+    QFile qOut(datName.c_str());
+
+    if(qOut.exists()){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning!", "The file "+input+" already exists. \n\n Do you want to overwrite it?",
+                                      QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+          qDebug() << "Yes was clicked";
+        }
+
+    else {
+      qDebug() << "Yes was *not* clicked";
+      this->setCursor(QCursor(Qt::ArrowCursor));
+      return;
+    }}
+
+    ofstream out(datName.c_str());
+
+    string line, eins, zwei;
+    int min=ui->spinBox->value();
+    int max=ui->spinBox_2->value();
+    int number_of_lines =0;
+
+    double loww = ui->doubleSpinBox->value();
+    double hiw = ui->doubleSpinBox_2->value(), Wtot=0, Wline=0, Wew=0, Ilow=0, Ihigh=0, EW=0;;
+
+    QString qext=ui->lineEdit_9->text();
+    string sext = qext.toUtf8().constData();
+
+    QVector<double> aad(1), bad(1), rv1(1), rv2(1);
+
+    if(ui->checkBox_12->isChecked()){
+
+        QString qrvel=ui->lineEdit_15->text();
+        string rvel = qrvel.toUtf8().constData();
+        std::ostringstream dat3NameStream(rvel);
+        dat3NameStream<<seqPath<<"/"<<rvel;
+        std::string dat3Name = dat3NameStream.str();
+        ifstream RVel(dat3Name.c_str());
+
+
+        QFile checkfile(dat3Name.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qSeqPath+"\t"+qrvel+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+           return;
+            }
+
+        int nrvel=0;
+
+        while(std::getline(RVel, line))
+           ++ nrvel;
+
+        RVel.clear();
+        RVel.seekg(0, ios::beg);
+
+        rv1.resize(nrvel);
+        rv2.resize(nrvel);
+
+        for (int i=0; i<nrvel; i++){
+        RVel >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> rv1[i];
+        istringstream ist2(zwei);
+        ist2 >> rv2[i];
+        }
+        RVel.close();
+
+    }
+    else{
+            out<<"Wline \t Wtot \t Wew \t EW"<<endl;
+    }
+
+    for (int u=min; u<=max; u++){
+
+        Wtot = 0;
+        Wline = 0;
+        Wew=0;
+        Ilow=0;
+        Ihigh=0;
+        EW=0;
+
+        if(ui->comboBox->currentIndex()==0){
+        QString input=ui->lineEdit->text();
+        string data = input.toUtf8().constData();
+        std::ostringstream datNameStream(data);
+        datNameStream<<seqPath<<"/"<<data<<u<<sext;
+        std::string datName = datNameStream.str();
+        ifstream dat(datName.c_str());
+
+
+        QFile checkfile(datName.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+           return;
+            }
+
+        number_of_lines =0;
+
+        while(std::getline(dat, line))
+           ++ number_of_lines;
+
+        dat.clear();
+        dat.seekg(0, ios::beg);
+
+        aad.resize(number_of_lines);
+        bad.resize(number_of_lines);
+
+        for (int i=0; i<number_of_lines; i++){
+        dat >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> aad[i];
+        istringstream ist2(zwei);
+        ist2 >> bad[i];
+        }
+        dat.close();
+        }
+
+        if(ui->comboBox->currentIndex()==1){
+            QString input=ui->lineEdit->text();
+            string data = input.toUtf8().constData();
+            std::ostringstream datNameStream(data);
+            datNameStream<<seqPath<<"/"<<data<<u<<sext;
+            std::string datName = datNameStream.str();
+
+            QFile checkfile1(datName.c_str());
+
+            if(!checkfile1.exists()){
+                qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                //check=1;
+               return;
+            }
+
+            CCfits::FITS::setVerboseMode(true);
+
+            try
+            {
+
+                //open file for reading
+                auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+
+                // Create pointer to extension
+                    CCfits::ExtHDU& datavector = input_file->extension(seExtension);
+
+                  // Read rows
+                  CCfits::Column& column = datavector.column(seWavecol);
+                  column.read(sewave, 1, column.rows());
+
+                  // Read rows
+                  CCfits::Column& column2 = datavector.column(seIntenscol);
+                  column2.read(seintens, 1, column2.rows());
+
+                  number_of_lines=sewave.size();
+
+                  aad.resize(number_of_lines);
+                  bad.resize(number_of_lines);
+
+                  for(int i=0; i<number_of_lines; i++){
+                  bad[i]=seintens[i];
+                  aad[i]=sewave[i];
+                  }
+
+
+            }
+                catch (CCfits::FitsException&)
+
+                 {
+                  std::cerr << " Fits Exception Thrown by test function \n";
+                  }
+
+
+               // return;
+
+        }
+
+        if(ui->checkBox_12->isChecked()){
+
+            QString qlines=ui->lineEdit_14->text();
+            string lines = qlines.toUtf8().constData();
+            std::ostringstream dat2NameStream(lines);
+            dat2NameStream<<seqPath<<"/"<<lines;
+            std::string dat2Name = dat2NameStream.str();
+            ifstream Lines(dat2Name.c_str());
+
+
+            QFile checkfile(datName.c_str());
+
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "File "+qSeqPath+"\t"+qlines+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+               return;
+                }
+
+            int nlines=0;
+
+            while(std::getline(Lines, line))
+               ++ nlines;
+
+            Lines.clear();
+            Lines.seekg(0, ios::beg);
+
+            QVector<double> lcw(nlines), lw(nlines);
+
+            for (int i=0; i<nlines; i++){
+            Lines >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> lcw[i];
+            istringstream ist2(zwei);
+            ist2 >> lw[i];
+            }
+            Lines.close();
+
+            double lc1, lc2, loww1, loww2, hiw1, hiw2;
+
+            for (int i=0; i<nlines; i++){
+
+                lc1=lcw[i]*(1+rv1[u]/c0);
+                lc2=lcw[i]*(1+rv2[u]/c0);
+                loww1 = lc1-lw[i];
+                loww2 = lc2-lw[i];
+                hiw1 = lc1+lw[i];
+                hiw2 = lc2+lw[i];
+
+                //out<<loww1<<"\t"<<lc1<<"\t"<<hiw1<<"\t"<<loww2<<"\t"<<lc2<<"\t"<<hiw2<<"\t";
+
+                Wtot = 0;
+                Wline = 0;
+                Wew=0;
+                Ilow=0;
+                Ihigh=0;
+                EW=0;
+
+                for(int e =1; e<number_of_lines; e++){
+                    if(aad[e-1]<=loww1 & aad[e]>=loww1){
+                        Ilow=bad[e];
+                    }
+                    else{
+                        Ilow=Ilow;
+                    }
+                    if(aad[e-1]<=hiw1 & aad[e]>=hiw1){
+                        Ihigh = bad[e];
+                    }
+                    else{
+                        Ihigh=Ihigh;
+                    }
+                    if(aad[e-1]>loww1 & aad[e-1]<hiw1){
+                        Wline+=(aad[e]-aad[e-1])*(bad[e]+bad[e-1])/2;
+                    }
+                }
+
+                Wtot = (Ilow+Ihigh)/2*(hiw1-loww1);
+                Wew = Wtot - Wline;
+                EW = Wew/(Ilow+Ihigh)*2;
+
+                out<<EW<<"\t";
+
+                Wtot = 0;
+                Wline = 0;
+                Wew=0;
+                Ilow=0;
+                Ihigh=0;
+                EW=0;
+
+                for(int e =1; e<number_of_lines; e++){
+                    if(aad[e-1]<=loww2 & aad[e]>=loww2){
+                        Ilow=bad[e];
+                    }
+                    else{
+                        Ilow=Ilow;
+                    }
+                    if(aad[e-1]<=hiw2 & aad[e]>=hiw2){
+                        Ihigh = bad[e];
+                    }
+                    else{
+                        Ihigh=Ihigh;
+                    }
+                    if(aad[e-1]>loww2 & aad[e-1]<hiw2){
+                        Wline+=(aad[e]-aad[e-1])*(bad[e]+bad[e-1])/2;
+                    }
+                }
+
+                Wtot = (Ilow+Ihigh)/2*(hiw2-loww2);
+                Wew = Wtot - Wline;
+                EW = Wew/(Ilow+Ihigh)*2;
+
+                out<<EW<<"\t";
+            }
+
+            out<<endl;
+
+        }
+
+        else{
+        for(int i =1; i<number_of_lines; i++){
+            if(aad[i-1]<=loww & aad[i]>=loww){
+                Ilow=bad[i];
+            }
+            else{
+                Ilow=Ilow;
+            }
+            if(aad[i-1]<=hiw & aad[i]>=hiw){
+                Ihigh = bad[i];
+            }
+            else{
+                Ihigh=Ihigh;
+            }
+            if(aad[i-1]>loww & aad[i-1]<hiw){
+                Wline+=(aad[i]-aad[i-1])*(bad[i]+bad[i-1])/2;
+            }
+        }
+
+        Wtot = (Ilow+Ihigh)/2*(hiw-loww);
+        Wew = Wtot - Wline;
+        EW = Wew/(Ilow+Ihigh)*2;
+
+        out<<Wline<<"\t"<<Wtot<<"\t"<<Wew<<"\t"<<EW<<endl;
+        }
+
+    }
+
+    out.close();
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
+
 }

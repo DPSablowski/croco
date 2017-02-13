@@ -264,7 +264,7 @@ void Template::on_pushButton_2_clicked()
     ist >> a[i];
     a[i]=a[i]*(1+RVA/c0);
     if(ui->checkBox->isChecked()){
-        a[i]=log(a[i]);
+        a[i]=log10(a[i]);
     }
     istringstream ist2(two);
     ist2 >> b[i];
@@ -333,7 +333,7 @@ void Template::on_pushButton_2_clicked()
     ist3 >> a[i];
     a[i]=a[i]*(1+RVB/c0);
     if(ui->checkBox_2->isChecked()){
-        a[i]=log(a[i]);
+        a[i]=log10(a[i]);
     }
     istringstream ist4(two);
     ist4 >> b[i];
@@ -444,7 +444,7 @@ void Template::on_pushButton_3_clicked()
     ist >> a[i];
     a[i]=a[i]*(1+RVA/c0);
     if(ui->checkBox->isChecked()){
-        a[i]=log(a[i]);
+        a[i]=log10(a[i]);
     }
     istringstream ist2(two);
     ist2 >> b[i];
@@ -488,14 +488,14 @@ void Template::on_pushButton_3_clicked()
     istringstream ist3(one);
     ist3 >> c[i];
     if(ui->checkBox_2->isChecked()){
-    f[i]=log(c[i]);
+    f[i]=log10(c[i]);
         }
     else{
         f[i]=c[i];
     }
     c[i]=c[i]*(1+RVB/c0);
     if(ui->checkBox_2->isChecked()){
-        c[i]=log(c[i]);
+        c[i]=log10(c[i]);
     }
     istringstream ist4(two);
     ist4 >> d[i];
@@ -554,7 +554,7 @@ void Template::on_pushButton_3_clicked()
     istringstream ist5(one);
     ist5 >> g[i];
     if(ui->checkBox_3->isChecked()){
-        g[i]=log(g[i]);
+        g[i]=log10(g[i]);
     }
     istringstream ist6(two);
     ist6 >> h[i];

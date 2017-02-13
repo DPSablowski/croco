@@ -58,6 +58,8 @@ private slots:
     void BTfindroot();
 
 
+    void on_pushButton_7_clicked();
+
 private:
     Ui::BinaryTool *ui;
 };

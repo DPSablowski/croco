@@ -63,13 +63,13 @@ MainWindow::MainWindow(QWidget *parent) :
     qIntenscol=ui->lineEdit_20->text();
     Intenscol = qIntenscol.toUtf8().constData();
 
-    ui->lineEdit->setText("FLAMES_");
-    ui->lineEdit_2->setText("vega");
-    ui->lineEdit_3->setText("vega");
+    ui->lineEdit->setText("Ha_");
+    ui->lineEdit_2->setText("Ha_vel_1");
+    ui->lineEdit_3->setText("Ha_vel_2");
     ui->lineEdit_4->setText("binarym_0.txt");
     ui->lineEdit_5->setText("croped_0.txt");
     ui->lineEdit_6->setText("tempmB.txt");
-    ui->lineEdit_7->setText("FLAMESm_");
+    ui->lineEdit_7->setText("Ha2m_");
     ui->lineEdit_8->setText("binaryrv_");
     ui->lineEdit_10->setText("tempmA");
     ui->lineEdit_11->setText("tempmB");
@@ -89,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
     ui->doubleSpinBox_16->setValue(0.5);
-    ui->lineEdit_15->setText("/home/daniels/Observations/Capella/Set_7/Ca_IR_2");
+    ui->lineEdit_15->setText("/home/daniels/Observations/Capella/Set_10/Ha");
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
@@ -464,7 +464,7 @@ void MainWindow::on_pushButton_clicked()
 
         for(int i=0; i<bini; i++){
         if((measw[i]>=absminw) & (measw[i]<=absmaxw)){
-            file1<<measw[i]<<" "<<measi[i]<<endl;
+            file1<<setprecision(14)<<measw[i]<<" "<<measi[i]<<endl;
         }
         }
 
@@ -544,7 +544,7 @@ void MainWindow::on_pushButton_clicked()
 
         for(int i=0; i<bini; i++){
         if((tempw1[i]>=absminw) & (tempw1[i]<=absmaxw)){
-            file2<<tempw1[i]<<" "<<tempi1[i]<<endl;
+            file2<<setprecision(14)<<tempw1[i]<<" "<<tempi1[i]<<endl;
         }
         }
 
@@ -601,7 +601,7 @@ void MainWindow::on_pushButton_clicked()
 
         for(int i=0; i<bini; i++){
         if((tempw2[i]>=absminw) & (tempw2[i]<=absmaxw)){
-            file3<<tempw2[i]<<" "<<tempi2[i]<<endl;
+            file3<<setprecision(14)<<tempw2[i]<<" "<<tempi2[i]<<endl;
         }
         }}
 
@@ -710,7 +710,7 @@ void MainWindow::on_pushButton_clicked()
                      aa=e;
                  }
              }
-             file1<<std::setprecision(8)<<resamw[i]<<" "<<resami[i]<<endl;
+             file1<<std::setprecision(14)<<resamw[i]<<" "<<resami[i]<<endl;
          }
          file1.close();
 
@@ -789,11 +789,12 @@ void MainWindow::on_pushButton_clicked()
                  }
 
 
+                 /*
                  if(bini<binia){
                      QMessageBox::information(this, "Error", "Error 12: Sampling of Template A to high!");
                      this->setCursor(QCursor(Qt::ArrowCursor));
                     return;
-                 }
+                 }*/
 
                  tempi1.resize(binia);
                  tempw1.resize(binia);
@@ -854,12 +855,12 @@ void MainWindow::on_pushButton_clicked()
                     return;
                  }
 
-
+                 /*
                  if(bini<binib){
                      QMessageBox::information(this, "Error", "Error 15: Sampling of template B to high!");
                      this->setCursor(QCursor(Qt::ArrowCursor));
                     return;
-                 }
+                 }*/
 
                  tempi2.resize(binib);
                  tempw2.resize(binib);
@@ -905,7 +906,7 @@ void MainWindow::on_pushButton_clicked()
                     aa=e;
                 }
             }
-            file2<<std::setprecision(8)<<retw1[i]<<" "<<reti1[i]<<endl;
+            file2<<std::setprecision(14)<<retw1[i]<<" "<<reti1[i]<<endl;
         }
         file2.close();
 
@@ -933,7 +934,7 @@ void MainWindow::on_pushButton_clicked()
                     aa=e;
                 }
             }
-            file3<<std::setprecision(8)<<retw2[i]<<" "<<reti2[i]<<endl;
+            file3<<std::setprecision(14)<<retw2[i]<<" "<<reti2[i]<<endl;
         }
         file3.close();
 
@@ -1511,10 +1512,10 @@ void MainWindow::on_pushButton_4_clicked()
         file6<<(-1)*(vsteps - i)*dv<<" "<<ccf[i][d]<<endl;
     }
 
-    QString hift= QString::number((-1)*shift);
+    QString hift= QString::number(shift);
     ui->lineEdit_12->setText(hift);
 
-    QString epa= QString::number((-1)*sepa);
+    QString epa= QString::number(sepa);
     ui->lineEdit_13->setText(epa);
 
     ui->spinBox_5->setValue(2*dosteps-1);
@@ -1530,7 +1531,7 @@ void MainWindow::on_pushButton_4_clicked()
     std::string rvName = rvNameStream.str();
     ofstream rvfile(rvName.c_str());
 
-    rvfile<<(-1)*shift<<" "<<(-1)*sepa<<endl;
+    rvfile<<shift<<" "<<(-1)*sepa<<endl;
 
     ui->progressBar->setValue(100/num*(g+1));
     qApp->processEvents(QEventLoop::AllEvents);

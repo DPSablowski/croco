@@ -15,23 +15,26 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QSpinBox>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_Arithmetic
 {
 public:
-    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
     QLineEdit *lineEdit;
+    QLabel *label_6;
+    QLineEdit *lineEdit_6;
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
     QCheckBox *checkBox_3;
@@ -47,6 +50,10 @@ public:
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_4;
     QLineEdit *lineEdit_3;
+    QCheckBox *checkBox_7;
+    QSpinBox *spinBox;
+    QLabel *label_7;
+    QSpinBox *spinBox_2;
     QSpacerItem *horizontalSpacer;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_3;
@@ -64,9 +71,9 @@ public:
     {
         if (Arithmetic->objectName().isEmpty())
             Arithmetic->setObjectName(QStringLiteral("Arithmetic"));
-        Arithmetic->resize(491, 272);
-        verticalLayout = new QVBoxLayout(Arithmetic);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        Arithmetic->resize(616, 366);
+        gridLayout = new QGridLayout(Arithmetic);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         label = new QLabel(Arithmetic);
@@ -83,6 +90,16 @@ public:
         lineEdit->setSizePolicy(sizePolicy);
 
         horizontalLayout->addWidget(lineEdit);
+
+        label_6 = new QLabel(Arithmetic);
+        label_6->setObjectName(QStringLiteral("label_6"));
+
+        horizontalLayout->addWidget(label_6);
+
+        lineEdit_6 = new QLineEdit(Arithmetic);
+        lineEdit_6->setObjectName(QStringLiteral("lineEdit_6"));
+
+        horizontalLayout->addWidget(lineEdit_6);
 
         checkBox = new QCheckBox(Arithmetic);
         checkBox->setObjectName(QStringLiteral("checkBox"));
@@ -109,7 +126,7 @@ public:
         horizontalLayout->addItem(horizontalSpacer_4);
 
 
-        verticalLayout->addLayout(horizontalLayout);
+        gridLayout->addLayout(horizontalLayout, 0, 0, 1, 1);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -147,7 +164,7 @@ public:
         horizontalLayout_2->addItem(horizontalSpacer_3);
 
 
-        verticalLayout->addLayout(horizontalLayout_2);
+        gridLayout->addLayout(horizontalLayout_2, 1, 0, 1, 1);
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
@@ -163,12 +180,32 @@ public:
 
         horizontalLayout_4->addWidget(lineEdit_3);
 
+        checkBox_7 = new QCheckBox(Arithmetic);
+        checkBox_7->setObjectName(QStringLiteral("checkBox_7"));
+
+        horizontalLayout_4->addWidget(checkBox_7);
+
+        spinBox = new QSpinBox(Arithmetic);
+        spinBox->setObjectName(QStringLiteral("spinBox"));
+
+        horizontalLayout_4->addWidget(spinBox);
+
+        label_7 = new QLabel(Arithmetic);
+        label_7->setObjectName(QStringLiteral("label_7"));
+
+        horizontalLayout_4->addWidget(label_7);
+
+        spinBox_2 = new QSpinBox(Arithmetic);
+        spinBox_2->setObjectName(QStringLiteral("spinBox_2"));
+
+        horizontalLayout_4->addWidget(spinBox_2);
+
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer);
 
 
-        verticalLayout->addLayout(horizontalLayout_4);
+        gridLayout->addLayout(horizontalLayout_4, 2, 0, 1, 1);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
@@ -189,7 +226,7 @@ public:
         horizontalLayout_3->addItem(horizontalSpacer_2);
 
 
-        verticalLayout->addLayout(horizontalLayout_3);
+        gridLayout->addLayout(horizontalLayout_3, 3, 0, 1, 1);
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
@@ -205,11 +242,11 @@ public:
         horizontalLayout_6->addItem(horizontalSpacer_6);
 
 
-        verticalLayout->addLayout(horizontalLayout_6);
+        gridLayout->addLayout(horizontalLayout_6, 4, 0, 1, 1);
 
         verticalSpacer = new QSpacerItem(20, 15, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout->addItem(verticalSpacer);
+        gridLayout->addItem(verticalSpacer, 5, 0, 1, 1);
 
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
@@ -225,7 +262,7 @@ public:
         horizontalLayout_5->addItem(horizontalSpacer_5);
 
 
-        verticalLayout->addLayout(horizontalLayout_5);
+        gridLayout->addLayout(horizontalLayout_5, 6, 0, 1, 1);
 
 
         retranslateUi(Arithmetic);
@@ -238,6 +275,7 @@ public:
     {
         Arithmetic->setWindowTitle(QApplication::translate("Arithmetic", "Dialog", 0));
         label->setText(QApplication::translate("Arithmetic", "A:", 0));
+        label_6->setText(QApplication::translate("Arithmetic", "*", 0));
         checkBox->setText(QApplication::translate("Arithmetic", "A+B", 0));
         checkBox_2->setText(QApplication::translate("Arithmetic", "A-B", 0));
         checkBox_3->setText(QApplication::translate("Arithmetic", "A*B", 0));
@@ -246,6 +284,8 @@ public:
         checkBox_5->setText(QApplication::translate("Arithmetic", "A+", 0));
         checkBox_6->setText(QApplication::translate("Arithmetic", "A*", 0));
         label_4->setText(QApplication::translate("Arithmetic", "Out:", 0));
+        checkBox_7->setText(QApplication::translate("Arithmetic", "Sequence from", 0));
+        label_7->setText(QApplication::translate("Arithmetic", "to", 0));
         label_3->setText(QApplication::translate("Arithmetic", "Work Path:", 0));
         pushButton_2->setText(QApplication::translate("Arithmetic", "Do", 0));
         pushButton->setText(QApplication::translate("Arithmetic", "Close", 0));

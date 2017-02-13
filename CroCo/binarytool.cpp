@@ -17,6 +17,7 @@ QString list1, list2;
 QString qBPath;
 string BPath;
 QVector<double> rvb1(1), rvb2(1), rvb3(1), rvb4(1), rvb5(1), cctimes(1);
+QVector<double> PERa(1), ECCa(1), AMPAa(1), AMPBa(1), GAMa(1), PERIa(1), LPERIa(1);
 
 
 BinaryTool::BinaryTool(QWidget *parent) :
@@ -26,37 +27,67 @@ BinaryTool::BinaryTool(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Binary Tool");
 
-    ui->doubleSpinBox_3->setValue(0.537);
-    BTe=ui->doubleSpinBox_3->value();
+    string sbin = "BinaryData.dat";
+    ifstream binaries(sbin.c_str());
 
-    ui->doubleSpinBox_4->setValue(106.16);
-    w1=ui->doubleSpinBox_4->value()*M_PI/180;
+    QFile qBin(sbin.c_str());
 
-    w2=w1+M_PI;
+    if(!qBin.exists()){
+        qDebug()<<"No data base file for orbits of binaries present.";
+        QMessageBox::information(this, "Error", "Data base of orbital elements not present.");
+    }
 
-    ui->doubleSpinBox_5->setValue(36997);
-    BTT0=ui->doubleSpinBox_5->value();
 
-    ui->doubleSpinBox_6->setValue(68.6);
-    K1=ui->doubleSpinBox_6->value();
+    else{
+        int lines=0;
+        string zeile1, eins1, zwei1, drei1, vier1, fuenf1, sechs1, sieben1, acht1;
 
-    ui->doubleSpinBox_7->setValue(67.6);
-    K2=ui->doubleSpinBox_7->value();
+        while(std::getline(binaries, zeile1))
+        ++ lines;
 
-    ui->doubleSpinBox_8->setValue(-5.6);
-    V=ui->doubleSpinBox_8->value();
+        binaries.clear();
+        binaries.seekg(0, ios::beg);
 
-    ui->doubleSpinBox_10->setValue(0.05);
-    dphi=ui->doubleSpinBox_10->value();
+        QVector<string> names(lines);
 
-    ui->doubleSpinBox_14->setValue(5);
-    ui->doubleSpinBox_15->setValue(35);
+        PERa.resize(lines);
+        ECCa.resize(lines);
+        AMPAa.resize(lines);
+        AMPBa.resize(lines);
+        GAMa.resize(lines);
+        PERIa.resize(lines);
+        LPERIa.resize(lines);
 
-    ui->doubleSpinBox_17->setValue(20.54);
-    BTP=ui->doubleSpinBox_17->value();
+        for(int i=0; i < lines; i++){
+            binaries >> eins1 >> zwei1 >> drei1 >> vier1 >> fuenf1 >> sechs1 >> sieben1 >> acht1;
+            istringstream str1(eins1);
+            str1 >> names[i];
+            QString qstr = QString::fromStdString(str1.str());
+            ui->comboBox_2->addItem(qstr);
+            istringstream str2(zwei1);
+            str2 >> PERa[i];
+            istringstream str3(drei1);
+            str3 >> ECCa[i];
+            istringstream str4(vier1);
+            str4 >> AMPAa[i];
+            istringstream str5(fuenf1);
+            str5 >> AMPBa[i];
+            istringstream str6(sechs1);
+            str6 >> GAMa[i];
+            istringstream str7(sieben1);
+            str7 >> PERIa[i];
+            istringstream str8(acht1);
+            str8 >> LPERIa[i];
+        }
 
-    ui->doubleSpinBox_2->setValue(1);
-    IF=ui->doubleSpinBox_2->value();
+        ui->doubleSpinBox_17->setValue(PERa[0]);
+        ui->doubleSpinBox_3->setValue(ECCa[0]);
+        ui->doubleSpinBox_6->setValue(AMPAa[0]);
+        ui->doubleSpinBox_7->setValue(AMPBa[0]);
+        ui->doubleSpinBox_8->setValue(GAMa[0]);
+        ui->doubleSpinBox_5->setValue(PERIa[0]);
+        ui->doubleSpinBox_4->setValue(LPERIa[0]);
+    }
 
     ui->lineEdit->setText("Li_lines.dat");
     ui->lineEdit_2->setText("Li_lines.dat");
@@ -1356,3 +1387,15 @@ void BinaryTool::BTfindroot(){
 
 }
 
+// load orbital parameters
+void BinaryTool::on_pushButton_7_clicked()
+{
+    int dey=ui->comboBox_2->currentIndex();
+    ui->doubleSpinBox_17->setValue(PERa[dey]);
+    ui->doubleSpinBox_3->setValue(ECCa[dey]);
+    ui->doubleSpinBox_6->setValue(AMPAa[dey]);
+    ui->doubleSpinBox_7->setValue(AMPBa[dey]);
+    ui->doubleSpinBox_8->setValue(GAMa[dey]);
+    ui->doubleSpinBox_5->setValue(PERIa[dey]);
+    ui->doubleSpinBox_4->setValue(LPERIa[dey]);
+}

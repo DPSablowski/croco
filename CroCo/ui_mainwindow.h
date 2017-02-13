@@ -503,6 +503,7 @@ public:
         spinBox_8->setObjectName(QStringLiteral("spinBox_8"));
         sizePolicy3.setHeightForWidth(spinBox_8->sizePolicy().hasHeightForWidth());
         spinBox_8->setSizePolicy(sizePolicy3);
+        spinBox_8->setMaximum(9999);
         spinBox_8->setValue(1);
 
         horizontalLayout->addWidget(spinBox_8);
