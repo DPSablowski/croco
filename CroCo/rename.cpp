@@ -23,6 +23,8 @@ Rename::Rename(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setWindowTitle("Renumerate & Rename Files");
+
     ui->lineEdit->setText("/home/daniels/Observations/Capella/Set_13/spectra");
     ui->lineEdit_3->setText(".dat");
     ui->lineEdit_4->setText("table.dat");
@@ -39,12 +41,23 @@ Rename::Rename(QWidget *parent) :
     ui->doubleSpinBox_3->setValue(0);
     ui->doubleSpinBox_4->setValue(1.5);
 
+    ui->checkBox_2->setChecked(true);
+
     ui->customPlot->axisRect()->setupFullAxesBox(true);
 }
 
 Rename::~Rename()
 {
     delete ui;
+}
+
+void Rename::seData(QString str, QString str2, QString str3, QString str4, QString str5)
+{
+    ui->lineEdit->setText(str);
+    ui->lineEdit_9->setText(str2);
+    ui->lineEdit_5->setText(str3);
+    ui->lineEdit_6->setText(str4);
+    ui->lineEdit_7->setText(str5);
 }
 
 //**************************************
@@ -79,24 +92,21 @@ void Rename::on_pushButton_clicked()
     {
         if(ui->checkBox->isChecked()){
 
-        if(i!=ui->spinBox_2->value()-1 & (i!=ui->spinBox_3->value()-1) & (i!=ui->spinBox_4->value()-1)){
+            if(i!=ui->spinBox_2->value()-1 & (i!=ui->spinBox_3->value()-1) & (i!=ui->spinBox_4->value()-1)){
 
-        // convert int i to str s
-        string s = to_string(e);
+            // convert int i to str s
+            string s = to_string(e);
 
-        oldname = (std::string(DIRECTORY)+pent->d_name).c_str();
-        newname = (std::string(DIRECTORY)+nename + s + rExt).c_str();
+            oldname = (std::string(DIRECTORY)+pent->d_name).c_str();
 
-        OLDNAME = oldname.c_str();
-        QString qold = QString::fromStdString(pent->d_name);
-        NEWNAME = newname.c_str();
-        QString qnew = QString::fromStdString(nename+s+rExt);
+            OLDNAME = oldname.c_str();
+            QString qold = QString::fromStdString(pent->d_name);
 
-        ui->tableWidget->setItem(e, 0, new QTableWidgetItem(qold));
-        ui->tableWidget->setItem(e, 1, new QTableWidgetItem(qnew));
-        e+=1;
+            ui->tableWidget->setItem(e, 0, new QTableWidgetItem(qold));
+            e+=1;
 
-    }}
+            }
+        }
 
         else{
 
@@ -104,19 +114,23 @@ void Rename::on_pushButton_clicked()
             string s = to_string(e);
 
             oldname = (std::string(DIRECTORY)+pent->d_name).c_str();
-            newname = (std::string(DIRECTORY)+nename + s + rExt).c_str();
 
             OLDNAME = oldname.c_str();
             QString qold = QString::fromStdString(pent->d_name);
-            NEWNAME = newname.c_str();
-            QString qnew = QString::fromStdString(nename+s+rExt);
 
             ui->tableWidget->setItem(e, 0, new QTableWidgetItem(qold));
-            ui->tableWidget->setItem(e, 1, new QTableWidgetItem(qnew));
             e+=1;
 
         }
         i+=1;
+    }
+
+    ui->tableWidget->sortItems(0, Qt::AscendingOrder);
+
+    for(int l =0; l<e; l++){
+        QString qi = QString::number(l);
+        QString qNew = ui->lineEdit_2->text()+qi+qRExt;
+        ui->tableWidget->setItem(l, 1, new QTableWidgetItem(qNew));
     }
 }
 
@@ -168,7 +182,14 @@ void Rename::on_pushButton_2_clicked()
 
         outp<<Old<<"\t"<<New<<endl;
 
-        rename(OLD,NEW);
+        if(ui->checkBox_2->isChecked()){
+            const QString qfi1 = ui->lineEdit->text()+"/"+qOld;
+            const QString qfi2 = ui->lineEdit->text()+"/"+qNew;
+            QFile::copy(qfi1,qfi2);
+        }
+        else{
+            rename(OLD,NEW);
+        }
     }
 
 }
@@ -243,19 +264,16 @@ void Rename::on_spinBox_5_valueChanged()
         std::valarray<double> spwave;
         std::valarray<double> spintens;
 
-
-        qspExtension=ui->lineEdit_5->text();
-        spExtension = qspExtension.toUtf8().constData();
-        qspWavecol=ui->lineEdit_6->text();
-        spWavecol = qspWavecol.toUtf8().constData();
-        qspIntenscol=ui->lineEdit_7->text();
-        spIntenscol = qspIntenscol.toUtf8().constData();
-
-
         CCfits::FITS::setVerboseMode(true);
 
         try
         {
+            qspExtension=ui->lineEdit_5->text();
+            spExtension = qspExtension.toUtf8().constData();
+            qspWavecol=ui->lineEdit_6->text();
+            spWavecol = qspWavecol.toUtf8().constData();
+            qspIntenscol=ui->lineEdit_7->text();
+            spIntenscol = qspIntenscol.toUtf8().constData();
 
             //open file for reading
             auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(dat4Name.c_str(),CCfits::Read,true));
@@ -317,50 +335,41 @@ void Rename::on_pushButton_4_clicked()
     QString qRFil = ui->lineEdit_9->text();
     string rFil = qRFil.toUtf8().constData();
 
-        const char *OLD, *NEW;
+    const char *OLD, *NEW;
 
 
     int minf = ui->spinBox_6->value();
     int maxf = ui->spinBox_7->value();
     int nstart = ui->spinBox_8->value();
+    int qf;
 
     if(nstart>minf){
         for(int i = 0; i<maxf-minf+1; i++){
 
-            ostringstream dat1NameStream(rFil);
-            dat1NameStream<<directory<<"/"<<rFil<<maxf-i<<rExt;
-            std::string dat1Name = dat1NameStream.str();
 
-             OLD = dat1Name.c_str();
+                 qf = maxf-i;
+                 QString ila = QString::number(qf);
+                 const QString qfi1 = direc+"/"+qRFil+ila+qRExt;
+                 qf = nstart+maxf-i-minf;
+                 ila = QString::number(qf);
+                 const QString qfi2 = direc+"/"+qRFil+ila+qRExt;
+                 QFile::rename(qfi1,qfi2);
 
-             ostringstream dat2NameStream(rFil);
-             dat2NameStream<<directory<<"/"<<rFil<<nstart+maxf-i-minf<<rExt;
-             std::string dat2Name = dat2NameStream.str();
 
-             NEW = dat2Name.c_str();
-
-             rename(OLD,NEW);
         }
     }
     else{
-    for(int i =0; i<maxf-minf+1; i++){
+        for(int i =0; i<maxf-minf+1; i++){
 
-        ostringstream dat1NameStream(rFil);
-        dat1NameStream<<directory<<"/"<<rFil<<minf+i<<rExt;
-        std::string dat1Name = dat1NameStream.str();
+            qf = minf+i;
+            QString ila = QString::number(qf);
 
-         OLD = dat1Name.c_str();
+                const QString qfi1 = direc+"/"+qRFil+ila+qRExt;
+                qf = nstart+i;
+                ila = QString::number(qf);
+                const QString qfi2 = direc+"/"+qRFil+ila+qRExt;
+                QFile::rename(qfi1,qfi2);
 
-         ostringstream dat2NameStream(rFil);
-         dat2NameStream<<directory<<"/"<<rFil<<nstart+i<<rExt;
-         std::string dat2Name = dat2NameStream.str();
-
-         NEW = dat2Name.c_str();
-
-         rename(OLD,NEW);
-
+        }
     }
-    }
-
-
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'rvcurve.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -66,6 +66,15 @@ public:
     QRadioButton *radioButton;
     QRadioButton *radioButton_2;
     QPushButton *pushButton_3;
+    QHBoxLayout *horizontalLayout_11;
+    QLabel *label_16;
+    QLineEdit *lineEdit_5;
+    QCheckBox *checkBox_8;
+    QCheckBox *checkBox_9;
+    QCheckBox *checkBox_10;
+    QCheckBox *checkBox_11;
+    QCheckBox *checkBox_12;
+    QPushButton *pushButton_7;
     QHBoxLayout *horizontalLayout_2;
     QPushButton *pushButton;
     QLabel *label_4;
@@ -92,11 +101,27 @@ public:
     QDoubleSpinBox *doubleSpinBox_6;
     QLabel *label_15;
     QDoubleSpinBox *doubleSpinBox_7;
+    QLabel *label_17;
+    QDoubleSpinBox *doubleSpinBox_8;
     QCheckBox *checkBox_3;
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
+    QHBoxLayout *horizontalLayout_12;
+    QLabel *label_20;
+    QDoubleSpinBox *doubleSpinBox_9;
+    QLabel *label_21;
+    QDoubleSpinBox *doubleSpinBox_10;
+    QLabel *label_22;
+    QDoubleSpinBox *doubleSpinBox_11;
+    QLabel *label_23;
+    QDoubleSpinBox *doubleSpinBox_12;
+    QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_10;
     QSpacerItem *horizontalSpacer_6;
+    QLabel *label_18;
+    QLineEdit *lineEdit_6;
+    QLabel *label_19;
+    QLineEdit *lineEdit_7;
     QPushButton *pushButton_6;
     QCheckBox *checkBox_4;
     QCheckBox *checkBox_5;
@@ -104,12 +129,13 @@ public:
     QLineEdit *lineEdit_4;
     QLabel *label_12;
     QSpinBox *spinBox_3;
+    QSpinBox *spinBox_4;
 
     void setupUi(QDialog *RvCurve)
     {
         if (RvCurve->objectName().isEmpty())
             RvCurve->setObjectName(QStringLiteral("RvCurve"));
-        RvCurve->resize(1179, 422);
+        RvCurve->resize(1499, 637);
         QPalette palette;
         QBrush brush(QColor(0, 0, 0, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -188,7 +214,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1159, 402));
+        scrollAreaWidgetContents->setGeometry(QRect(-150, 0, 1722, 592));
         horizontalLayout_6 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
         verticalLayout_3 = new QVBoxLayout();
@@ -363,6 +389,53 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_5);
 
+        horizontalLayout_11 = new QHBoxLayout();
+        horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
+        label_16 = new QLabel(scrollAreaWidgetContents);
+        label_16->setObjectName(QStringLiteral("label_16"));
+
+        horizontalLayout_11->addWidget(label_16);
+
+        lineEdit_5 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
+        sizePolicy6.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
+        lineEdit_5->setSizePolicy(sizePolicy6);
+
+        horizontalLayout_11->addWidget(lineEdit_5);
+
+        checkBox_8 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_8->setObjectName(QStringLiteral("checkBox_8"));
+
+        horizontalLayout_11->addWidget(checkBox_8);
+
+        checkBox_9 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
+
+        horizontalLayout_11->addWidget(checkBox_9);
+
+        checkBox_10 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_10->setObjectName(QStringLiteral("checkBox_10"));
+
+        horizontalLayout_11->addWidget(checkBox_10);
+
+        checkBox_11 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_11->setObjectName(QStringLiteral("checkBox_11"));
+
+        horizontalLayout_11->addWidget(checkBox_11);
+
+        checkBox_12 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_12->setObjectName(QStringLiteral("checkBox_12"));
+
+        horizontalLayout_11->addWidget(checkBox_12);
+
+        pushButton_7 = new QPushButton(scrollAreaWidgetContents);
+        pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
+
+        horizontalLayout_11->addWidget(pushButton_7);
+
+
+        verticalLayout->addLayout(horizontalLayout_11);
+
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         pushButton = new QPushButton(scrollAreaWidgetContents);
@@ -491,7 +564,7 @@ public:
         doubleSpinBox_5->setDecimals(3);
         doubleSpinBox_5->setMinimum(-999);
         doubleSpinBox_5->setMaximum(999);
-        doubleSpinBox_5->setValue(30);
+        doubleSpinBox_5->setValue(0);
 
         horizontalLayout_9->addWidget(doubleSpinBox_5);
 
@@ -525,6 +598,19 @@ public:
 
         horizontalLayout_9->addWidget(doubleSpinBox_7);
 
+        label_17 = new QLabel(scrollAreaWidgetContents);
+        label_17->setObjectName(QStringLiteral("label_17"));
+
+        horizontalLayout_9->addWidget(label_17);
+
+        doubleSpinBox_8 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_8->setObjectName(QStringLiteral("doubleSpinBox_8"));
+        doubleSpinBox_8->setDecimals(3);
+        doubleSpinBox_8->setMinimum(-9999);
+        doubleSpinBox_8->setMaximum(9999.99);
+
+        horizontalLayout_9->addWidget(doubleSpinBox_8);
+
         checkBox_3 = new QCheckBox(scrollAreaWidgetContents);
         checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
 
@@ -543,11 +629,99 @@ public:
 
         verticalLayout_2->addLayout(horizontalLayout_9);
 
+        horizontalLayout_12 = new QHBoxLayout();
+        horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
+        label_20 = new QLabel(scrollAreaWidgetContents);
+        label_20->setObjectName(QStringLiteral("label_20"));
+        sizePolicy5.setHeightForWidth(label_20->sizePolicy().hasHeightForWidth());
+        label_20->setSizePolicy(sizePolicy5);
+
+        horizontalLayout_12->addWidget(label_20);
+
+        doubleSpinBox_9 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_9->setObjectName(QStringLiteral("doubleSpinBox_9"));
+        doubleSpinBox_9->setDecimals(3);
+        doubleSpinBox_9->setMinimum(-999);
+        doubleSpinBox_9->setMaximum(999.99);
+
+        horizontalLayout_12->addWidget(doubleSpinBox_9);
+
+        label_21 = new QLabel(scrollAreaWidgetContents);
+        label_21->setObjectName(QStringLiteral("label_21"));
+
+        horizontalLayout_12->addWidget(label_21);
+
+        doubleSpinBox_10 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_10->setObjectName(QStringLiteral("doubleSpinBox_10"));
+        doubleSpinBox_10->setDecimals(3);
+        doubleSpinBox_10->setMinimum(-999);
+        doubleSpinBox_10->setMaximum(999);
+        doubleSpinBox_10->setValue(0);
+
+        horizontalLayout_12->addWidget(doubleSpinBox_10);
+
+        label_22 = new QLabel(scrollAreaWidgetContents);
+        label_22->setObjectName(QStringLiteral("label_22"));
+
+        horizontalLayout_12->addWidget(label_22);
+
+        doubleSpinBox_11 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_11->setObjectName(QStringLiteral("doubleSpinBox_11"));
+        doubleSpinBox_11->setDecimals(3);
+        doubleSpinBox_11->setMinimum(-999);
+        doubleSpinBox_11->setMaximum(999.99);
+
+        horizontalLayout_12->addWidget(doubleSpinBox_11);
+
+        label_23 = new QLabel(scrollAreaWidgetContents);
+        label_23->setObjectName(QStringLiteral("label_23"));
+
+        horizontalLayout_12->addWidget(label_23);
+
+        doubleSpinBox_12 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_12->setObjectName(QStringLiteral("doubleSpinBox_12"));
+        doubleSpinBox_12->setDecimals(3);
+        doubleSpinBox_12->setMinimum(-999.99);
+        doubleSpinBox_12->setMaximum(999.99);
+
+        horizontalLayout_12->addWidget(doubleSpinBox_12);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+
+        horizontalLayout_12->addItem(horizontalSpacer_2);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_12);
+
         horizontalLayout_10 = new QHBoxLayout();
         horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
         horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
         horizontalLayout_10->addItem(horizontalSpacer_6);
+
+        label_18 = new QLabel(scrollAreaWidgetContents);
+        label_18->setObjectName(QStringLiteral("label_18"));
+
+        horizontalLayout_10->addWidget(label_18);
+
+        lineEdit_6 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_6->setObjectName(QStringLiteral("lineEdit_6"));
+        sizePolicy6.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
+        lineEdit_6->setSizePolicy(sizePolicy6);
+
+        horizontalLayout_10->addWidget(lineEdit_6);
+
+        label_19 = new QLabel(scrollAreaWidgetContents);
+        label_19->setObjectName(QStringLiteral("label_19"));
+
+        horizontalLayout_10->addWidget(label_19);
+
+        lineEdit_7 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_7->setObjectName(QStringLiteral("lineEdit_7"));
+        sizePolicy6.setHeightForWidth(lineEdit_7->sizePolicy().hasHeightForWidth());
+        lineEdit_7->setSizePolicy(sizePolicy6);
+
+        horizontalLayout_10->addWidget(lineEdit_7);
 
         pushButton_6 = new QPushButton(scrollAreaWidgetContents);
         pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
@@ -593,6 +767,13 @@ public:
 
         horizontalLayout_10->addWidget(spinBox_3);
 
+        spinBox_4 = new QSpinBox(scrollAreaWidgetContents);
+        spinBox_4->setObjectName(QStringLiteral("spinBox_4"));
+        spinBox_4->setMinimum(1);
+        spinBox_4->setValue(3);
+
+        horizontalLayout_10->addWidget(spinBox_4);
+
 
         verticalLayout_2->addLayout(horizontalLayout_10);
 
@@ -612,37 +793,51 @@ public:
 
     void retranslateUi(QDialog *RvCurve)
     {
-        RvCurve->setWindowTitle(QApplication::translate("RvCurve", "Dialog", 0));
-        label_6->setText(QApplication::translate("RvCurve", "<html><head/><body><p>File  <span style=\" font-weight:600; color:#0b54f9;\">RV1    </span><span style=\" font-weight:600; color:#f90e0e;\">RV2    </span><span style=\" font-weight:600; color:#39f90e;\">RV1+RV2</span></p></body></html>", 0));
-        label_5->setText(QApplication::translate("RvCurve", "file time", 0));
-        label->setText(QApplication::translate("RvCurve", "RV files", 0));
-        label_2->setText(QApplication::translate("RvCurve", ".txt from", 0));
-        label_3->setText(QApplication::translate("RvCurve", "to", 0));
-        checkBox_7->setText(QApplication::translate("RvCurve", "flip", 0));
-        pushButton_2->setText(QApplication::translate("RvCurve", "get values", 0));
-        label_7->setText(QApplication::translate("RvCurve", "Time data", 0));
-        radioButton->setText(QApplication::translate("RvCurve", "phase", 0));
-        radioButton_2->setText(QApplication::translate("RvCurve", "time", 0));
-        pushButton_3->setText(QApplication::translate("RvCurve", "get values", 0));
-        pushButton->setText(QApplication::translate("RvCurve", "Close", 0));
-        label_4->setText(QApplication::translate("RvCurve", "Work path", 0));
-        label_8->setText(QApplication::translate("RvCurve", "x1:", 0));
-        label_9->setText(QApplication::translate("RvCurve", "x2:", 0));
-        label_10->setText(QApplication::translate("RvCurve", "y1:", 0));
-        label_11->setText(QApplication::translate("RvCurve", "y2:", 0));
-        pushButton_5->setText(QApplication::translate("RvCurve", "find values", 0));
-        pushButton_4->setText(QApplication::translate("RvCurve", "Plot", 0));
-        label_13->setText(QApplication::translate("RvCurve", "<html><head/><body><p>f(x)=a+b*sin(6.28c*t),   a:</p></body></html>", 0));
-        label_14->setText(QApplication::translate("RvCurve", "b:", 0));
-        label_15->setText(QApplication::translate("RvCurve", "c:", 0));
-        checkBox_3->setText(QApplication::translate("RvCurve", "plot", 0));
-        checkBox->setText(QApplication::translate("RvCurve", "- RV1", 0));
-        checkBox_2->setText(QApplication::translate("RvCurve", "- RV2", 0));
-        pushButton_6->setText(QApplication::translate("RvCurve", "Save", 0));
-        checkBox_4->setText(QApplication::translate("RvCurve", "pdf", 0));
-        checkBox_5->setText(QApplication::translate("RvCurve", "png", 0));
-        checkBox_6->setText(QApplication::translate("RvCurve", "jpg", 0));
-        label_12->setText(QApplication::translate("RvCurve", "Font Size:", 0));
+        RvCurve->setWindowTitle(QApplication::translate("RvCurve", "Dialog", Q_NULLPTR));
+        label_6->setText(QApplication::translate("RvCurve", "<html><head/><body><p>File  <span style=\" font-weight:600; color:#0b54f9;\">RV1    </span><span style=\" font-weight:600; color:#f90e0e;\">RV2    </span><span style=\" font-weight:600; color:#39f90e;\">RV1+RV2</span></p></body></html>", Q_NULLPTR));
+        label_5->setText(QApplication::translate("RvCurve", "file time", Q_NULLPTR));
+        label->setText(QApplication::translate("RvCurve", "RV files", Q_NULLPTR));
+        label_2->setText(QApplication::translate("RvCurve", ".txt from", Q_NULLPTR));
+        label_3->setText(QApplication::translate("RvCurve", "to", Q_NULLPTR));
+        checkBox_7->setText(QApplication::translate("RvCurve", "flip", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("RvCurve", "get values", Q_NULLPTR));
+        label_7->setText(QApplication::translate("RvCurve", "Time data", Q_NULLPTR));
+        radioButton->setText(QApplication::translate("RvCurve", "phase", Q_NULLPTR));
+        radioButton_2->setText(QApplication::translate("RvCurve", "time", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("RvCurve", "get values", Q_NULLPTR));
+        label_16->setText(QApplication::translate("RvCurve", "Statistic File", Q_NULLPTR));
+        checkBox_8->setText(QApplication::translate("RvCurve", "Col 1", Q_NULLPTR));
+        checkBox_9->setText(QApplication::translate("RvCurve", "Col 2", Q_NULLPTR));
+        checkBox_10->setText(QApplication::translate("RvCurve", "w/ f(x)", Q_NULLPTR));
+        checkBox_11->setText(QApplication::translate("RvCurve", "w/ g(x)", Q_NULLPTR));
+        checkBox_12->setText(QApplication::translate("RvCurve", "w/ f(x)+g(x)", Q_NULLPTR));
+        pushButton_7->setText(QApplication::translate("RvCurve", "plot", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("RvCurve", "Close", Q_NULLPTR));
+        label_4->setText(QApplication::translate("RvCurve", "Work path", Q_NULLPTR));
+        label_8->setText(QApplication::translate("RvCurve", "x1:", Q_NULLPTR));
+        label_9->setText(QApplication::translate("RvCurve", "x2:", Q_NULLPTR));
+        label_10->setText(QApplication::translate("RvCurve", "y1:", Q_NULLPTR));
+        label_11->setText(QApplication::translate("RvCurve", "y2:", Q_NULLPTR));
+        pushButton_5->setText(QApplication::translate("RvCurve", "find values", Q_NULLPTR));
+        pushButton_4->setText(QApplication::translate("RvCurve", "Plot", Q_NULLPTR));
+        label_13->setText(QApplication::translate("RvCurve", "<html><head/><body><p>f(x)=a+b*sin(6.28c*t+d), a:</p></body></html>", Q_NULLPTR));
+        label_14->setText(QApplication::translate("RvCurve", "b:", Q_NULLPTR));
+        label_15->setText(QApplication::translate("RvCurve", "c:", Q_NULLPTR));
+        label_17->setText(QApplication::translate("RvCurve", "d:", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("RvCurve", "plot", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("RvCurve", "- RV1", Q_NULLPTR));
+        checkBox_2->setText(QApplication::translate("RvCurve", "- RV2", Q_NULLPTR));
+        label_20->setText(QApplication::translate("RvCurve", "g(X)=e+h*sin(6.28i*t+j), e:", Q_NULLPTR));
+        label_21->setText(QApplication::translate("RvCurve", "h:", Q_NULLPTR));
+        label_22->setText(QApplication::translate("RvCurve", "i:", Q_NULLPTR));
+        label_23->setText(QApplication::translate("RvCurve", "j:", Q_NULLPTR));
+        label_18->setText(QApplication::translate("RvCurve", "x label", Q_NULLPTR));
+        label_19->setText(QApplication::translate("RvCurve", "y label", Q_NULLPTR));
+        pushButton_6->setText(QApplication::translate("RvCurve", "Save", Q_NULLPTR));
+        checkBox_4->setText(QApplication::translate("RvCurve", "pdf", Q_NULLPTR));
+        checkBox_5->setText(QApplication::translate("RvCurve", "png", Q_NULLPTR));
+        checkBox_6->setText(QApplication::translate("RvCurve", "jpg", Q_NULLPTR));
+        label_12->setText(QApplication::translate("RvCurve", "Font Size:", Q_NULLPTR));
     } // retranslateUi
 
 };

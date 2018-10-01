@@ -51,12 +51,6 @@ Telluric::Telluric(QWidget *parent) :
     ui->lineEdit_3->setText("DataVector");
     ui->lineEdit_4->setText("Arg");
     ui->lineEdit_5->setText("Fun");
-    qteExtension=ui->lineEdit_3->text();
-    teExtension = qteExtension.toUtf8().constData();
-    qteWavecol=ui->lineEdit_4->text();
-    teWavecol = qteWavecol.toUtf8().constData();
-    qteIntenscol=ui->lineEdit_5->text();
-    teIntenscol = qteIntenscol.toUtf8().constData();
 
     ui->comboBox_2->addItem("HITRAN O2");
     ui->comboBox_2->addItem("HITRAN H2O");
@@ -77,6 +71,16 @@ Telluric::Telluric(QWidget *parent) :
 Telluric::~Telluric()
 {
     delete ui;
+}
+
+void Telluric::seData(QString str1, QString str2, QString str3)
+{
+    ui->lineEdit_6->setText(str1);
+    qTellPath=ui->lineEdit_6->text();
+    tellPath = qTellPath.toUtf8().constData();
+
+    ui->lineEdit->setText(str2+str3);
+
 }
 
 void Telluric::tellRead(){
@@ -146,6 +150,12 @@ void Telluric::tellRead(){
 
         try
         {
+            qteExtension=ui->lineEdit_3->text();
+            teExtension = qteExtension.toUtf8().constData();
+            qteWavecol=ui->lineEdit_4->text();
+            teWavecol = qteWavecol.toUtf8().constData();
+            qteIntenscol=ui->lineEdit_5->text();
+            teIntenscol = qteIntenscol.toUtf8().constData();
 
             //open file for reading
             auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
@@ -189,7 +199,7 @@ void Telluric::tellRead(){
     QString plot2;
 
     if(ui->comboBox_2->currentIndex()==0){
-        plot2 = "oxy.dat";
+        plot2 = "oxygen.dat";
     }
     if(ui->comboBox_2->currentIndex()==1){
         plot2 = "water.dat";
@@ -233,22 +243,28 @@ void Telluric::tellRead(){
     place=0;
 
     for (int i=0; i<number_of_lines2; i++){
-    toplot2 >> one >> two >> three;
-    istringstream ist3(one);
-    ist3 >> telll;
-    if(telll>=at[0]&telll<=at[number_of_lines-1]){
-    ct[place]=telll;
-    istringstream ist4(two);
-    ist4 >> dt[place];
-    com = QString::number(ct[place]);
-    com1 = QString::number(dt[place]);
-    ui->comboBox_3->addItem(com+";"+com1);
-    dt[place]=0;
-    istringstream ist5(three);
-    ist5 >> et[place];
-    et[place]=0;
-    ++place;
-    }
+        toplot2 >> one >> two >> three;
+        istringstream ist3(one);
+        ist3 >> telll;
+        if(ui->comboBox_2->currentIndex()==4){
+            telll=telll;
+        }
+        else{
+            telll = 1/telll*100000000;
+        }
+        if(telll>=at[0]&telll<=at[number_of_lines-1]){
+            ct[place]=telll;
+            istringstream ist4(two);
+            ist4 >> dt[place];
+            com = QString::number(ct[place]);
+            com1 = QString::number(dt[place]);
+            ui->comboBox_3->addItem(com+";"+com1);
+            dt[place]=0;
+            istringstream ist5(three);
+            ist5 >> et[place];
+            et[place]=0;
+            ++place;
+        }
     }
     toplot2.close();
     \

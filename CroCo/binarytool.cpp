@@ -28,17 +28,17 @@ BinaryTool::BinaryTool(QWidget *parent) :
     this->setWindowTitle("Binary Tool");
 
     string sbin = "BinaryData.dat";
-    ifstream binaries(sbin.c_str());
 
     QFile qBin(sbin.c_str());
 
     if(!qBin.exists()){
         qDebug()<<"No data base file for orbits of binaries present.";
-        QMessageBox::information(this, "Error", "Data base of orbital elements not present.");
+        QMessageBox::information(this, "Error", "Data base "+qBin.fileName()+" of orbital elements not present.");
     }
 
 
     else{
+        ifstream binaries(sbin.c_str());
         int lines=0;
         string zeile1, eins1, zwei1, drei1, vier1, fuenf1, sechs1, sieben1, acht1;
 
@@ -89,8 +89,14 @@ BinaryTool::BinaryTool(QWidget *parent) :
         ui->doubleSpinBox_4->setValue(LPERIa[0]);
     }
 
-    ui->lineEdit->setText("Li_lines.dat");
-    ui->lineEdit_2->setText("Li_lines.dat");
+    ui->lineEdit->setText("Li_list.dat");
+    ui->lineEdit_2->setText("Li2_list.dat");
+
+    ui->doubleSpinBox_10->setValue(0.05);
+    ui->doubleSpinBox_14->setValue(20);
+    ui->doubleSpinBox_15->setValue(5);
+    ui->doubleSpinBox_9->setValue(0.2);
+    ui->doubleSpinBox_16->setValue(5);
 
     ui->comboBox->addItem("HITRAN O2");
     ui->comboBox->addItem("HITRAN H2O");
@@ -98,16 +104,16 @@ BinaryTool::BinaryTool(QWidget *parent) :
     ui->comboBox->addItem("Orion");
     ui->comboBox->addItem("UVES Hanuschik");
 
-    ui->lineEdit_4->setText("sun2.txt");
-    ui->lineEdit_5->setText("sun2.txt");
-
+    ui->lineEdit_4->setText("phase_");
+    ui->lineEdit_5->setText("templateB.txt");
     ui->lineEdit_6->setText("binaryrv_");
-
-    ui->lineEdit_7->setText("binary_");
+    ui->lineEdit_7->setText("spot_");
+    ui->lineEdit_10->setText("ratios.dat");
+    ui->lineEdit_11->setText(".dat");
 
     ui->spinBox_3->setValue(19);
 
-    ui->lineEdit_3->setText("/home/daniels/Disentangling/Artificial/ErrorTest/SN100");
+    ui->lineEdit_3->setText(QDir::currentPath());
     qBPath=ui->lineEdit_3->text();
     BPath = qBPath.toUtf8().constData();
 
@@ -126,6 +132,13 @@ BinaryTool::BinaryTool(QWidget *parent) :
 BinaryTool::~BinaryTool()
 {
     delete ui;
+}
+
+void BinaryTool::seData(QString str1)
+{
+    ui->lineEdit_3->setText(str1);
+    qBPath=ui->lineEdit_3->text();
+    BPath = qBPath.toUtf8().constData();
 }
 
 double BTfunction (double X[], double RVCt, double RVCT0, double RVCP, double RVCe){
@@ -185,10 +198,91 @@ void BinaryTool::on_doubleSpinBox_8_valueChanged()
 void BinaryTool::on_doubleSpinBox_10_valueChanged()
 {
     dphi=ui->doubleSpinBox_10->value();
+    if(dphi>0.0){
+        ui->spinBox_5->setMaximum(1/dphi-1);
+    }
 }
 
 //*************************************************
 // calculate RVs
+//*************************************************
+void BinaryTool::CalcRVs(){
+
+    K1=ui->doubleSpinBox_6->value();
+    BTT0=ui->doubleSpinBox_5->value();
+    BTe=ui->doubleSpinBox_3->value();
+    w1=ui->doubleSpinBox_4->value()*M_PI/180;
+    w2=w1+M_PI;
+    K2=ui->doubleSpinBox_7->value();
+    V=ui->doubleSpinBox_8->value();
+
+
+    string eins, zwei, drei, line;
+    int number=0;
+
+    QString qratio = ui->lineEdit_10->text();
+    string sratio = qratio.toUtf8().constData();
+    ostringstream sratioNameStream(sratio);
+    sratioNameStream<<BPath<<"/"<<sratio;
+    string sratioName = sratioNameStream.str();
+    ifstream sRatio(sratioName.c_str());
+
+    QFile checkfile(sratioName.c_str());
+
+            if(!checkfile.exists()){
+                qDebug()<<"Error 3: The file "<<checkfile.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "Error 3: Spectrum "+checkfile.fileName()+" of primary does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+               return;
+            }
+
+            while(std::getline(sRatio, line))
+                       ++ number;
+
+             sRatio.clear();
+             sRatio.seekg(0, ios::beg);
+
+    QVector<double> phas(number), ratio1(number), ratio2(number);
+
+    for (int i =0; i < number; i++){
+        sRatio >> eins >> zwei >> drei;
+        istringstream ist(eins);
+        ist >> phas[i];
+        istringstream ist2(zwei);
+        ist2 >> ratio1[i];
+        istringstream ist3(drei);
+        ist3 >> ratio2[2];
+        }
+    sRatio.close();
+
+    V1.resize(number);
+    V2.resize(number);
+    t.resize(number);
+
+    for(int m=0; m<number; m++){
+
+        t[m]=BTT0+phas[m]*BTP;
+
+        if(BTe!=0){
+            BTt=t[m];
+            BinaryTool::BTfindroot();
+            E=BTE;
+
+        theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
+        }
+        else{
+            E = M_PI*(t[m]-BTT0)/BTP;
+            theta=2*(atan(tan(E/2)));
+        }
+
+        V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
+        V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
+        cout<<V1[m]<<"\t"<<V2[m]<<endl;
+    }
+}
+
+//*************************************************
+// calculate RVs for plotting curve
 //*************************************************
 void BinaryTool::on_pushButton_2_clicked()
 {
@@ -415,7 +509,7 @@ void BinaryTool::on_pushButton_3_clicked()
     QVector<double> intenst(num_lines3);
     QVector<double> FWHMt(num_lines3);
     QVector<double> FWHMn(num_lines2);
-    double lw, uw, dw, w, vsi1, vsi2, Intensi=0, tempi1=0, tempi2=0, SNR, c=299792.458;
+    double lw, uw, dw, w, vsi1, vsi2, spotA, spotP, spotF, Intensi=0, tempi1=0, tempi2=0, SNR, c=299792.458, pulA, pulP, vsi11, pulP2, pulA2, vsi12;
 
     lw=ui->doubleSpinBox_11->value();
     uw=ui->doubleSpinBox_12->value();
@@ -423,6 +517,15 @@ void BinaryTool::on_pushButton_3_clicked()
     vsi1=ui->doubleSpinBox_14->value();
     vsi2=ui->doubleSpinBox_15->value();
     SNR=ui->spinBox->value();
+    pulP=ui->doubleSpinBox_16->value();
+    pulA=ui->doubleSpinBox_9->value();
+    pulA2 = ui->doubleSpinBox->value();
+    pulP2 = ui->doubleSpinBox_18->value();
+    spotA = ui->doubleSpinBox_19->value();
+    spotP = ui->doubleSpinBox_20->value();
+    spotF = ui->doubleSpinBox_21->value();
+    int phisteps=1/dphi;
+    cout<<phisteps<<endl;
 
     wsteps = (uw-lw)/dw;
 
@@ -499,7 +602,6 @@ void BinaryTool::on_pushButton_3_clicked()
     ostringstream input22NameStream(input22);
     input22NameStream<<BPath<<"/"<<input22;
     string input2Name = input22NameStream.str();
-    ifstream input2(input2Name.c_str());
 
     QFile checkfile2(input2Name.c_str());
 
@@ -509,6 +611,7 @@ void BinaryTool::on_pushButton_3_clicked()
                 this->setCursor(QCursor(Qt::ArrowCursor));
                return;
             }
+            ifstream input2(input2Name.c_str());
 
             while(std::getline(input2, line))
                        ++ num_lines2;
@@ -565,7 +668,7 @@ void BinaryTool::on_pushButton_3_clicked()
 
                           if(!checkfile3.exists()){
                             qDebug()<<"Error: The file "<<checkfile3.fileName()<<" does not exist.";
-                            QMessageBox::information(this, "Error", "Error: Line list telluric features does not exist!");
+                            QMessageBox::information(this, "Error", "Error: Line list "+checkfile3.fileName()+" for telluric features does not exist!");
                             this->setCursor(QCursor(Qt::ArrowCursor));
                             return;
                                    }
@@ -589,20 +692,28 @@ void BinaryTool::on_pushButton_3_clicked()
                               istringstream istr8(eins+" "+zwei+" "+drei);
                               istr8 >> ltell;
                               if((ltell>=lw)&(ltell<=uw)){
-                              lineswt[place]=ltell;
-                              istringstream istr9(zwei);
-                              istr9 >> linesit[place];
-                              linesit[place]=linesit[place]*IF;
-                              istringstream istr11(drei);
-                              istr11 >> FWHMt[place];
-                              ++place;
+                                lineswt[place]=ltell;
+                                istringstream istr9(zwei);
+                                istr9 >> linesit[place];
+                                linesit[place]=linesit[place]*IF;
+                                istringstream istr11(drei);
+                                istr11 >> FWHMt[place];
+                                ++place;
                               }
-                              }
+                          }
                     }
 
+                    QVector<double> spotw(num_lines1), spoti(num_lines1);
 
-    for(int m=0; m<1/dphi; m++){
-    t[m]=BTT0+(m+1)*dphi*BTP;
+                    std::ostringstream rvNameStream("velocities.txt");
+                    rvNameStream<<BPath<<"/"<<"velocities.txt";
+                    std::string rvName = rvNameStream.str();
+                    ofstream rv(rvName.c_str());
+
+                    double spotd=0;
+
+    for(int m=0; m<phisteps; m++){
+    t[m]=BTT0+m*dphi*BTP;
 
     file4<<setprecision(14)<<t[m]<<endl;
 
@@ -622,40 +733,121 @@ void BinaryTool::on_pushButton_3_clicked()
     V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
     V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
 
+    rv<<V1[m]<<"\t"<<V2[m]<<endl;
+
+    // Pulsation primary
+    if(ui->checkBox_3->isChecked()){
+      vsi11=vsi1+pulA*sin(2*M_PI/pulP*(t[m]-BTT0));
+    }
+    else vsi11=vsi1;
+
+    // Pulsation secondary
+    if(ui->checkBox_8->isChecked()){
+        vsi12=vsi2+pulA2*sin(2*M_PI/pulP2*(t[m]-BTT0));
+    }
+    else vsi12 = vsi2;
+
     for(int n=0; n < num_lines1; n++){
         linesw1[n]=(V1[m]/c+1)*linesw01[n];
+            if(ui->checkBox_9->isChecked()){    // spot wavelength position
+                spotw[n]=((V1[m]-1.4*vsi11*cos(2*M_PI/spotP*(t[m]-BTT0-spotd)))/c+1)*linesw01[n];
+                cout<<spotw[n]<<"\t"<<((V1[m]-vsi11*cos(2*M_PI/spotP*(t[m]-BTT0-spotd)))/c+1)<<endl;
+                if((t[m]-BTT0-spotd)>=spotP/2){
+                    spotd += spotP/2;
+                }
+            }
         }
     for(int n=0; n < num_lines2; n++){
         linesw2[n]=(V2[m]/c+1)*linesw02[n];
         }
+
+    if(m==ui->spinBox_5->value()){
+        if(ui->checkBox_10->isChecked()){ // damp line intensities
+            for(int e=0; e<num_lines1; e++){
+                linesi1[e]=linesi1[e]*ui->doubleSpinBox_22->value();
+            }
+        }
+        else{
+            if(ui->checkBox_11->isChecked()){ // broaden line
+                vsi11 = vsi11 * ui->doubleSpinBox_22->value();
+            }
+            else{
+
+            }
+        }
+    }
+    else{
+
+    }
+    if(m==ui->spinBox_5->value()+1){
+        if(ui->checkBox_10->isChecked()){ // damp line intensities
+            for(int e=0; e<num_lines1; e++){
+                linesi1[e]=linesi1[e]/ui->doubleSpinBox_22->value();
+            }
+        }
+        else{
+            if(ui->checkBox_11->isChecked()){ // broaden line
+                vsi11 = vsi11 / ui->doubleSpinBox_22->value();
+            }
+            else{
+
+            }
+        }
+    }
+    else{
+
+    }
 
     std::ostringstream file1NameStream("spectra_");
     file1NameStream<<BPath<<"/"<<"spectra_"<<m<<".txt";
     std::string file1Name = file1NameStream.str();
     ofstream file1(file1Name.c_str());
 
+    std::ostringstream file4NameStream("componentA_");
+    file4NameStream<<BPath<<"/"<<"componentA_"<<m<<".txt";
+    std::string file4Name = file4NameStream.str();
+    ofstream file4(file4Name.c_str());
+
+    std::ostringstream file5NameStream("componentB_");
+    file5NameStream<<BPath<<"/"<<"componentB_"<<m<<".txt";
+    std::string file5Name = file5NameStream.str();
+    ofstream file5(file5Name.c_str());
+
     for(int e=0; e<wsteps; e++){
         w=dw*e+lw;
 
         file1 <<w<< "\t";
+        double Int1=0.0;
+        double Int2=0.0;
 
         for(int n=0; n < num_lines1; n++){
-        intens1[n]=linesi1[n]*exp(-0.25/(pow((vsi1/c*linesw1[n]),2))*pow((linesw1[n]-w),2));
+        intens1[n]=linesi1[n]*exp(-0.25/(pow((vsi11/c*linesw1[n]),2))*pow((linesw1[n]-w),2));
         Intensi+=intens1[n];
+        Int1+=intens1[n];
         }
+        if(ui->checkBox_9->isChecked()){    // add spot signal
+            for(int n = 0; n< num_lines1; n++){
+                spoti[n] = spotA*exp(-0.25/(pow((spotF/c*spotw[n]),2))*pow((spotw[n]-w),2));
+                Intensi -= spoti[n];
+                Int1-=spoti[n];
+            }
+        }
+        file4<<w*(1-V1[m]/c)<<"\t"<<1-Int1+gauss()/SNR+1/SNR<<endl;
 
         for(int n=0; n < num_lines2; n++){
-        intens2[n]=linesi2[n]*exp(-0.25/(pow((vsi2/c*linesw2[n]),2))*pow((linesw2[n]-w),2));
+        intens2[n]=linesi2[n]*exp(-0.25/(pow((vsi12/c*linesw2[n]),2))*pow((linesw2[n]-w),2));
         Intensi+=intens2[n];
+        Int2+=intens2[n];
         }
+        file5<<w<<"\t"<<1-Int2+gauss()/SNR+1/SNR<<endl;
 
         if(m==1){ // generate template
             for(int n=0; n < num_lines1; n++){
-                temi1[n]=(1-linesi1[n]*num_lines1*exp(-0.25/(pow((vsi1/c*linesw01[n]),2))*pow((linesw01[n]-w),2)))/num_lines1;
+                temi1[n]=(1-linesi1[n]*num_lines1*exp(-0.25/(pow((vsi11/c*linesw01[n]),2))*pow((linesw01[n]-w),2)))/num_lines1;
                 tempi1+=temi1[n];
                 }
                 for(int n=0; n < num_lines2; n++){
-                temi2[n]=(1-linesi2[n]*num_lines2*exp(-0.25/(pow((vsi2/c*linesw02[n]),2))*pow((linesw02[n]-w),2)))/num_lines2;
+                temi2[n]=(1-linesi2[n]*num_lines2*exp(-0.25/(pow((vsi12/c*linesw02[n]),2))*pow((linesw02[n]-w),2)))/num_lines2;
                 tempi2+=temi2[n];
                 }
 
@@ -725,51 +917,51 @@ void BinaryTool::on_lineEdit_3_textChanged()
 //*****************************************************
 void BinaryTool::on_pushButton_4_clicked()
 {
-    BinaryTool::on_pushButton_2_clicked();
-
     this->setCursor(QCursor(Qt::WaitCursor));
 
-    string line, eins, zwei;
+    BinaryTool::CalcRVs();
+
+    string line, eins, zwei, drei;
     const double c=299792.458;
-    double ratio=ui->doubleSpinBox->value();//+1;
+    int number=0;
 
-    QString comp1 = ui->lineEdit_4->text();
-    string input11 = comp1.toUtf8().constData();
-    ostringstream input1NameStream(input11);
-    input1NameStream<<BPath<<"/"<<input11;
-    string input1Name = input1NameStream.str();
-    ifstream input1(input1Name.c_str());
+    QString qratio = ui->lineEdit_10->text();
+    string sratio = qratio.toUtf8().constData();
+    ostringstream sratioNameStream(sratio);
+    sratioNameStream<<BPath<<"/"<<sratio;
+    string sratioName = sratioNameStream.str();
 
-    QFile checkfile1(input1Name.c_str());
+    QFile checkfile(sratioName.c_str());
 
-            if(!checkfile1.exists()){
-                qDebug()<<"Error 3: The file "<<checkfile1.fileName()<<" does not exist.";
-                QMessageBox::information(this, "Error", "Error 3: Spectrum "+qBPath+"/" +comp1+ " of primary does not exist!");
-                this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
-            }
+    if(!checkfile.exists()){
+       qDebug()<<"Error 3: The file "<<checkfile.fileName()<<" does not exist.";
+       QMessageBox::information(this, "Error", "Error 3: Spectrum "+checkfile.fileName()+ " of primary does not exist!");
+       this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+    ifstream sRatio(sratioName.c_str());
 
-            int number=0;
+    number=0;
 
-            while(std::getline(input1, line))
-                       ++ number;
+    while(std::getline(sRatio, line))
+          ++ number;
 
-             input1.clear();
-             input1.seekg(0, ios::beg);
+    sRatio.clear();
+    sRatio.seekg(0, ios::beg);
 
-    QVector<double> WC1(number), IC1(number);
-
+    QVector<double> phas(number), ratio1(number), ratio2(number);
 
     for (int i =0; i < number; i++){
-        input1 >> eins >> zwei;
-        istringstream istr3(eins+" "+zwei);
-        istr3 >> WC1[i];
-        istringstream istr4(zwei);
-        istr4 >> IC1[i];
-        IC1[i]=IC1[i];//*(1-1/ratio);
+        sRatio >> eins >> zwei >> drei;
+        istringstream ist(eins);
+        ist >> phas[i];
+        istringstream ist2(zwei);
+        ist2 >> ratio1[i];
+        istringstream ist3(drei);
+        ist3 >> ratio2[i];
+        cout<<ratio1[i]<<"\t"<<ratio2[i]<<endl;
         }
-
-    input1.close();
+    sRatio.close();
 
     QString comp2 = ui->lineEdit_5->text();
     string input22 = comp2.toUtf8().constData();
@@ -780,54 +972,201 @@ void BinaryTool::on_pushButton_4_clicked()
 
     QFile checkfile2(input2Name.c_str());
 
-            if(!checkfile2.exists()){
-                qDebug()<<"Error 4: The file "<<checkfile2.fileName()<<" does not exist.";
-                QMessageBox::information(this, "Error", "Error 4: Spectrum "+qBPath+"/" +comp2+ " of secondary does not exist!");
-                this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
-            }
+    if(!checkfile2.exists()){
+       qDebug()<<"Error 4: The file "<<checkfile2.fileName()<<" does not exist.";
+       QMessageBox::information(this, "Error", "Error 4: Spectrum "+qBPath+"/" +comp2+" of secondary does not exist!");
+       this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
 
-            int number2 =0;
+    int number2 =0;
 
-            while(std::getline(input2, line))
-                       ++ number2;
+    while(std::getline(input2, line))
+         ++ number2;
 
-             input2.clear();
-             input2.seekg(0, ios::beg);
+    input2.clear();
+    input2.seekg(0, ios::beg);
 
-             if(number!=number2){
-                 qDebug()<<"Error 5: Different data size";
-                 QMessageBox::information(this, "Error", "Error 5: Different size of data");
-                 this->setCursor(QCursor(Qt::ArrowCursor));
-                 return;
-             }
+    if(number!=number2){
+       qDebug()<<"Error 5: Different data size";
+       QMessageBox::information(this, "Error", "Error 5: Different size of data");
+       this->setCursor(QCursor(Qt::ArrowCursor));
+       //return;
+    }
 
     QVector<double> WC2(number2), IC2(number2);
 
-                    for (int i =0; i < number2; i++){
-                        input2 >> eins >> zwei;
-                        istringstream istr5(eins+" "+zwei);
-                        istr5 >> WC2[i];
-                        istringstream istr6(zwei);
-                        istr6 >> IC2[i];
-                        IC2[i]=IC2[i]/ratio;
-                        }
+    for (int i =0; i < number2; i++){
+        input2 >> eins >> zwei;
+        istringstream istr5(eins+" "+zwei);
+        istr5 >> WC2[i];
+        istringstream istr6(zwei);
+        istr6 >> IC2[i];
+        IC2[i]=IC2[i];
+    }
 
-                    input2.close();
+    input2.close();
 
-           if(WC1[1]-WC1[0]!=WC2[1]-WC2[0]){
-               qDebug()<<"Error 6: Data with unequal binning!";
-               QMessageBox::information(this, "Error", "Error 6: Data with unequal binning!");
-               this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
+    if(ui->checkBox_12->isChecked()){
+       int nmin = ui->spinBox_6->value();
+       int nmax = ui->spinBox_7->value();
+
+       QString qexts = ui->lineEdit_11->text();
+       string exts = qexts.toUtf8().constData();
+
+       for(int i =0; i<(nmax-nmin+1); i++){
+
+           QString comp1 = ui->lineEdit_4->text();
+           string input11 = comp1.toUtf8().constData();
+           ostringstream input1NameStream(input11);
+           input1NameStream<<BPath<<"/"<<input11<<i<<exts;
+           string input1Name = input1NameStream.str();
+
+           QFile checkfile1(input1Name.c_str());
+
+           if(!checkfile1.exists()){
+              qDebug()<<"Error 3: The file "<<checkfile1.fileName()<<" does not exist.";
+              QMessageBox::information(this, "Error", "Error 3: Spectrum "+checkfile1.fileName()+" of primary does not exist!");
+              this->setCursor(QCursor(Qt::ArrowCursor));
+              return;
+           }
+           ifstream input1(input1Name.c_str());
+           number=0;
+
+           while(std::getline(input1, line))
+                ++ number;
+
+           input1.clear();
+           input1.seekg(0, ios::beg);
+
+           QVector<double> WC1(number), IC1(number);
+
+           for (int i =0; i < number; i++){
+               input1 >> eins >> zwei;
+               istringstream istr3(eins+" "+zwei);
+               istr3 >> WC1[i];
+               istringstream istr4(zwei);
+               istr4 >> IC1[i];
+            }
+
+           std::ostringstream timeNameStream("time.txt");
+           timeNameStream<<BPath<<"/"<<"time.txt";
+           std::string timeName = timeNameStream.str();
+           ofstream tim(timeName.c_str());
+
+           int shift1, shift2, aa=0;
+
+           QVector<double> WCs1(number), WCs2(number2), CI(number), ICs1(number), ICs2(number);
+
+           tim<<setprecision(14)<<t[i]<<endl;
+
+           QString binar = ui->lineEdit_7->text();
+           string bina = binar.toUtf8().constData();
+           ostringstream out2NameStream(bina);
+           out2NameStream<<BPath<<"/"<<bina<<i<<".txt";
+           string out2Name = out2NameStream.str();
+           ofstream file1(out2Name.c_str());
+
+           for(int n = 0; n<WC1.size(); n++){
+               WCs1[n]=WC1[n]*(1+V1[i]/c);
+               ICs1[n]=IC1[n]*ratio1[i];
            }
 
-           if(WC1[0]!=WC2[0]){
-               qDebug()<<"Error 7: Data with unequal start wavelength!";
-               QMessageBox::information(this, "Error", "Error 7: Data with unequal start wavelength!");
-               this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
+           for(int n = 0; n<WC2.size(); n++){
+               WCs2[n]=WC2[n]*(1+V2[i]/c);
+               ICs2[n]=IC2[n]*ratio2[i];
            }
+
+           aa = 0;
+
+           for(int e=0; e<number; e++){
+               for(int u=aa; (u<aa+150) & (u<number); u++){
+
+                    if((WCs1[u]==WC1[e])){
+                        CI[e]=ICs1[u];
+                        aa=u;
+                    }
+                    if((WCs1[u]<WC1[e]) & (WCs1[u+1]>WC1[e])){
+                        CI[e]=(ICs1[u]+(WC1[e]-WCs1[u])/(WCs1[u+1]-WCs1[u])*(ICs1[u+1]-ICs1[u]));
+                        aa=u;
+                    }
+                }
+           }
+
+
+           aa=0;
+
+           for(int e=0; e<number; e++){
+               for(int u=aa; (u<aa+150) & (u<number); u++){
+
+                    if((WCs2[u]==WC1[e])){
+                        CI[e]+=ICs2[u];
+                        aa=u;
+                    }
+                    if((WCs2[u]<WC1[e]) & (WCs2[u+1]>WC1[e])){
+                        CI[e]+=(ICs2[u]+(WC1[e]-WCs2[u])/(WCs2[u+1]-WCs2[u])*(ICs2[u+1]-ICs2[u]));
+                        aa=u;
+                    }
+                }
+           }
+
+            for(int e=0; e<number; e++){
+                file1<<WC1[e]<<" "<<CI[e]<<endl;
+            }
+
+       }
+    }
+    else{
+
+        QString comp1 = ui->lineEdit_4->text();
+        string input11 = comp1.toUtf8().constData();
+        ostringstream input1NameStream(input11);
+        input1NameStream<<BPath<<"/"<<input11;
+        string input1Name = input1NameStream.str();
+
+        QFile checkfile1(input1Name.c_str());
+
+        if(!checkfile1.exists()){
+           qDebug()<<"Error 3: The file "<<checkfile1.fileName()<<" does not exist.";
+           QMessageBox::information(this, "Error", "Error 3: Spectrum "+qBPath+"/" +comp1+" of primary does not exist!");
+           this->setCursor(QCursor(Qt::ArrowCursor));
+           return;
+        }
+        ifstream input1(input1Name.c_str());
+        number=0;
+
+        while(std::getline(input1, line))
+             ++ number;
+
+        input1.clear();
+        input1.seekg(0, ios::beg);
+
+        QVector<double> WC1(number), IC1(number);
+
+        for (int i =0; i < number; i++){
+            input1 >> eins >> zwei;
+            istringstream istr3(eins+" "+zwei);
+            istr3 >> WC1[i];
+            istringstream istr4(zwei);
+            istr4 >> IC1[i];
+            IC1[i]=IC1[i];
+         }
+
+         input1.close();
+
+         if(WC1[1]-WC1[0]!=WC2[1]-WC2[0]){
+             qDebug()<<"Error 6: Data with unequal binning!";
+             QMessageBox::information(this, "Error", "Error 6: Data with unequal binning!");
+             this->setCursor(QCursor(Qt::ArrowCursor));
+             return;
+         }
+
+         if(WC1[0]!=WC2[0]){
+             qDebug()<<"Error 7: Data with unequal start wavelength!";
+             QMessageBox::information(this, "Error", "Error 7: Data with unequal start wavelength!");
+             this->setCursor(QCursor(Qt::ArrowCursor));
+             return;
+         }
 
            std::ostringstream filet1NameStream("tempA.txt");
            filet1NameStream<<BPath<<"/"<<"tempA.txt";
@@ -854,9 +1193,9 @@ void BinaryTool::on_pushButton_4_clicked()
 
            int shift1, shift2, aa=0;
            //double diff=WC1[1]-WC1[0];
-           QVector<double> WCs1(number), WCs2(number2), CI(number);
+           QVector<double> WCs1(number), WCs2(number2), CI(number), ICs1(number), ICs2(number);
 
-           for(int i=0; i<t.size(); i++){
+           for(int i=0; i<phas.size(); i++){
 
                tim<<setprecision(14)<<t[i]<<endl;
 
@@ -869,24 +1208,26 @@ void BinaryTool::on_pushButton_4_clicked()
 
                for(int n = 0; n<WC1.size(); n++){
                    WCs1[n]=WC1[n]*(1+V1[i]/c);
+                   ICs1[n]=IC1[n]*ratio1[i];
                }
 
                for(int n = 0; n<WC2.size(); n++){
                    WCs2[n]=WC2[n]*(1+V2[i]/c);
+                   ICs2[n]=IC2[n]*ratio2[i];
                }
 
                aa = 0;
 
                for(int e=0; e<number; e++){
-                   for(int u=aa; u<aa+500; u++){
+                   for(int u=aa; u<aa+5; u++){
 
                     if((WCs1[u]==WC1[e])){
-                        CI[e]=IC1[u];
+                        CI[e]=ICs1[u];
 
                         aa=u;
                     }
                     if((WCs1[u]<WC1[e]) & (WCs1[u+1]>WC1[e])){
-                        CI[e]=IC1[u]+(WC1[e]-WCs1[u])/(WCs1[u+1]-WCs1[u])*(IC1[u+1]-IC1[u]);
+                        CI[e]=(ICs1[u]+(WC1[e]-WCs1[u])/(WCs1[u+1]-WCs1[u])*(ICs1[u+1]-ICs1[u]));
 
                         aa=u;
                     }
@@ -897,26 +1238,27 @@ void BinaryTool::on_pushButton_4_clicked()
                aa=0;
 
                for(int e=0; e<number; e++){
-                   for(int u=aa; u<aa+500; u++){
+                   for(int u=aa; u<aa+5; u++){
 
                     if((WCs2[u]==WC1[e])){
-                        CI[e]+=IC2[u];
+                        CI[e]+=ICs2[u];
                         aa=u;
                     }
                     if((WCs2[u]<WC1[e]) & (WCs2[u+1]>WC1[e])){
-                        CI[e]+=IC2[u]+(WC1[e]-WCs2[u])/(WCs2[u+1]-WCs2[u])*(IC2[u+1]-IC2[u]);
+                        CI[e]+=(ICs2[u]+(WC1[e]-WCs2[u])/(WCs2[u+1]-WCs2[u])*(ICs2[u+1]-ICs2[u]));
                         aa=u;
                     }
                    }
                }
 
                 for(int e=0; e<number; e++){
-                    file1<<WC1[e]<<" "<<CI[e]*ratio/(ratio+1)<<endl;
+                    file1<<WC1[e]<<" "<<CI[e]<<endl;
                 }
 
            }
 
            tim.close();
+                    }
 
            this->setCursor(QCursor(Qt::ArrowCursor));
 
@@ -968,23 +1310,24 @@ void BinaryTool::on_pushButton_5_clicked()
     ostringstream input11NameStream(input11);
     input11NameStream<<input11;
     string input1Name = input11NameStream.str();
-    ifstream input1(input1Name.c_str());
+    cout<<"test"<<endl;
 
     QFile checkfile1(input1Name.c_str());
 
             if(!checkfile1.exists()){
                 qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-                QMessageBox::information(this, "Error", "Error 1: Line List for primary does not exist!");
+                QMessageBox::information(this, "Error", "Error 1: Line list "+checkfile1.fileName()+" for primary does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
                return;
             }
+
+            ifstream input1(input1Name.c_str());
+
             while(std::getline(input1, line))
                        ++ num_lines1;
 
                     input1.clear();
                     input1.seekg(0, ios::beg);
-
-
 
                     double linesw1[num_lines1];	// wavelengths of lines spectrum one
                     double linesw01[num_lines1];	// rest wavelengths of lines
@@ -996,16 +1339,18 @@ void BinaryTool::on_pushButton_5_clicked()
                     //double intensspot1[num_lines1];
                     //double spotw1[num_lines1];
 
-
                     for (int i =0; i < num_lines1; i++){
                          input1 >> eins >> zwei >> drei;
-                         istringstream istr(eins+" "+zwei+" "+drei);
+                         istringstream istr(eins);
                          istr >> linesw01[i];
                          istringstream istr2(zwei);
                          istr2 >> linesi1[i];
                          istringstream istr3(drei);
                          istr3 >> spoti1[i];;
-                            }
+                    }
+                    cout<<"test"<<endl;
+
+
                     if(ui->checkBox_2->isChecked()){
                     QString list3;
                     if(ui->comboBox->currentIndex()==0){
@@ -1028,16 +1373,19 @@ void BinaryTool::on_pushButton_5_clicked()
                     ostringstream input23NameStream(input23);
                     input23NameStream<<input23;
                     string input3Name = input23NameStream.str();
-                    ifstream input3(input3Name.c_str());
+                    cout<<"test"<<endl;
+
 
                     QFile checkfile3(input3Name.c_str());
 
                           if(!checkfile3.exists()){
                             qDebug()<<"Error: The file "<<checkfile3.fileName()<<" does not exist.";
-                            QMessageBox::information(this, "Error", "Error: Line list "+list3+" features does not exist!");
+                            QMessageBox::information(this, "Error", "Error: Line list "+checkfile3.fileName()+" features does not exist!");
                             this->setCursor(QCursor(Qt::ArrowCursor));
                             return;
                                    }
+
+                          ifstream input3(input3Name.c_str());
 
                           while(std::getline(input3, line))
                                ++ num_lines3;
@@ -1050,6 +1398,8 @@ void BinaryTool::on_pushButton_5_clicked()
                           intenst.resize(num_lines3);
                           FWHMt.resize(num_lines3);
                           FWHMn.resize(num_lines3);
+                          cout<<"test"<<endl;
+
 
                           double ltell;
 
@@ -1058,16 +1408,17 @@ void BinaryTool::on_pushButton_5_clicked()
                               istringstream istr8(eins+" "+zwei+" "+drei);
                               istr8 >> ltell;
                               if((ltell>=lw)&(ltell<=uw)){
-                              lineswt[place]=ltell;
-                              istringstream istr9(zwei);
-                              istr9 >> linesit[place];
-                              linesit[place]=linesit[place]*IF;
-                              istringstream istr11(drei);
-                              istr11 >> FWHMt[place];
-                              ++place;
+                                lineswt[place]=ltell;
+                                istringstream istr9(zwei);
+                                istr9 >> linesit[place];
+                                linesit[place]=linesit[place]*IF;
+                                istringstream istr11(drei);
+                                istr11 >> FWHMt[place];
+                                ++place;
                               }
-                              }
+                          }
                     }
+                    cout<<"test"<<endl;
 
                     std::ostringstream rvNameStream("velocities.txt");
                     rvNameStream<<BPath<<"/"<<"velocities.txt";
@@ -1103,9 +1454,10 @@ void BinaryTool::on_pushButton_5_clicked()
                   rv<<V1[m]<<endl;
 
                   if(ui->checkBox_3->isChecked()){
-                  vsi11=vsi1+pulA*sin(2*M_PI*pulP*t[m]);
+                    vsi11=vsi1+pulA*sin(2*M_PI/pulP*(t[m]-BTT0));
                   }
                   else vsi11=vsi1;
+
 
                   for(int n=0; n < num_lines1; n++){
                       linesw1[n]=(V1[m]/c+1)*linesw01[n];
@@ -1399,3 +1751,4 @@ void BinaryTool::on_pushButton_7_clicked()
     ui->doubleSpinBox_5->setValue(PERIa[dey]);
     ui->doubleSpinBox_4->setValue(LPERIa[dey]);
 }
+

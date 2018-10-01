@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1076</width>
-    <height>403</height>
+    <width>1349</width>
+    <height>454</height>
    </rect>
   </property>
   <property name="palette">
@@ -444,8 +444,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1056</width>
-        <height>383</height>
+        <width>1351</width>
+        <height>409</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -557,7 +557,7 @@
                 <double>-9999.000000000000000</double>
                </property>
                <property name="maximum">
-                <double>9999.000000000000000</double>
+                <double>99999.000000000000000</double>
                </property>
                <property name="singleStep">
                 <double>0.100000000000000</double>
@@ -594,6 +594,12 @@
                 <string>Plot</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_2"/>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_2"/>
              </item>
             </layout>
            </item>
@@ -729,6 +735,16 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
+              <widget class="QCheckBox" name="checkBox_6">
+               <property name="text">
+                <string>Flux-Data</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_10"/>
+             </item>
+             <item>
               <spacer name="horizontalSpacer_4">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -740,6 +756,13 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_5">
+               <property name="text">
+                <string>divide by y2</string>
+               </property>
+              </widget>
              </item>
              <item>
               <widget class="QLabel" name="label_9">

@@ -15,6 +15,9 @@ public:
     explicit Rename(QWidget *parent = 0);
     ~Rename();
 
+public slots:
+    void seData(QString str, QString str2, QString str3, QString str4, QString str5);
+
 private slots:
     void on_pushButton_clicked();
 

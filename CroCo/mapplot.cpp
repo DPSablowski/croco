@@ -41,6 +41,14 @@ MapPlot::~MapPlot()
     delete ui;
 }
 
+void MapPlot::seData(QString str1)
+{
+    ui->lineEdit_2->setText(str1);
+    qMPath=ui->lineEdit_2->text();
+    MPath = qMPath.toUtf8().constData();
+
+}
+
 void MapPlot::on_pushButton_2_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));

@@ -52,6 +52,10 @@ private slots:
 
     void on_doubleSpinBox_17_valueChanged();
 
+
+public slots:
+    void seData(QString str);
+
 private:
     Ui::Template *ui;
 };

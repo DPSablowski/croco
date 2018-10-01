@@ -27,7 +27,7 @@ RVCalc::RVCalc(QWidget *parent) :
 
     ui->checkBox_7->setChecked(true);
 
-    ui->lineEdit_2->setText("/home/daniels/Observations/Capella/Set_15/Ca_UV/subset1");
+    ui->lineEdit_2->setText(QDir::currentPath());
     qRvPath=ui->lineEdit_2->text();
     rvPath = qRvPath.toUtf8().constData();
     ui->lineEdit->setText("times_rv15.dat");
@@ -35,6 +35,8 @@ RVCalc::RVCalc(QWidget *parent) :
     ui->lineEdit_7->setText("rv13.dat");
     ui->lineEdit_10->setText("cab_");
     ui->lineEdit_11->setText(".dat");
+    ui->lineEdit_6->setText("Ham_sin_rv_t.txt");
+    ui->lineEdit_9->setText("times_rv13.dat");
 
     QFont legendFont = font();
     legendFont.setPointSize(16);
@@ -106,6 +108,8 @@ RVCalc::RVCalc(QWidget *parent) :
         ui->doubleSpinBox_3->setValue(GAM[0]);
         ui->doubleSpinBox_2->setValue(PERI[0]);
         ui->doubleSpinBox_6->setValue(LPERI[0]);
+
+        connect(ui->customPlot, SIGNAL(mouseMove(QMouseEvent*)), this ,SLOT(showPointToolTip(QMouseEvent*)));
     }
 }
 
@@ -114,7 +118,29 @@ RVCalc::~RVCalc()
     delete ui;
 }
 
-double function (double X[], double RVCt, double RVCT0, double RVCP, double RVCe){
+void RVCalc::seData(QString str1, QString str2)
+{
+    ui->lineEdit_2->setText(str1);
+    qRvPath=ui->lineEdit_2->text();
+    rvPath = qRvPath.toUtf8().constData();
+
+    ui->lineEdit_11->setText(str2);
+
+}
+
+//********************************************************
+//show mouse coordinates
+//********************************************************
+void RVCalc::showPointToolTip(QMouseEvent *event)
+{
+
+    double xc = ui->customPlot->xAxis->pixelToCoord(event->pos().x());
+    double yc = ui->customPlot->yAxis->pixelToCoord(event->pos().y());
+
+    setToolTip(QString("%1 , %2").arg(xc).arg(yc));
+}
+
+double ofunction (double X[], double RVCt, double RVCT0, double RVCP, double RVCe){
     double func;
 
     func= abs(RVCe*sin(X[0])+2*M_PI*(RVCt-RVCT0)/RVCP-X[0]);
@@ -181,7 +207,13 @@ void RVCalc::on_pushButton_2_clicked()
     double t2=ui->doubleSpinBox_13->value();
     double dt = RVCP/100;
     double theta, E;
-    int steps =(t2-t1)/dt;
+    int steps, help;
+    if(ui->checkBox_2->isChecked()){
+        steps = 100;
+    }
+    else{
+        steps=(t2-t1)/dt;
+    }
     QVector<double> RVA(steps), RVB(steps), t(steps);
 
 
@@ -200,16 +232,27 @@ void RVCalc::on_pushButton_2_clicked()
             theta=2*(atan(tan(E/2)));
         }
 
-    RVA[m] = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
-    RVB[m] = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
-    t[m]=t[m]-ui->doubleSpinBox_14->value();
+        RVA[m] = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
+        RVB[m] = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
+        if(ui->checkBox_2->isChecked()){
+            cout<<t[m]<<"\t";
+            t[m]=t[m]-RVCT0;
+            cout<<t[m]<<"\t";
+            help = t[m]/RVCP;
+            cout<<help<<"\t";
+            t[m] = (t[m]-help*RVCP)/RVCP;
+            cout<<t[m]<<endl;
+        }
+        else{
+            t[m]=t[m]-ui->doubleSpinBox_14->value();
+        }
     }
 
     QPen pen;
-    pen.setWidth(2);
+    pen.setWidth(ui->spinBox_5->value());
     pen.setColor(Qt::red);
     QPen pen4;
-    pen4.setWidth(2);
+    pen4.setWidth(ui->spinBox_5->value());
     pen4.setColor(Qt::blue);
 
     ui->customPlot->addGraph();
@@ -257,46 +300,54 @@ void RVCalc::on_pushButton_2_clicked()
         int a=(t2-t1)/RVCP;
 
         for (int i=0; i<lines; i++){
-        toplot1 >> one >>two>>three;
-        istringstream ist(one);
-        ist >> at[i];
-        at[i]=at[i]-ui->doubleSpinBox_14->value();
-        if(i==0){
-            at1=at[0];
-        }
-        if(ui->checkBox_2->isChecked()){
+            toplot1 >> one >>two>>three;
+            istringstream ist(one);
+            ist >> at[i];
+            if(ui->checkBox_2->isChecked()){
+                at[i] = at[i]-RVCT0;
+                help = at[i]/RVCP;
+                at[i] = (at[i]-help*RVCP)/RVCP;
+            }
+            else{
+                at[i]=at[i]-ui->doubleSpinBox_14->value();
+            }
+            cout<<"at: "<<at[i]<<endl;
 
-            if(at[i]-at1>=RVCP){
-            for(int e=0; e<a; e++){
+            if(i==0){
+                at1=at[0];
+            }
+       /*   if(ui->checkBox_2->isChecked()){
 
-                at[i]=at[i]-RVCP;
-                if(at[i]<at1){
-                    at[i]=at[i]+RVCP;
-                    e=a;
+                if(at[i]-at1>=RVCP){
+                    for(int e=0; e<a; e++){
+                        at[i]=at[i]-RVCP;
+                        if(at[i]<at1){
+                            at[i]=at[i]+RVCP;
+                            e=a;
+                        }
+                    }
                 }
-            }
-            }
 
-        }
+            }*/
 
-        istringstream ist2(two);
-        ist2 >> bt[i];
-        if(i==0){
-            rvmin = bt[0];
-        }
-        if(bt[i]<rvmin){
-            rvmin = bt[i];
-        }
-        istringstream ist3(three);
-        ist3 >> ct[i];
+            istringstream ist2(two);
+            ist2 >> bt[i];
+            if(i==0){
+                rvmin = bt[0];
+            }
+            if(bt[i]<rvmin){
+                rvmin = bt[i];
+            }
+            istringstream ist3(three);
+            ist3 >> ct[i];
         }
         toplot1.close();
 
         QPen pen2;
-        pen2.setWidth(3);
+        pen2.setWidth(ui->spinBox_5->value()+1);
         pen2.setColor(Qt::green);
         QPen pen3;
-        pen3.setWidth(3);
+        pen3.setWidth(ui->spinBox_5->value()+1);
         pen3.setColor(Qt::black);
 
         ui->customPlot->addGraph();
@@ -312,53 +363,8 @@ void RVCalc::on_pushButton_2_clicked()
         ui->customPlot->graph(3)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
         ui->customPlot->graph(3)->rescaleAxes(true);
         if(ui->checkBox_2->isChecked()){
-            ui->customPlot->xAxis->setRange(at1-5, at1+RVCP);
+            ui->customPlot->xAxis->setRange(-0.1, 1.1);
         }
-
-        // looking for independent spectra
-        if(rvmin<0){
-        for(int i=0; i<lines; i++){
-            bt[i]=bt[i]+abs(rvmin);
-        }
-        }
-        double resolution = ui->doubleSpinBox_15->value();
-        int testc=0;
-        int NIS=0;
-        /*
-        for(int i =0; i<lines; i++){
-            for(int m=0; m<lines; m++){
-                if(abs(bt[i]-bt[m])>resolution){
-                ++testc;
-                }
-            }
-            if(testc==lines-1){
-                ++NIS;
-            }
-            testc=0;
-        }*/
-
-        for(int e =0; e<lines; e++){
-        for(int i = 1; i<lines; i++){
-            if(abs(bt[i]-bt[0])>resolution){
-                ++testc;
-            }
-        }
-        QVector<double> ind1(testc+1);
-        ind1[0]=bt[0];
-        NIS = testc+1;
-        testc=0;
-
-        for(int i = 1; i<lines; i++){
-            if(abs(bt[i]-bt[0])>resolution){
-                ind1[testc]=bt[i];
-                //cout<<ind1[testc+1]<<endl;
-                ++testc;
-            }
-        }
-        testc=0;
-        }
-
-        ui->spinBox_2->setValue(NIS);
 
     }
     ui->customPlot->replot();
@@ -633,25 +639,25 @@ void RVCalc::findroot(){
 
         //initial points
         Pm[0][0]=2*M_PI*(RVCt-RVCT0)/RVCP-2*RVCe;
-        for (int i=0; i<n+1; i++){
-        for (int j=0; j<n; j++){
-        if(i>0 & i==j+1){
-        e[i][j]=1;
-        }
-        else{
-        e[i][j]=0;
-        }
-        if(i==0){
 
-        X[j]=Pm[i][j];
-        }
-        if(i!=0){
-        Pm[i][j]=Pm[0][j]+step*e[i][j];
-        X[j]=Pm[i][j];
-        }
-        }
-        y[i]=function(X, RVCt, RVCT0, RVCP, RVCe);
-        eval++;
+        for (int i=0; i<n+1; i++){
+            for (int j=0; j<n; j++){
+                if(i>0 & i==j+1){
+                    e[i][j]=1;
+                }
+                else{
+                    e[i][j]=0;
+                }
+                if(i==0){
+                    X[j]=Pm[i][j];
+                }
+                if(i!=0){
+                    Pm[i][j]=Pm[0][j]+step*e[i][j];
+                    X[j]=Pm[i][j];
+                }
+            }
+            y[i]=ofunction(X, RVCt, RVCT0, RVCP, RVCe);
+            eval++;
         }
 
         //start main loop
@@ -679,7 +685,7 @@ void RVCalc::findroot(){
         yl=y[j];
         Pl = j;
         }}
-        cout<<"yl: "<<yl<<endl;
+        //cout<<"yl: "<<yl<<endl;
 
         // second highest value
         ysh=yl;
@@ -708,14 +714,14 @@ void RVCalc::findroot(){
         for (int i=0; i<n; i++){
         C[i]=Z[i]+alpha*(Z[i]-Pm[Ph][i]);
         }
-        yi=function(C, RVCt, RVCT0, RVCP, RVCe);
+        yi=ofunction(C, RVCt, RVCT0, RVCP, RVCe);
         eval++;
 
         if(yi<yl){
         for (int i=0; i<n; i++){
         Em[i]=Z[i]+gamma*(C[i]-Z[i]);
         }
-        yt=function(Em, RVCt, RVCT0, RVCP, RVCe);
+        yt=ofunction(Em, RVCt, RVCT0, RVCP, RVCe);
         eval++;
         if(yt<yl){
         for (int i=0; i<n; i++){
@@ -729,7 +735,7 @@ void RVCalc::findroot(){
         Pm[Ph][i]=C[i];
         }
         eval++;
-        y[Ph]=function(C, RVCt, RVCT0, RVCP, RVCe);
+        y[Ph]=ofunction(C, RVCt, RVCT0, RVCP, RVCe);
         }}
 
         if(yi>=yl){
@@ -738,7 +744,7 @@ void RVCalc::findroot(){
         Pm[Ph][i]=C[i];
         }
         eval++;
-        y[Ph]=function(C, RVCt, RVCT0, RVCP, RVCe);
+        y[Ph]=ofunction(C, RVCt, RVCT0, RVCP, RVCe);
         }
         if(yi>ysh){
         if(yi<=yh){
@@ -746,13 +752,13 @@ void RVCalc::findroot(){
         Pm[Ph][i]=C[i];
         }
         eval++;
-        y[Ph]=function(C, RVCt, RVCT0, RVCP, RVCe);
+        y[Ph]=ofunction(C, RVCt, RVCT0, RVCP, RVCe);
         yh=y[Ph];
         }
         for(int i=0; i<n; i++){
         S[i]=Z[i]+beta*(Pm[Ph][i]-Z[i]);
         }
-        yt=function(S, RVCt, RVCT0, RVCP, RVCe);
+        yt=ofunction(S, RVCt, RVCT0, RVCP, RVCe);
         eval++;
         if(yt>yh){
         for (int j=0; j<n+1; j++){
@@ -760,7 +766,7 @@ void RVCalc::findroot(){
         Pm[j][i]=Pm[Pl][i]+btot*(Pm[j][i]-Pm[Pl][i]); //total contraction
         X[i]=Pm[j][i];
         }
-        y[j]=function(X, RVCt, RVCT0, RVCP, RVCe);
+        y[j]=ofunction(X, RVCt, RVCT0, RVCP, RVCe);
         eval++;
         }}
 
@@ -769,7 +775,7 @@ void RVCalc::findroot(){
         Pm[Ph][i]=S[i];
         }
         eval++;
-        y[Ph]=function(S, RVCt, RVCT0, RVCP, RVCe);
+        y[Ph]=ofunction(S, RVCt, RVCT0, RVCP, RVCe);
         }}
 
         }
@@ -803,8 +809,9 @@ void RVCalc::findroot(){
 
 }
 
-
-//number of independent spectra
+//************************************
+//average of independent spectra
+//************************************
 void RVCalc::on_pushButton_7_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
@@ -830,7 +837,6 @@ void RVCalc::on_pushButton_7_clicked()
     std::ostringstream datNameStream(plot11);
     datNameStream<<rvPath<<"/"<<plot11;
     std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
 
     QFile checkfile(datName.c_str());
 
@@ -840,6 +846,7 @@ void RVCalc::on_pushButton_7_clicked()
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
+    ifstream toplot1(datName.c_str());
 
     int lines =0, bb=0, cc=0;
 
@@ -917,11 +924,11 @@ void RVCalc::on_pushButton_7_clicked()
     for(int i = 0; i<bt.size(); i++){
         for(int n =0; n<bt.size(); n++){
             if(n!=i){
-                if(abs(bt[i]-bt[n])<=2*reso or (abs(at[i]-at[n])<=2*reso)){
+                if(abs(bt[i]-bt[n])<=reso or (abs(at[i]-at[n])<=reso)){
                     if(count==0){
                     count=1;
                     nind = n;
-                    if(abs(bt[i]-bt[n])<=2*reso){
+                    if(abs(bt[i]-bt[n])<=reso){
                     dist=abs(bt[i]-bt[n]);
                     }
                     else{
@@ -1162,7 +1169,7 @@ void RVCalc::on_pushButton_7_clicked()
     }
 
     // all at once
-    else if(ui->checkBox_7->isChecked()){
+    if(ui->checkBox_7->isChecked()){
 
         int count=0, count2=1, count3=0, count4=0, count5=0;
         QVector<int> rese(count2), rese2(count2), nspec(count2);
@@ -1208,7 +1215,7 @@ void RVCalc::on_pushButton_7_clicked()
 
             for(int n=0; n<bt.size(); n++){
                 count = 0;
-                if(abs(current1-bt[n])<=2*reso & (abs(current2-at[n])<=2*reso & count3==0) ){
+                if(abs(current1-bt[n])<=reso & (abs(current2-at[n])<=reso & count3==0) ){
 
                     for(int e =0; e<count2; e++){
                         if(n!=rese[e] & (i!=n)){
@@ -1381,7 +1388,77 @@ void RVCalc::on_pushButton_7_clicked()
         }
     }
 
-    ui->spinBox_2->setValue(bt.size());
+    // single files
+    if(ui->checkBox_9->isChecked()){
+
+        std::ostringstream datNameStream(aver1);
+        datNameStream<<rvPath<<"/"<<aver1<<"rv"<<fExten;
+        std::string datName = datNameStream.str();
+        ofstream rvout(datName.c_str());
+
+        for(int i =0; i<lines; i++){
+
+            if(abs(at[count]-at[i])>=reso or (i ==0)){
+
+                rvout<<setprecision(16)<<otim[i]<<"\t"<<bt[i]<<" \t"<<at[i]<<endl;
+
+                if(ui->checkBox_5->isChecked()){
+
+                    std::ostringstream datNameStream(aver1);
+                    datNameStream<<rvPath<<"/"<<aver1<<i<<fExten;
+                    std::string datName = datNameStream.str();
+                    ifstream in(datName.c_str());
+
+                    QFile checkfile1(datName.c_str());
+
+                    if(!checkfile1.exists()){
+                        qDebug()<<"Error2: The file "<<checkfile1.fileName()<<" does not exist.";
+                        QMessageBox::information(this, "Error", "File "+qRvPath+"/"+aver+" does not exist!");
+                        this->setCursor(QCursor(Qt::ArrowCursor));
+                       return;
+                    }
+
+                    while(std::getline(in, zeile))
+                       ++ lines1;
+
+                    in.clear();
+                    in.seekg(0, ios::beg);
+
+                    W1.resize(lines1), I1.resize(lines1);
+
+                    for (int q=0; q<lines1; q++){
+                        in >> one>>two;
+                        istringstream ist3(one);
+                        ist3 >> W1[q];
+                        istringstream ist4(two);
+                        ist4 >> I1[q];
+                    }
+                    in.close();
+
+                    std::ostringstream dat2NameStream(aver1);
+                    dat2NameStream<<rvPath<<"/"<<aver1<<"sin_"<<count2<<fExten;
+                    std::string dat2Name = dat2NameStream.str();
+                    ofstream out(dat2Name.c_str());
+
+                    for(int l = 0; l<lines1; l++){
+                        out<<setprecision(14)<<W1[l]<<"\t"<<I1[l]<<endl;
+                    }
+                    lines1=0;
+
+                }
+                ++count2;
+                count=i;
+                cout<<"spectra "<<i<<endl;
+            }
+            else {
+
+            }
+        }
+
+        ui->spinBox_2->setValue(count2+1);
+
+    }
+
 
     this->setCursor(QCursor(Qt::ArrowCursor));
 
@@ -1391,9 +1468,11 @@ void RVCalc::on_checkBox_6_clicked()
 {
     if(ui->checkBox_6->isChecked()){
         ui->checkBox_7->setChecked(false);
+        ui->checkBox_9->setChecked(false);
     }
     else{
         ui->checkBox_7->setChecked(true);
+        ui->checkBox_9->setChecked(false);
     }
 }
 
@@ -1401,9 +1480,23 @@ void RVCalc::on_checkBox_7_clicked()
 {
     if(ui->checkBox_7->isChecked()){
         ui->checkBox_6->setChecked(false);
+        ui->checkBox_9->setChecked(false);
     }
     else{
         ui->checkBox_6->setChecked(true);
+        ui->checkBox_9->setChecked(false);
+    }
+}
+
+void RVCalc::on_checkBox_9_clicked()
+{
+    if(ui->checkBox_9->isChecked()){
+        ui->checkBox_7->setChecked(false);
+        ui->checkBox_6->setChecked(false);
+    }
+    else{
+        ui->checkBox_6->setChecked(true);
+        ui->checkBox_7->setChecked(false);
     }
 }
 
@@ -1467,7 +1560,6 @@ void RVCalc::on_pushButton_8_clicked()
         std::ostringstream dat2NameStream(rvf);
         dat2NameStream<<rvPath<<"/"<<rvf;
         std::string dat2Name = dat2NameStream.str();
-        ifstream inf(dat2Name.c_str());
 
         QFile checkfile2(dat2Name.c_str());
 
@@ -1477,6 +1569,8 @@ void RVCalc::on_pushButton_8_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
+
+        ifstream inf(dat2Name.c_str());
 
         while(std::getline(inf, zeile))
            ++ lines;
@@ -1511,30 +1605,203 @@ void RVCalc::on_pushButton_8_clicked()
 
     }
 
+    string logf = "log_removed.dat";
+    std::ostringstream dat4NameStream(logf);
+    dat4NameStream<<rvPath<<"/"<<logf;
+    std::string dat4Name = dat4NameStream.str();
+
+    QString qlogf = qRvPath+"/log_removed.dat";
+    QFileInfo QLFile(qlogf);
+    ofstream LogFile;
+
+    if(QLFile.exists()){
+        LogFile.open(dat4Name.c_str(), std::ios_base::app);
+        LogFile<<rn<<endl;
+    }
+    else{
+        LogFile.open(dat4Name.c_str());
+        LogFile<<rn<<endl;
+    }
+
     this->setCursor(QCursor(Qt::ArrowCursor));
 
 
 }
 
+
+//******************************
+// Test button
+//******************************
 void RVCalc::on_pushButton_9_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
 
-    int linesn=0;
-    string one, two, three, four, five, six, zeile;
+    int linesA=0, linesB=0;
+    string one, two, three, zeile;
 
-    string inA = "hst_c0f_6.dat";
-    string inB = "hst_c1f_6.dat";
-    string outA = "hst_";
-    string ext = "_6.dat";
-    int numb = 18;
+    string inA = ui->lineEdit_6->text().toUtf8().constData();
+    string inB = ui->lineEdit_9->text().toUtf8().constData();
 
-    double I=0, W=0, N;
+    string outA = ui->lineEdit_7->text().toUtf8().constData();
+    ostringstream dat3NameStream(outA);
+    dat3NameStream<<rvPath<<"/"<<outA;
+    std::string dat3Name = dat3NameStream.str();
+    ofstream ouA(dat3Name.c_str());
 
     std::ostringstream dat1NameStream(inA);
     dat1NameStream<<rvPath<<"/"<<inA;
     std::string dat1Name = dat1NameStream.str();
+
+    QFile checkfile1(dat1Name.c_str());
+
+    if(!checkfile1.exists()){
+        qDebug()<<"Error3: The file "<<checkfile1.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error", "File "+qRvPath+"/"+ui->lineEdit_6->text()+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+
     ifstream in1(dat1Name.c_str());
+
+    while(std::getline(in1, zeile))
+       ++ linesA;
+
+    in1.clear();
+    in1.seekg(0, ios::beg);
+
+    QVector<double> timA(linesA), rvA(linesA), rvB(linesA);
+
+    std::ostringstream dat2NameStream(inB);
+    dat2NameStream<<rvPath<<"/"<<inB;
+    std::string dat2Name = dat2NameStream.str();
+
+    QFile checkfile2(dat2Name.c_str());
+
+    if(!checkfile2.exists()){
+        qDebug()<<"Error3: The file "<<checkfile2.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error", "File "+qRvPath+"/"+ui->lineEdit_9->text()+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+
+    ifstream in2(dat2Name.c_str());
+
+    while(std::getline(in2, zeile))
+       ++ linesB;
+
+    in2.clear();
+    in2.seekg(0, ios::beg);
+
+    QVector<double> timB(linesB);
+
+
+    for(int i = 1; i<linesA; i++){
+
+        in1 >> one >> two >> three;
+        istringstream ist1(one);
+        ist1 >> timA[i];
+        istringstream ist2(two);
+        ist2 >>rvA[i];
+        istringstream ist3(three);
+        ist3 >>rvB[i];
+
+    }
+    in1.close();
+
+    for(int i=0; i<linesB; i++){
+        in2 >> one >> two >> three;
+        istringstream str(one);
+        str >> timB[i];
+    }
+    in2.close();
+
+    int pos=0;
+    double diff=0.0;
+    RVCP=ui->doubleSpinBox->value();
+    RVCT0=ui->doubleSpinBox_2->value();
+    double gamma=ui->doubleSpinBox_3->value();
+    double KA=ui->doubleSpinBox_4->value();
+    double KB=ui->doubleSpinBox_5->value();
+    double WA=ui->doubleSpinBox_6->value()/180*M_PI;
+    double WB=WA+M_PI;
+    RVCe=ui->doubleSpinBox_8->value();
+    double RVA1=0.0, RVB1=0.0, theta=0.0, E=0.0, RVA2=0.0, RVB2=0.0;
+
+    for(int i=0; i<linesB; i++){
+        for(int e=0; e<linesA; e++){
+            if(e==0){
+                diff=abs(timB[i]-timA[e]);
+            }
+            else{
+                    if(abs(timB[i]-timA[e])<diff){
+                        diff=abs(timB[i]-timA[e]);
+                        pos=e;
+                    }
+                    else{
+
+                    }
+            }
+
+        }
+        if(timB[i]!=timA[pos]){
+
+            RVCt=timA[pos];
+            RVCalc::findroot();
+            E=RVCE;
+            theta=2*(atan(tan(E/2)*sqrt((1+RVCe)/(1-RVCe))));
+
+            RVA2 = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
+            RVB2 = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
+
+            RVCt=timB[i];
+            RVCalc::findroot();
+            E=RVCE;
+            theta=2*(atan(tan(E/2)*sqrt((1+RVCe)/(1-RVCe))));
+
+            RVA1 = gamma + KA*(cos(theta+WA)+RVCe*cos(WA));
+            RVB1 = gamma + KB*(cos(theta+WB)+RVCe*cos(WB));
+        }
+        else{
+            RVA1=0.0;
+            RVB1=0.0;
+            RVA2=0.0;
+            RVB2=0.0;
+        }
+
+        ouA<<setprecision(14)<<timB[i]<<"\t"<<rvA[pos]-(RVA2-RVA1)<<"\t"<<rvB[pos]-(RVB2-RVB1)<<endl;
+
+    }
+    ouA.close();
+
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
+
+}
+
+//*********************************
+// reject files from a list
+//*********************************
+void RVCalc::on_pushButton_10_clicked()
+{
+    QString qinA = ui->lineEdit_12->text();
+    string inA = qinA.toUtf8().constData();
+    std::ostringstream dat1NameStream(inA);
+    dat1NameStream<<rvPath<<"/"<<inA;
+    std::string dat1Name = dat1NameStream.str();
+
+    QFile checkfile(dat1Name.c_str());
+
+    if(!checkfile.exists()){
+        qDebug()<<"Error3: The file "<<checkfile.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error", "File "+qRvPath+"/"+qinA+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+
+    ifstream in1(dat1Name.c_str());
+
+    int linesn=0, numb=0;
+    string eins, zeile;
 
     while(std::getline(in1, zeile))
        ++ linesn;
@@ -1542,62 +1809,67 @@ void RVCalc::on_pushButton_9_clicked()
     in1.clear();
     in1.seekg(0, ios::beg);
 
-    std::ostringstream dat2NameStream(inB);
-    dat2NameStream<<rvPath<<"/"<<inB;
-    std::string dat2Name = dat2NameStream.str();
-    ifstream in2(dat2Name.c_str());
+    for(int i =0; i<linesn; i++){
+        in1 >> eins;
+        istringstream istr1(eins);
+        istr1 >> numb;
+        ui->spinBox_3->setValue(numb);
+        RVCalc::on_pushButton_8_clicked();
+    }
+}
 
-    std::ostringstream dat3NameStream(outA);
+//******************************
+// merge RV files from croco
+//******************************
+void RVCalc::on_pushButton_11_clicked()
+{
+    int fmin=ui->spinBox_6->value();
+    int fmax=ui->spinBox_7->value();
+    QString qinA = ui->lineEdit_13->text();
+    string inA = qinA.toUtf8().constData();
+    QString qExt = ui->lineEdit_14->text();
+    string ext = qExt.toUtf8().constData();
+    std::ostringstream dat1NameStream(inA);
+    QString fnum;
+    string eins, zwei, zeile;
+
+    QVector<double> vela(fmax-fmin+1), velb(fmax-fmin+1);
+
+    for(int i=fmin; i<=fmax;i++){
+
+        fnum = QString::number(i);
+        dat1NameStream<<rvPath<<"/"<<inA<<i<<ext;
+        std::string dat1Name = dat1NameStream.str();
 
 
-    for(int i = 1; i<=numb; i++){
+        QFile checkfile(dat1Name.c_str());
 
-        linesn=0;
-        int count =0;
-
-
-    for (int q=0; q<linesn; q++){
-
-        if(q == (1+count)*1999){
-
-            dat3NameStream<<rvPath<<"/"<<outA<<count<<ext;
-            std::string dat3Name = dat3NameStream.str();
-            ofstream ouA(dat3Name.c_str());
+        if(!checkfile.exists()){
+            qDebug()<<"Error3: The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qRvPath+"/"+qinA+fnum+qExt+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
         }
 
-        in1 >> one >> two >> three >> four >> five >> six;
-        istringstream istA1(one);
-        istA1 >> N;
-        istringstream istA2(two);
-        istA2 >>W;
-        //ouA<<W<<"\t";
+        ifstream in1(dat1Name.c_str());
 
-        in2 >> one >> two >> three >> four >> five >> six;
-        istringstream istB1(one);
-        istB1 >> N;
-        istringstream istB2(two);
-        istB2 >>I;
-        //outA<<I<<endl;
-
-        istringstream istA3(three);
-        istA3 >>W;
-        istringstream istA4(four);
-        istA4 >>W;
-        istringstream istA5(five);
-        istA5 >>W;
-        istringstream istA6(six);
-        istA6 >>W;
-    }
-    in1.close();
-
-    ofstream out(dat1Name.c_str());
-
-    for(int q = 0; q<linesn; q++){
-        //out<<setprecision(12)<<W1[q]<<"\t"<<I1[q]<<endl;
+        for(int e =0; e<1; e++){
+            in1 >> eins >> zwei;
+            istringstream istr1(eins);
+            istr1 >> vela[i];
+            istringstream istr2(zwei);
+            istr2>> velb[i];
+        }
+        in1.close();
     }
 
+    string outA = "mergedRVs.dat";
+    ostringstream dat3NameStream(outA);
+    dat3NameStream<<rvPath<<"/"<<outA;
+    std::string dat3Name = dat3NameStream.str();
+    ofstream ouA(dat3Name.c_str());
 
+    for(int i =0; i<vela.size(); i++){
+        ouA<<setprecision(10)<<vela[i]<<"\t"<<velb[i]<<endl;
     }
-    this->setCursor(QCursor(Qt::ArrowCursor));
-
 }

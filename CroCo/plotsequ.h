@@ -15,6 +15,9 @@ public:
     explicit PlotSequ(QWidget *parent = 0);
     ~PlotSequ();
 
+public slots:
+    void seData(QString str, QString str2, QString str3, QString str4, QString str5);
+
 private slots:
     void on_pushButton_3_clicked();
 
@@ -57,6 +60,14 @@ private slots:
     void showPointToolTip(QMouseEvent *event);
 
     void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
+
+    void on_pushButton_10_clicked();
+
+    void on_checkBox_15_clicked();
+
+    void on_checkBox_16_clicked();
 
 private:
     Ui::PlotSequ *ui;

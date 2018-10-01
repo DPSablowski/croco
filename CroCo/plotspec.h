@@ -21,6 +21,9 @@ public:
     explicit PlotSpec(QWidget *parent = 0);
     ~PlotSpec();
 
+public slots:
+    void seData(QString str, QString str2, QString str3, QString str4, QString str5);
+
 private slots:
     void on_pushButton_2_clicked();
 
@@ -50,11 +53,7 @@ private slots:
 
     void on_spinBox_valueChanged();
 
-    void on_lineEdit_7_textChanged();
-
-    void on_lineEdit_8_textChanged();
-
-    void on_lineEdit_9_textChanged();
+    void showPointToolTip(QMouseEvent *event);
 
 private:
     Ui::PlotSpec *ui;

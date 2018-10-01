@@ -43,6 +43,16 @@ CPD::~CPD()
     delete ui;
 }
 
+void CPD::seData(QString str1, QString str2, QString str3)
+{
+    ui->lineEdit_5->setText(str1);
+    qCPDPath=ui->lineEdit_5->text();
+    CPDPath = qCPDPath.toUtf8().constData();
+
+    ui->lineEdit->setText(str2);
+    ui->lineEdit_2->setText(str3);
+
+}
 
 
 void CPD::on_pushButton_2_clicked()

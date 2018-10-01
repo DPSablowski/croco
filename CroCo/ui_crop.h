@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'crop.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -55,6 +55,7 @@ public:
     QDoubleSpinBox *doubleSpinBox;
     QLabel *label_8;
     QDoubleSpinBox *doubleSpinBox_2;
+    QPushButton *pushButton_4;
     QSpacerItem *horizontalSpacer_5;
     QHBoxLayout *horizontalLayout_5;
     QPushButton *pushButton_3;
@@ -64,6 +65,8 @@ public:
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_9;
     QLineEdit *lineEdit_6;
+    QLabel *label_12;
+    QLineEdit *lineEdit_8;
     QLabel *label_10;
     QLineEdit *lineEdit_7;
     QSpacerItem *horizontalSpacer;
@@ -73,7 +76,7 @@ public:
     {
         if (Crop->objectName().isEmpty())
             Crop->setObjectName(QStringLiteral("Crop"));
-        Crop->resize(736, 346);
+        Crop->resize(995, 346);
         verticalLayout = new QVBoxLayout(Crop);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout = new QHBoxLayout();
@@ -210,6 +213,16 @@ public:
 
         horizontalLayout_3->addWidget(doubleSpinBox_2);
 
+        pushButton_4 = new QPushButton(Crop);
+        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
+        pushButton_4->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_3->addWidget(pushButton_4);
+
         horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_5);
@@ -256,6 +269,18 @@ public:
 
         horizontalLayout_4->addWidget(lineEdit_6);
 
+        label_12 = new QLabel(Crop);
+        label_12->setObjectName(QStringLiteral("label_12"));
+
+        horizontalLayout_4->addWidget(label_12);
+
+        lineEdit_8 = new QLineEdit(Crop);
+        lineEdit_8->setObjectName(QStringLiteral("lineEdit_8"));
+        sizePolicy1.setHeightForWidth(lineEdit_8->sizePolicy().hasHeightForWidth());
+        lineEdit_8->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_4->addWidget(lineEdit_8);
+
         label_10 = new QLabel(Crop);
         label_10->setObjectName(QStringLiteral("label_10"));
 
@@ -277,9 +302,6 @@ public:
 
         pushButton = new QPushButton(Crop);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy1);
 
@@ -294,21 +316,23 @@ public:
 
     void retranslateUi(QDialog *Crop)
     {
-        Crop->setWindowTitle(QApplication::translate("Crop", "Dialog", 0));
-        label->setText(QApplication::translate("Crop", "Input Spectra", 0));
-        label_2->setText(QApplication::translate("Crop", "from", 0));
-        label_3->setText(QApplication::translate("Crop", "to", 0));
-        label_5->setText(QApplication::translate("Crop", "Extension", 0));
-        label_4->setText(QApplication::translate("Crop", "W.Col.", 0));
-        label_6->setText(QApplication::translate("Crop", "I.Col.", 0));
-        pushButton_2->setText(QApplication::translate("Crop", "Crop", 0));
-        label_7->setText(QApplication::translate("Crop", "from", 0));
-        label_8->setText(QApplication::translate("Crop", "to", 0));
-        pushButton_3->setText(QApplication::translate("Crop", "Bin", 0));
-        label_11->setText(QApplication::translate("Crop", "X", 0));
-        label_9->setText(QApplication::translate("Crop", "Output", 0));
-        label_10->setText(QApplication::translate("Crop", "Work Path:", 0));
-        pushButton->setText(QApplication::translate("Crop", "Close", 0));
+        Crop->setWindowTitle(QApplication::translate("Crop", "Dialog", Q_NULLPTR));
+        label->setText(QApplication::translate("Crop", "Input Spectra", Q_NULLPTR));
+        label_2->setText(QApplication::translate("Crop", "from", Q_NULLPTR));
+        label_3->setText(QApplication::translate("Crop", "to", Q_NULLPTR));
+        label_5->setText(QApplication::translate("Crop", "Extension", Q_NULLPTR));
+        label_4->setText(QApplication::translate("Crop", "W.Col.", Q_NULLPTR));
+        label_6->setText(QApplication::translate("Crop", "I.Col.", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("Crop", "Crop", Q_NULLPTR));
+        label_7->setText(QApplication::translate("Crop", "from", Q_NULLPTR));
+        label_8->setText(QApplication::translate("Crop", "to", Q_NULLPTR));
+        pushButton_4->setText(QApplication::translate("Crop", "Abort", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("Crop", "Bin", Q_NULLPTR));
+        label_11->setText(QApplication::translate("Crop", "X", Q_NULLPTR));
+        label_9->setText(QApplication::translate("Crop", "Output", Q_NULLPTR));
+        label_12->setText(QApplication::translate("Crop", "*.", Q_NULLPTR));
+        label_10->setText(QApplication::translate("Crop", "Work Path:", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("Crop", "Close", Q_NULLPTR));
     } // retranslateUi
 
 };

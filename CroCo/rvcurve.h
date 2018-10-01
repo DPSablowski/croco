@@ -42,6 +42,28 @@ private slots:
 
     void on_spinBox_3_valueChanged();
 
+    void on_pushButton_7_clicked();
+
+    void on_doubleSpinBox_8_valueChanged(double arg1);
+
+    void on_lineEdit_6_editingFinished();
+
+    void on_lineEdit_7_editingFinished();
+
+    void on_doubleSpinBox_9_valueChanged(double arg1);
+
+    void on_doubleSpinBox_10_valueChanged(double arg1);
+
+    void on_doubleSpinBox_11_valueChanged(double arg1);
+
+    void on_doubleSpinBox_12_valueChanged(double arg1);
+
+    void on_checkBox_10_clicked();
+
+    void on_checkBox_11_clicked();
+
+    void on_checkBox_12_clicked();
+
 private:
     Ui::RvCurve *ui;
 };

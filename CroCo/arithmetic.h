@@ -32,6 +32,21 @@ private slots:
 
     void on_checkBox_6_clicked();
 
+    void on_checkBox_8_clicked();
+
+    void on_checkBox_9_clicked();
+
+    void on_lineEdit_8_editingFinished();
+
+    void on_lineEdit_9_editingFinished();
+    
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
+
+public slots:
+    void seData(QString str, QString str2, QString str3);
+
 private:
     Ui::Arithmetic *ui;
 };

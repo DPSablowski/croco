@@ -52,6 +52,17 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    void on_pushButton_10_clicked();
+
+    void on_checkBox_9_clicked();
+
+    void showPointToolTip(QMouseEvent *event);
+
+    void on_pushButton_11_clicked();
+
+public slots:
+    void seData(QString str, QString str2);
+
 private:
     Ui::RVCalc *ui;
 };

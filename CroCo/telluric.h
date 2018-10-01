@@ -44,6 +44,9 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+public slots:
+    void seData(QString str, QString str2, QString str3);
+
 private:
     Ui::Telluric *ui;
 };

@@ -25,14 +25,17 @@
 #include <CCfits/CCfits>
 #include <cpd.h>
 #include <splinefit.h>
+#include <moments.h>
+#include <thread>
+#include <omp.h>
+#include <algorithm>
 
 //running man icon from: https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/running_man.png
 
 using namespace std;
-namespace fit=CCfits;
+using namespace CCfits;
 
-
-int num=1, bini=5, logbin=5, aa, d2, b2, d, b, dn, don, ssteps, counter, dosteps, vsteps, binia=5, binib=5, infilei=0, check=0;
+int num=1, stopreb=0, stopcor=0, bini=5, logbin=5, aa, d2, b2, d, b, dn, don, ssteps, counter, dosteps, vsteps, binia=5, binib=5, infilei=0, check=0;
 double doshift, vshift, increment, Phi, measn, diff, tempn, tempn2, x1, x2, yy1, yy2, xc1, oset, xc2, yc1, yc2, Phi1, Phi2, min, meant, means, sigmat, sigmas, low, high, sepa, shift, de, di, ratio, inl, inh, mi, ri, t1i, t2i, dv, ccfmax, absminw, absmaxw;
 string eins, zwei, line, path, Extension, Wavecol, Intenscol;
 const double c0 = 299792.458;
@@ -63,16 +66,16 @@ MainWindow::MainWindow(QWidget *parent) :
     qIntenscol=ui->lineEdit_20->text();
     Intenscol = qIntenscol.toUtf8().constData();
 
-    ui->lineEdit->setText("Ha_");
-    ui->lineEdit_2->setText("Ha_vel_1");
-    ui->lineEdit_3->setText("Ha_vel_2");
+    ui->lineEdit->setText("croped_");
+    ui->lineEdit_2->setText("Ha_vel_shift_1.txt");
+    ui->lineEdit_3->setText("Ha_vel_shift_2.txt");
     ui->lineEdit_4->setText("binarym_0.txt");
     ui->lineEdit_5->setText("croped_0.txt");
     ui->lineEdit_6->setText("tempmB.txt");
-    ui->lineEdit_7->setText("Ha2m_");
+    ui->lineEdit_7->setText("cropedm_");
     ui->lineEdit_8->setText("binaryrv_");
-    ui->lineEdit_10->setText("tempmA");
-    ui->lineEdit_11->setText("tempmB");
+    ui->lineEdit_10->setText("tempmA.txt");
+    ui->lineEdit_11->setText("tempmB.txt");
     ui->lineEdit_14->setText("ccf_0_");
     increment=ui->doubleSpinBox_12->value();
 
@@ -89,7 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
     ui->doubleSpinBox_16->setValue(0.5);
-    ui->lineEdit_15->setText("/home/daniels/Observations/Capella/Set_10/Ha");
+    ui->lineEdit_15->setText(QDir::currentPath());
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
@@ -155,8 +158,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_22->setStyleSheet("QLabel{background: transparent;}");
     ui->label_23->setStyleSheet("QLabel{background: transparent;}");
     ui->label_24->setStyleSheet("QLabel{background: transparent;}");
-    ui->label_25->setStyleSheet("QLabel{background: transparent;}");
-    ui->label_26->setStyleSheet("QLabel{background: transparent;}");
     ui->label_27->setStyleSheet("QLabel{background: transparent;}");
     ui->label_28->setStyleSheet("QLabel{background: transparent;}");
     ui->label_29->setStyleSheet("QLabel{background: transparent;}");
@@ -180,6 +181,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_47->setStyleSheet("QLabel{background: transparent;}");
     ui->label_48->setStyleSheet("QLabel{background: transparent;}");
 
+    /*
     ui->checkBox->setStyleSheet("QCheckBox{background: transparent;}");
     ui->checkBox_2->setStyleSheet("QCheckBox{background: transparent;}");
     ui->checkBox_3->setStyleSheet("QCheckBox{background: transparent;}");
@@ -191,6 +193,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->checkBox_9->setStyleSheet("QCheckBox{background: transparent;}");
     ui->checkBox_10->setStyleSheet("QCheckBox{background: transparent;}");
     ui->checkBox_11->setStyleSheet("QCheckBox{background: transparent;}");
+    */
+
+
+    ui->customPlot->axisRect()->setupFullAxesBox(true);
+    ui->customPlot_2->axisRect()->setupFullAxesBox(true);
+
+#pragma omp parallel
+    {
+    omp_set_dynamic(0);
+    ui->spinBox_10->setValue(omp_get_num_threads());
+    ui->spinBox_11->setValue(omp_get_num_threads());
+    ui->spinBox_11->setMaximum(omp_get_num_threads());
+    }
 
 }
 
@@ -231,7 +246,6 @@ void MainWindow::ReadMeasured(int gg){
         std::ostringstream datNameStream(data);
         datNameStream<<path<<"/"<<data<<gg<<sfext;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile1(datName.c_str());
 
@@ -239,6 +253,7 @@ void MainWindow::ReadMeasured(int gg){
             qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+input+ +gg+ " does not exist!");
             check=1;
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
 
@@ -246,6 +261,12 @@ void MainWindow::ReadMeasured(int gg){
 
         try
         {
+            qExtension=ui->lineEdit_18->text();
+            Extension = qExtension.toUtf8().constData();
+            qWavecol=ui->lineEdit_19->text();
+            Wavecol = qWavecol.toUtf8().constData();
+            qIntenscol=ui->lineEdit_20->text();
+            Intenscol = qIntenscol.toUtf8().constData();
 
             //open file for reading
             auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
@@ -286,41 +307,42 @@ void MainWindow::ReadMeasured(int gg){
     }
 
     if(ui->comboBox->currentIndex()==1){
-QString input=ui->lineEdit->text();
-string data = input.toUtf8().constData();
-std::ostringstream datNameStream(data);
-datNameStream<<path<<"/"<<data<<gg<<sfext;
-std::string datName = datNameStream.str();
-ifstream dat(datName.c_str());
+        QString input=ui->lineEdit->text();
+        string data = input.toUtf8().constData();
+        std::ostringstream datNameStream(data);
+        datNameStream<<path<<"/"<<data<<gg<<sfext;
+        std::string datName = datNameStream.str();
 
-QFile checkfile1(datName.c_str());
+        QFile checkfile1(datName.c_str());
 
-if(!checkfile1.exists()){
-    qDebug()<<"Error 2: The file "<<checkfile1.fileName()<<" does not exist.";
-    QMessageBox::information(this, "Error 2:", "Spectrum  "+input+ +gg+" does not exist!");
-     check=1;
-   return;
-}
+        if(!checkfile1.exists()){
+            qDebug()<<"Error 2: The file "<<checkfile1.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error 2:", "Spectrum  "+input+ +gg+" does not exist!");
+            check=1;
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        ifstream dat(datName.c_str());
 
-bini=0;
+        bini=0;
 
-while(std::getline(dat, line))
-   ++ bini;
+        while(std::getline(dat, line))
+        ++ bini;
 
-dat.clear();
-dat.seekg(0, ios::beg);
+        dat.clear();
+        dat.seekg(0, ios::beg);
 
-measw.resize(bini);
-measi.resize(bini);
+        measw.resize(bini);
+        measi.resize(bini);
 
-for (int i =0; i < bini; i++){
-dat >> eins >> zwei;
-istringstream istr7(eins);
-istr7 >> measw[i];
-istringstream istr8(zwei);
-istr8 >> measi[i];
-}
-dat.close();
+        for (int i =0; i < bini; i++){
+            dat >> eins >> zwei;
+            istringstream istr7(eins);
+            istr7 >> measw[i];
+            istringstream istr8(zwei);
+            istr8 >> measi[i];
+        }
+        dat.close();
     }
 }
 
@@ -329,6 +351,44 @@ dat.close();
 //****************************************************************
 void MainWindow::on_pushButton_clicked()
 {
+    this->setCursor(QCursor(Qt::WaitCursor));
+
+// Logfile
+    QString qLogFile = "logarithmicbin.log";
+    QString qlFile = qpath+"/"+qLogFile;
+    QFileInfo QLFile(qlFile);
+    string lFile = qLogFile.toUtf8().constData();
+    std::ostringstream lFileNameStream(lFile);
+    lFileNameStream<<path<<"/"<<lFile;
+    std::string lFileName = lFileNameStream.str();
+    ofstream LogFile;
+
+    struct tm *ts;
+    time_t t;
+
+    t = time(NULL);
+    ts = localtime(&t);
+
+    if(QLFile.exists()){
+        LogFile.open(lFileName.c_str(), std::ios_base::app);
+        LogFile<<endl;
+        LogFile<<"__________________________________________________"<<endl;
+        LogFile<<" "<<asctime(ts)<<endl;
+        LogFile<<endl;
+    }
+
+    else{
+        LogFile.open(lFileName.c_str());
+        LogFile<<"******************************"<<endl;
+        LogFile<<"  Logarithmic Binning Log-File"<<endl;
+        LogFile<<"******************************"<<endl;
+    }
+
+    LogFile<<"Input files: "<<ui->lineEdit->text().toUtf8().constData()<<"*"<<ui->lineEdit_21->text().toUtf8().constData()<<endl;
+    LogFile<<"Output files: "<<ui->lineEdit_7->text().toUtf8().constData()<<"*.txt"<<endl;
+    LogFile<<"Files from "<<ui->spinBox->value()<<" to "<<ui->spinBox_8->value()<<endl;
+    LogFile<<"Rebinning step size: "<<ui->doubleSpinBox_12->value()<<endl;
+
     num=ui->spinBox_8->value() - ui->spinBox->value()+1;
 
     if(ui->checkBox_4->isChecked()){
@@ -384,38 +444,81 @@ void MainWindow::on_pushButton_clicked()
         }
     }
 
-    if(ui->checkBox_11->isChecked()){
+    if(ui->checkBox_10->isChecked()){
+         LogFile<<"Use common wavelength range; lower: "<<absminw<<"; upper: "<<absmaxw<<endl;
+    }
+
+    else{
+        if(ui->checkBox_11->isChecked()){
 
         if(absminw>ui->doubleSpinBox_17->value()){
             qDebug()<<"Error : At least one spectrum starts at a higher wavelength.";
             QString absmi=QString::number(absminw);
             QMessageBox::information(this, "Error ", "Error : At least one spectrum starts at a higher wavelength. The common value is "+absmi+".");
-
+            this->setCursor(QCursor(Qt::ArrowCursor));
             return;
         }
 
         if(absmaxw<ui->doubleSpinBox_18->value()){
             qDebug()<<"Error : At least one spectrum ends at a lower wavelength.";
             QString absma=QString::number(absmaxw);
-            QMessageBox::information(this, "Error ", "Error : At least one spectrum ends at a lower value. The common vale is "+absma+".");
-
+            QMessageBox::information(this, "Error ", "Error : At least one spectrum ends at a lower value. The common value is "+absma+".");
+            this->setCursor(QCursor(Qt::ArrowCursor));
             return;
         }
 
         absminw=ui->doubleSpinBox_17->value();
         absmaxw=ui->doubleSpinBox_18->value();
+        LogFile<<"Use wavelength range; lower: "<<absminw<<"; upper: "<<absmaxw<<endl;
 
+    }
     }
 
     //looking for global smallest difference log(lambda)
-    diff=dif[0];
-    for (int g=0; g<num; g++){
-        if(ui->checkBox_4->isChecked()){
-            g=ui->spinBox->value();
+    if(ui->checkBox_22->isChecked()){
+        diff=1.0;
+        for (int g=0; g<num; g++){
+            if(ui->checkBox_4->isChecked()){
+                g=ui->spinBox->value();
+            }
+            if((dif[g]<diff) & (dif[g]>0)){
+                diff=dif[g];
+                //cout<<diff<<endl;
+            }
         }
-        if(dif[g]<diff){
-            diff=dif[g];
-            //cout<<diff<<endl;
+        LogFile<<"Using global minimum for new step size."<<endl;
+    }
+    else{
+        // compute average of differences
+        if(ui->checkBox_23->isChecked()){
+            diff=0.0;
+            int ndiff=0;
+            for (int g=0; g<num; g++){
+                if(ui->checkBox_4->isChecked()){
+                    g=ui->spinBox->value();
+                }
+                if((dif[g]<diff) & (dif[g]>0)){
+                    diff+=dif[g];
+                    ++ndiff;
+                    //cout<<diff<<endl;
+                }
+            }
+        diff=diff/ndiff;
+        LogFile<<"Using average for new step size."<<endl;
+        }
+        else{
+            // compute median of differences
+            sort(dif.begin(), dif.end());
+
+            int med1=dif.size()/2, med2=dif.size()/2-1;
+
+            if(abs(med1-dif.size()/2)!=0.0){
+                diff=(dif[med1]+dif[med2])/2;
+            }
+            else{
+                diff=dif[med1];
+            }
+            LogFile<<"Using median for new step size."<<endl;
         }
     }
 
@@ -424,10 +527,12 @@ void MainWindow::on_pushButton_clicked()
 
     if(ui->checkBox_14->isChecked()){
         diff = abs(log10(absminw+ui->doubleSpinBox_19->value())-log10(absminw));
+        LogFile<<"Use custom step size: "<<diff<<endl;
     }
 
     else{
-    diff=diff*increment;
+        diff=diff*increment;
+        LogFile<<"Use step size: "<<diff<<endl;
     }
 
     cout<<"new step size: "<<diff<<endl;
@@ -435,10 +540,13 @@ void MainWindow::on_pushButton_clicked()
     if(diff==0){
         cout<<"step size is zero! Rebinning aborted."<<endl;
         QMessageBox::information(this, "Error", "Step size is zero! Rebinning aborted.");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        LogFile<<"Step size is zero, rebinning aborted."<<endl;
         return;
     }
 
     dv=(pow(10,diff)-1)*c0;
+    LogFile<<"Step size in velocity: "<<dv<<" km/s"<<endl;
     QString Vsize=QString::number(dv);
     ui->lineEdit_16->setText(Vsize);
 
@@ -455,7 +563,7 @@ void MainWindow::on_pushButton_clicked()
         //measured
         MainWindow::ReadMeasured(gg);
 
-        QString output11="croped_";
+        QString output11="croped1_";
         string output1 = output11.toUtf8().constData();
         std::ostringstream output1NameStream(output1);
         output1NameStream<<path<<"/"<<output1<<g<<".txt";
@@ -463,9 +571,9 @@ void MainWindow::on_pushButton_clicked()
         ofstream file1(output1Name.c_str());
 
         for(int i=0; i<bini; i++){
-        if((measw[i]>=absminw) & (measw[i]<=absmaxw)){
-            file1<<setprecision(14)<<measw[i]<<" "<<measi[i]<<endl;
-        }
+            if((measw[i]>=absminw) & (measw[i]<=absmaxw)){
+                file1<<setprecision(14)<<measw[i]<<" "<<measi[i]<<endl;
+            }
         }
 
         ifstream dat1(output1Name.c_str());
@@ -481,11 +589,11 @@ void MainWindow::on_pushButton_clicked()
         measi.resize(bini);
 
         for (int i =0; i < bini; i++){
-        dat1 >> eins >> zwei;
-        istringstream istr7(eins);
-        istr7 >> measw[i];
-        istringstream istr8(zwei);
-        istr8 >> measi[i];
+            dat1 >> eins >> zwei;
+            istringstream istr7(eins);
+            istr7 >> measw[i];
+            istringstream istr8(zwei);
+            istr8 >> measi[i];
         }
         dat1.close();
     }
@@ -495,17 +603,18 @@ void MainWindow::on_pushButton_clicked()
         QString input12=ui->lineEdit_2->text();
         string data12 = input12.toUtf8().constData();
         std::ostringstream dat2NameStream(data12);
-        dat2NameStream<<path<<"/"<<data12<<".txt";
+        dat2NameStream<<path<<"/"<<data12;
         std::string dat2Name = dat2NameStream.str();
-        ifstream dat2(dat2Name.c_str());
 
         QFile checkfile2(dat2Name.c_str());
 
         if(!checkfile2.exists()){
             qDebug()<<"Error 3: The file "<<checkfile2.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "Error 3: Template A does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
+        ifstream dat2(dat2Name.c_str());
 
         bini=0;
 
@@ -519,50 +628,52 @@ void MainWindow::on_pushButton_clicked()
         tempi1.resize(bini);
 
         for (int i =0; i < bini; i++){
-        dat2 >> eins >> zwei;
-        istringstream istr5(eins);
-        istr5 >> tempw1[i];
-        istringstream istr6(zwei);
-        istr6 >> tempi1[i];
-        if((i==0) & (tempw1[0]>absminw)){
-            QMessageBox::information(this, "Error", "Error 4: Template A starts at higher wavelength than all spectra.");
-                    return;
-        }
-        if((i==bini-1)& (tempw1[bini-1]<absmaxw)){
-            QMessageBox::information(this, "Error", "Error 5: Template A ends at lower wavelength than all spectra.");
-            return;
-        }
+            dat2 >> eins >> zwei;
+            istringstream istr5(eins);
+            istr5 >> tempw1[i];
+            istringstream istr6(zwei);
+            istr6 >> tempi1[i];
+            if((i==0) & (tempw1[0]>absminw)){
+                QMessageBox::information(this, "Error", "Error 4: Template A starts at higher wavelength "+QString::number(tempw1[0])+" than all spectra. " +absminw);
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+            if((i==bini-1)& (tempw1[bini-1]<absmaxw)){
+                QMessageBox::information(this, "Error", "Error 5: Template A ends at lower wavelength "+QString::number(tempw1[i])+" than all spectra. "+absmaxw);
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
         }
         dat2.close();
 
-        QString output12="cropedt1";
+        QString output12="cropedt1.txt";
         string output2 = output12.toUtf8().constData();
         std::ostringstream output2NameStream(output2);
-        output2NameStream<<path<<"/"<<output2<<".txt";
+        output2NameStream<<path<<"/"<<output2;
         std::string output2Name = output2NameStream.str();
         ofstream file2(output2Name.c_str());
 
         for(int i=0; i<bini; i++){
-        if((tempw1[i]>=absminw) & (tempw1[i]<=absmaxw)){
-            file2<<setprecision(14)<<tempw1[i]<<" "<<tempi1[i]<<endl;
-        }
+            if((tempw1[i]>=absminw) & (tempw1[i]<=absmaxw)){
+                file2<<setprecision(14)<<tempw1[i]<<" "<<tempi1[i]<<endl;
+            }
         }
 
         //template2
         QString input13=ui->lineEdit_3->text();
         string data13 = input13.toUtf8().constData();
         std::ostringstream dat3NameStream(data13);
-        dat3NameStream<<path<<"/"<<data13<<".txt";
+        dat3NameStream<<path<<"/"<<data13;
         std::string dat3Name = dat3NameStream.str();
-        ifstream dat3(dat3Name.c_str());
 
         QFile checkfile3(dat3Name.c_str());
 
         if(!checkfile3.exists()){
             qDebug()<<"Error 6: The file "<<checkfile3.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "Error 6: Template B does not exist!");
-           return;
+            return;
         }
+        ifstream dat3(dat3Name.c_str());
 
         bini=0;
 
@@ -576,46 +687,51 @@ void MainWindow::on_pushButton_clicked()
         tempi2.resize(bini);
 
         for (int i =0; i < bini; i++){
-        dat3 >> eins >> zwei;
-        istringstream istr3(eins);
-        istr3 >> tempw2[i];
-        istringstream istr4(zwei);
-        istr4 >> tempi2[i];
-        if((i==0) & (tempw2[0]>absminw)){
-            QMessageBox::information(this, "Error", "Error 7: Template B starts at higher wavelength than all spectra.");
-                    return;
-        }
-        if((i==bini-1)& (tempw2[bini-1]<absmaxw)){
-            QMessageBox::information(this, "Error", "Error 8: Template B ends at lower wavelength than all spectra.");
-            return;
-        }
+            dat3 >> eins >> zwei;
+            istringstream istr3(eins);
+            istr3 >> tempw2[i];
+            istringstream istr4(zwei);
+            istr4 >> tempi2[i];
+            if((i==0) & (tempw2[0]>absminw)){
+                QMessageBox::information(this, "Error", "Error 7: Template B starts at higher wavelength "+QString::number(tempw2[0])+" than all spectra. "+absminw);
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+            if((i==bini-1)& (tempw2[bini-1]<absmaxw)){
+                QMessageBox::information(this, "Error", "Error 8: Template B ends at lower wavelength "+QString::number(tempw2[i])+" than all spectra. "+absmaxw);
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
         }
         dat3.close();
 
-        QString output13="cropedt2";
+        QString output13="cropedt2.txt";
         string output3 = output13.toUtf8().constData();
         std::ostringstream output3NameStream(output3);
-        output3NameStream<<path<<"/"<<output3<<".txt";
+        output3NameStream<<path<<"/"<<output3;
         std::string output3Name = output3NameStream.str();
         ofstream file3(output3Name.c_str());
 
         for(int i=0; i<bini; i++){
-        if((tempw2[i]>=absminw) & (tempw2[i]<=absmaxw)){
-            file3<<setprecision(14)<<tempw2[i]<<" "<<tempi2[i]<<endl;
+            if((tempw2[i]>=absminw) & (tempw2[i]<=absmaxw)){
+                file3<<setprecision(14)<<tempw2[i]<<" "<<tempi2[i]<<endl;
+            }
         }
-        }}
+     }
 
 
 
 //******************************************************
 //rebinning
 //******************************************************
-        this->setCursor(QCursor(Qt::WaitCursor));
+
         ui->progressBar->setValue(0);
 
     for(int g=0; g<num; g++){
 
     ui->customPlot->clearGraphs();
+
+
 
         if(ui->checkBox_4->isChecked()){
             g=num-1;
@@ -626,19 +742,27 @@ void MainWindow::on_pushButton_clicked()
          ui->lineEdit_9->setText(progress);
          qApp->processEvents(QEventLoop::AllEvents);
 
+         if(stopreb==1){
+             stopreb=0;
+             this->setCursor(QCursor(Qt::ArrowCursor));
+             return;
+         }
+         else{
+             //
+         }
+
          measn=ui->doubleSpinBox_13->value();
          tempn=ui->doubleSpinBox_14->value();
          tempn2=ui->doubleSpinBox_16->value();
 
          //read measured spectrum
 
-       QString input="croped_";
+       QString input="croped1_";
 
         string data1 = input.toUtf8().constData();
          std::ostringstream dat1NameStream(data1);
          dat1NameStream<<path<<"/"<<data1<<g<<".txt";
          std::string dat1Name = dat1NameStream.str();
-         ifstream dat1(dat1Name.c_str());
 
          QFile checkfile1(dat1Name.c_str());
 
@@ -648,6 +772,7 @@ void MainWindow::on_pushButton_clicked()
              this->setCursor(QCursor(Qt::ArrowCursor));
             return;
          }
+         ifstream dat1(dat1Name.c_str());
 
          bini=0;
 
@@ -710,18 +835,18 @@ void MainWindow::on_pushButton_clicked()
                      aa=e;
                  }
              }
-             file1<<std::setprecision(14)<<resamw[i]<<" "<<resami[i]<<endl;
+             file1<<std::setprecision(14)<<resamw[i]<<"\t"<<resami[i]<<endl;
          }
          file1.close();
 
 
                  for (int i=0; i+1<bini; i++){
-                 mi+=(measw[i+1]-measw[i])*((measi[i]+measi[i+1])/2);
+                    mi+=(measw[i+1]-measw[i])*((measi[i]+measi[i+1])/2);
                  }
                  for (int i=0; i+1<logbin; i++){
-                 ri+=(resamw[i+1]-resamw[i])*((resami[i]+resami[i+1])/2);
+                    ri+=(resamw[i+1]-resamw[i])*((resami[i]+resami[i+1])/2);
                  }
-                 ui->progressBar->setValue(100/num*(g+1));
+                 ui->progressBar->setValue(100*(g+1)/num);
                  qApp->processEvents(QEventLoop::AllEvents);
 
 
@@ -752,18 +877,17 @@ void MainWindow::on_pushButton_clicked()
         }
 
                  if(ui->checkBox_9->isChecked()){
-                 //read primary template
-                 QString input2=ui->lineEdit_2->text();
+                    //read primary template
+                    QString input2=ui->lineEdit_2->text();
 
-                 if(ui->checkBox_10->isChecked()){
-                     input2="cropedt1";
-                 }
+                    if(ui->checkBox_10->isChecked()){
+                         //input2="cropedt1";
+                    }
 
-                 string data2 = input2.toUtf8().constData();
-                 std::ostringstream dat2NameStream(data2);
-                 dat2NameStream<<path<<"/"<<data2<<".txt";
-                 std::string dat2Name = dat2NameStream.str();
-                 ifstream dat2(dat2Name.c_str());
+                    string data2 = input2.toUtf8().constData();
+                    std::ostringstream dat2NameStream(data2);
+                    dat2NameStream<<path<<"/"<<data2;
+                    std::string dat2Name = dat2NameStream.str();
 
                  QFile checkfile2(dat2Name.c_str());
 
@@ -773,6 +897,7 @@ void MainWindow::on_pushButton_clicked()
                      this->setCursor(QCursor(Qt::ArrowCursor));
                     return;
                  }
+                 ifstream dat2(dat2Name.c_str());
 
                  binia=0;
 
@@ -802,18 +927,21 @@ void MainWindow::on_pushButton_clicked()
                  QString output21=ui->lineEdit_10->text();
                  string output2 = output21.toUtf8().constData();
                  std::ostringstream file2NameStream(output2);
-                 file2NameStream<<path<<"/"<<output2<<".txt";
+                 file2NameStream<<path<<"/"<<output2;
                  std::string file2Name = file2NameStream.str();
                  ofstream file2(file2Name.c_str());
 
-                 for (int i =0; i < bini; i++){
-                 dat2 >> eins >> zwei;
-                 istringstream istr4(eins);
-                 istr4 >> tempw1[i];
-                 tempw1[i]=log10(tempw1[i]);
-                 istringstream istr5(zwei);
-                 istr5 >> tempi1[i];
-                 tempi1[i]=(tempi1[i]-tempn);
+                 for (int i =0; i < binia; i++){
+                    dat2 >> eins >> zwei;
+                    istringstream istr4(eins);
+                    istr4 >> tempw1[i];
+                    tempw1[i]=log10(tempw1[i]);
+                    istringstream istr5(zwei);
+                    istr5 >> tempi1[i];
+                    tempi1[i]=(tempi1[i]-tempn);
+                    if(ui->checkBox_15->isChecked()){
+                        tempi1[i]=tempi1[i]*ui->lineEdit_24->text().toDouble();
+                    }
                  }
                  dat2.close();
 
@@ -821,14 +949,13 @@ void MainWindow::on_pushButton_clicked()
                  QString input3=ui->lineEdit_3->text();
 
                  if(ui->checkBox_10->isChecked()){
-                 input3="cropedt2";
+                    //input3="cropedt2";
                  }
 
                  string data3 = input3.toUtf8().constData();
                  std::ostringstream dat3NameStream(data3);
-                 dat3NameStream<<path<<"/"<<data3<<".txt";
+                 dat3NameStream<<path<<"/"<<data3;
                  std::string dat3Name = dat3NameStream.str();
-                 ifstream dat3(dat3Name.c_str());
 
                  QFile checkfile3(dat3Name.c_str());
 
@@ -838,6 +965,7 @@ void MainWindow::on_pushButton_clicked()
                      this->setCursor(QCursor(Qt::ArrowCursor));
                     return;
                  }
+                 ifstream dat3(dat3Name.c_str());
 
                  this->setCursor(QCursor(Qt::WaitCursor));
 
@@ -865,21 +993,24 @@ void MainWindow::on_pushButton_clicked()
                  tempi2.resize(binib);
                  tempw2.resize(binib);
 
-                 for (int i =0; i < bini; i++){
-                 dat3 >> eins >> zwei;
-                 istringstream istr7(eins);
-                 istr7 >> tempw2[i];
-                 tempw2[i]=log10(tempw2[i]);
-                 istringstream istr8(zwei);
-                 istr8 >> tempi2[i];
-                 tempi2[i]=(tempi2[i]-tempn2);
+                 for (int i =0; i < binib; i++){
+                    dat3 >> eins >> zwei;
+                    istringstream istr7(eins);
+                    istr7 >> tempw2[i];
+                    tempw2[i]=log10(tempw2[i]);
+                    istringstream istr8(zwei);
+                    istr8 >> tempi2[i];
+                    tempi2[i]=(tempi2[i]-tempn2);
+                    if(ui->checkBox_16->isChecked()){
+                        tempi2[i]=tempi2[i]*ui->lineEdit_25->text().toDouble();
+                    }
                  }
                  dat3.close();
 
                  QString output31=ui->lineEdit_11->text();
                  string output3 = output31.toUtf8().constData();
                  std::ostringstream file3NameStream(output3);
-                 file3NameStream<<path<<"/"<<output3<<".txt";
+                 file3NameStream<<path<<"/"<<output3;
                  std::string file3Name = file3NameStream.str();
                  ofstream file3(file3Name.c_str());
 
@@ -892,12 +1023,12 @@ void MainWindow::on_pushButton_clicked()
 
         for(int i=0; i<logbin; i++){
 
-            retw1[i]=tempw1[0]+i*diff;
+            retw1[i]=resamw[i]; //tempw1[0]+i*diff;
             reti1[i]=0;
 
-            for(int e=aa; e<aa+5; e++){
+            for(int e=0; e<binia; e++){
 
-                if(tempw1[e]==reti1[i]){
+                if(tempw1[e]==retw1[i]){
                     reti1[i]=tempi1[e];
                     aa=e;
                 }
@@ -906,7 +1037,7 @@ void MainWindow::on_pushButton_clicked()
                     aa=e;
                 }
             }
-            file2<<std::setprecision(14)<<retw1[i]<<" "<<reti1[i]<<endl;
+            file2<<std::setprecision(14)<<resamw[i]<<"\t"<<reti1[i]<<endl;
         }
         file2.close();
 
@@ -920,12 +1051,12 @@ void MainWindow::on_pushButton_clicked()
 
         for(int i=0; i<logbin; i++){
 
-            retw2[i]=tempw2[0]+i*diff;
+            retw2[i]=resamw[i]; //tempw2[0]+i*diff;
             reti2[i]=0;
 
-            for(int e=aa; e<aa+5; e++){
+            for(int e=aa; e<binib; e++){
 
-                if(tempw2[e]==reti2[i]){
+                if(tempw2[e]==retw2[i]){
                     reti2[i]=tempi2[e];
                     aa=e;
                 }
@@ -934,7 +1065,7 @@ void MainWindow::on_pushButton_clicked()
                     aa=e;
                 }
             }
-            file3<<std::setprecision(14)<<retw2[i]<<" "<<reti2[i]<<endl;
+            file3<<std::setprecision(14)<<resamw[i]<<"\t"<<reti2[i]<<endl;
         }
         file3.close();
 
@@ -1005,6 +1136,7 @@ void MainWindow::ReadHeader(int argc,   char *argv[])
     }
 
     if (status) fits_report_error(stderr, status); /* print any error message */
+
     return;
 }
 
@@ -1020,7 +1152,6 @@ void MainWindow::on_pushButton_3_clicked()
     std::ostringstream dat1NameStream(plot11);
     dat1NameStream<<path<<"/"<<plot11;
     std::string dat1Name = dat1NameStream.str();
-    ifstream toplot1(dat1Name.c_str());
 
     QFile checkfile1(dat1Name.c_str());
 
@@ -1029,13 +1160,13 @@ void MainWindow::on_pushButton_3_clicked()
         QMessageBox::information(this, "Error", "Error 16: File 1 does not exist!");
        return;
     }
+    ifstream toplot1(dat1Name.c_str());
 
     QString plot2=ui->lineEdit_5->text();
     string plot12 = plot2.toUtf8().constData();
     std::ostringstream dat2NameStream(plot12);
     dat2NameStream<<path<<"/"<<plot12;
     std::string dat2Name = dat2NameStream.str();
-    ifstream toplot2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -1044,13 +1175,13 @@ void MainWindow::on_pushButton_3_clicked()
         QMessageBox::information(this, "Error", "Error 17: File 2 does not exist!");
        return;
     }
+    ifstream toplot2(dat2Name.c_str());
 
     QString plot3=ui->lineEdit_6->text();
     string plot13 = plot3.toUtf8().constData();
     std::ostringstream dat3NameStream(plot13);
     dat3NameStream<<path<<"/"<<plot13;
     std::string dat3Name = dat3NameStream.str();
-    ifstream toplot3(dat3Name.c_str());
 
     QFile checkfile3(dat3Name.c_str());
 
@@ -1059,6 +1190,7 @@ void MainWindow::on_pushButton_3_clicked()
         QMessageBox::information(this, "Error", "Error 18: File 3 does not exist!");
        return;
     }
+    ifstream toplot3(dat3Name.c_str());
 
     int number_of_lines =0;
 
@@ -1192,7 +1324,7 @@ void MainWindow::on_pushButton_4_clicked()
     QString input2=ui->lineEdit_10->text();
     string data2 = input2.toUtf8().constData();
     std::ostringstream dat2NameStream(data2);
-    dat2NameStream<<path<<"/"<<data2<<".txt";
+    dat2NameStream<<path<<"/"<<data2;
     std::string dat2Name = dat2NameStream.str();
     ifstream dat2(dat2Name.c_str());
 
@@ -1205,11 +1337,11 @@ void MainWindow::on_pushButton_4_clicked()
     }
 
     for (int i=0; i<logbin; i++){
-    dat2 >> eins >>zwei;
-    istringstream istr3(eins);
-    istr3 >> retw1[i];
-    istringstream istr4(zwei);
-    istr4 >> reti1[i];
+        dat2 >> eins >>zwei;
+        istringstream istr3(eins);
+        istr3 >> retw1[i];
+        istringstream istr4(zwei);
+        istr4 >> reti1[i];
     }
     dat2.close();
 
@@ -1217,7 +1349,7 @@ void MainWindow::on_pushButton_4_clicked()
     QString input3=ui->lineEdit_11->text();
     string data3 = input3.toUtf8().constData();
     std::ostringstream dat3NameStream(data3);
-    dat3NameStream<<path<<"/"<<data3<<".txt";
+    dat3NameStream<<path<<"/"<<data3;
     std::string dat3Name = dat3NameStream.str();
     ifstream dat3(dat3Name.c_str());
 
@@ -1230,11 +1362,11 @@ void MainWindow::on_pushButton_4_clicked()
     }
 
     for (int i=0; i<logbin; i++){
-    dat3 >> eins >>zwei;
-    istringstream istr5(eins);
-    istr5 >> retw2[i];
-    istringstream istr6(zwei);
-    istr6 >> reti2[i];
+        dat3 >> eins >>zwei;
+        istringstream istr5(eins);
+        istr5 >> retw2[i];
+        istringstream istr6(zwei);
+        istr6 >> reti2[i];
     }
     dat3.close();
     int min, max;
@@ -1244,12 +1376,24 @@ void MainWindow::on_pushButton_4_clicked()
         max=ui->spinBox_6->value();
     }
     else{
-    min=ui->spinBox_6->value();
-    max=ui->spinBox_7->value();
+        min=ui->spinBox_6->value();
+        max=ui->spinBox_7->value();
     }
     num=max-min;
 
     for(int g=min; g<=max; g++){
+
+        qApp->processEvents(QEventLoop::AllEvents);
+        ui->customPlot_2->clearGraphs();
+
+        if(stopcor==1){
+            stopcor=0;
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        else{
+            //
+        }
 
         //read rebined spectra
         QString input=ui->lineEdit_7->text();
@@ -1257,7 +1401,6 @@ void MainWindow::on_pushButton_4_clicked()
         std::ostringstream dat1NameStream(data1);
         dat1NameStream<<path<<"/"<<data1<<g<<".txt";
         std::string dat1Name = dat1NameStream.str();
-        ifstream dat1(dat1Name.c_str());
 
         QFile checkfile1(dat1Name.c_str());
 
@@ -1266,6 +1409,7 @@ void MainWindow::on_pushButton_4_clicked()
             QMessageBox::information(this, "Error", "Error 21: File for rebined spectra does not exist!");
            return;
         }
+        ifstream dat1(dat1Name.c_str());
 
         logbin=0;
         while(std::getline(dat1, line))
@@ -1283,12 +1427,12 @@ void MainWindow::on_pushButton_4_clicked()
         reti2.resize(logbin);
 
         for (int i=0; i<logbin; i++){
-        dat1 >> eins >>zwei;
-        istringstream istr(eins);
-        istr >> resamw[i];
-        istringstream istr2(zwei);
-        istr2 >> resami[i];
-        resami[i]=resami[i]-measn;
+            dat1 >> eins >>zwei;
+            istringstream istr(eins);
+            istr >> resamw[i];
+            istringstream istr2(zwei);
+            istr2 >> resami[i];
+            resami[i]=resami[i]-measn;
         }
         dat1.close();
 /*
@@ -1424,9 +1568,9 @@ void MainWindow::on_pushButton_4_clicked()
 
     for (int n=0; n<2*vsteps; n++){
             for(int m=0; m<2*dosteps; m++){
-            ccf[n][m]=0;
+                ccf[n][m]=0;
             }
-            }
+         }
 
     for (int n=0; n<2*vsteps; n++){
         //cout<<(vsteps-n)*dv<<endl;
@@ -1436,26 +1580,26 @@ void MainWindow::on_pushButton_4_clicked()
         don=dosteps-m;
 
             for (int i=0; i<logbin; i++){
-            if((i+don<logbin) &(i+don>0)){
-            temp[i]=reti1[i]+reti2[i+don];
-            }
-            else{
-            temp[i]=0;
-            }
+                if((i+don<logbin) &(i+don>0)){
+                    temp[i]=reti1[i]+reti2[i+don];
+                }
+                else{
+                    temp[i]=0;
+                }
             }
 
             meant=0;
             means=0;
             for(int i=0; i<logbin; i++){
-            meant+=temp[i]/logbin;
-            means+=resami[i]/logbin;
+                meant+=temp[i]/logbin;
+                means+=resami[i]/logbin;
             }
 
             sigmas=0;
             sigmat=0;
             for(int i=0; i<logbin; i++){
-            sigmat+=pow((temp[i]-meant),2);
-            sigmas+=pow((resami[i]-means),2);
+                sigmat+=pow((temp[i]-meant),2);
+                sigmas+=pow((resami[i]-means),2);
             }
             sigmat=sqrt(sigmat/(logbin-1));
             sigmas=sqrt(sigmas/(logbin-1));
@@ -1463,54 +1607,67 @@ void MainWindow::on_pushButton_4_clicked()
             // correlation
             dn=vsteps-n;
             for(int i=0; i<logbin; i++){
-            if((i+dn<logbin) &(i+dn>0)){
-            ccf[n][m]+=(resami[i]-means)*(temp[i+dn]-meant)/logbin/sigmat/sigmas;
-            }
-            else{
-            ccf[n][m]+=0.0;
-            }
+                if((i+dn<logbin) &(i+dn>0)){
+                    ccf[n][m]+=(resami[i]-means)*(temp[i+dn]-meant)/logbin/sigmat/sigmas;
+                }
+                else{
+                    ccf[n][m]+=0.0;
+                }
             }
             if(ccf[n][m]<1){
-            if(ccf[n][m]>0){
-            //file4<<(dosteps-m)*dv<<" "<<(vsteps-n)*dv<<" "<<ccf[n][m]<<"\n";
-            }}
-            }}
+                if(ccf[n][m]>0){
+                    //file4<<(dosteps-m)*dv<<" "<<(vsteps-n)*dv<<" "<<ccf[n][m]<<"\n";
+                }
+            }
+        }
+    }
 
     if(ui->checkBox_12->isChecked()){
-    for(int m=0; m<2*dosteps; m++){
-    std::ostringstream file5NameStream("ccf_");
-    file5NameStream<<path<<"/ccf_"<<g<<"_"<<m<<".txt";
-    std::string file5Name = file5NameStream.str();
-    ofstream file5(file5Name.c_str());
+        for(int m=0; m<2*dosteps; m++){
+            std::ostringstream file5NameStream("ccf_");
+            file5NameStream<<path<<"/ccf_"<<g<<"_"<<m<<".txt";
+            std::string file5Name = file5NameStream.str();
+            ofstream file5(file5Name.c_str());
 
-    for(int n=0; n<2*vsteps; n++){
-        if((ccf[n][m]<1) &(ccf[n][m]>0)){
-        file5<<(-1)*(vsteps - n)*dv<<" "<<ccf[n][m]<<endl;
-    }}
-    file5.close();
-    }
+            for(int n=0; n<2*vsteps; n++){
+                if((ccf[n][m]<1) &(ccf[n][m]>0)){
+                    file5<<(-1)*(vsteps - n)*dv<<" "<<ccf[n][m]<<endl;
+                }
+            }
+            file5.close();
+        }
     }
 
     ccfmax=0;
     for(int m=0; m<2*dosteps; m++){
-            for(int n=0; n<2*vsteps; n++){
-            if((ccf[n][m]>ccfmax) &(ccf[n][m]<1)){
-            ccfmax=ccf[n][m];
-            shift = (vsteps - n)*dv;
-            sepa=(dosteps-m)*dv;
-            b=n;
-            d=m;
-            }}
-            }
+       for(int n=0; n<2*vsteps; n++){
+           if((ccf[n][m]>ccfmax) &(ccf[n][m]<1)){
+               ccfmax=ccf[n][m];
+               shift = (vsteps - n)*dv;
+               sepa=(dosteps-m)*dv;
+               b=n;
+               d=m;
+           }
+        }
+    }
+
 
     std::ostringstream file6NameStream("ccfmax_");
     file6NameStream<<path<<"/ccfmax_"<<g<<".txt";
     std::string file6Name = file6NameStream.str();
     ofstream file6(file6Name.c_str());
+    QVector<double> ccfx(2*vsteps), ccfy(2*vsteps);
 
     for(int i=0; i<2*vsteps; i++){
         file6<<(-1)*(vsteps - i)*dv<<" "<<ccf[i][d]<<endl;
+        ccfx[i]=(-1)*(vsteps - i)*dv;
+        ccfy[i]=ccf[i][d];
     }
+
+    ui->customPlot_2->addGraph();
+    ui->customPlot_2->graph()->addData(ccfx, ccfy);
+    ui->customPlot_2->rescaleAxes();
+    ui->customPlot_2->replot();
 
     QString hift= QString::number(shift);
     ui->lineEdit_12->setText(hift);
@@ -1531,14 +1688,16 @@ void MainWindow::on_pushButton_4_clicked()
     std::string rvName = rvNameStream.str();
     ofstream rvfile(rvName.c_str());
 
-    rvfile<<shift<<" "<<(-1)*sepa<<endl;
+    rvfile<<-shift<<" "<<(-1)*sepa-shift<<endl;
+    cout<<-shift<<" "<<(-1)*sepa-shift<<endl;
 
-    ui->progressBar->setValue(100/num*(g+1));
+    ui->progressBar->setValue(100*(g+1)/num);
     qApp->processEvents(QEventLoop::AllEvents);
 
     this->setCursor(QCursor(Qt::ArrowCursor));
 
 }
+    ui->progressBar->setValue(100);
 }
 
 //****************************************************************
@@ -1962,15 +2121,19 @@ void MainWindow::on_actionBug_Report_triggered()
     QMessageBox::information(this, "Bug Report", "Please contact: dsablowski@aip.de");
 }
 
+
 void MainWindow::on_actionPlot_triggered()
 {
+
     pSpec =new PlotSpec(this);
+    pSpec->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_18->text(), ui->lineEdit_19->text(), ui->lineEdit_20->text());
     pSpec->show();
 }
 
 void MainWindow::on_actionSequence_Plotter_triggered()
 {
     pSequ = new PlotSequ(this);
+    pSequ->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_18->text(), ui->lineEdit_19->text(), ui->lineEdit_20->text());
     pSequ->show();
 }
 
@@ -2044,6 +2207,7 @@ void MainWindow::on_doubleSpinBox_14_valueChanged()
 void MainWindow::on_actionTemplate_Generator_triggered()
 {
     qTemplate = new Template(this);
+    qTemplate->seData(ui->lineEdit_15->text());
     qTemplate->show();
 }
 
@@ -2084,6 +2248,7 @@ void MainWindow::on_lineEdit_20_textChanged()
 void MainWindow::on_actionBinary_Tool_triggered()
 {
     qBinary = new BinaryTool(this);
+    qBinary->seData(ui->lineEdit_15->text());
     qBinary->show();
 }
 
@@ -2100,24 +2265,28 @@ void MainWindow::on_checkBox_11_clicked()
 void MainWindow::on_actionTelluric_triggered()
 {
     qTell = new Telluric(this);
+    qTell->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_21->text());
     qTell->show();
 }
 
 void MainWindow::on_action2D_Map_Plot_triggered()
 {
     qMPlot = new MapPlot(this);
+    qMPlot->seData(ui->lineEdit_15->text());
     qMPlot->show();
 }
 
 void MainWindow::on_actionRV_Calculator_triggered()
 {
     qRVCalc = new RVCalc(this);
+    qRVCalc->seData(ui->lineEdit_15->text(), ui->lineEdit_21->text());
     qRVCalc->show();
 }
 
 void MainWindow::on_actionRaname_Files_triggered()
 {
     qRename = new Rename(this);
+    qRename->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_18->text(), ui->lineEdit_19->text(), ui->lineEdit_20->text());
     qRename->show();
 }
 
@@ -2143,19 +2312,29 @@ void MainWindow::on_comboBox_currentIndexChanged()
 void MainWindow::on_actionCPD_triggered()
 {
     qCPD = new CPD(this);
+    qCPD->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_21->text());
     qCPD->show();
 }
 
 void MainWindow::on_actionArithmetic_triggered()
 {
     qArith = new Arithmetic(this);
+    qArith->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_21->text());
     qArith->show();
 }
 
 void MainWindow::on_actionCrop_triggered()
 {
     qCrop = new Crop(this);
+    qCrop->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_18->text(), ui->lineEdit_19->text(), ui->lineEdit_20->text());
     qCrop->show();
+}
+
+void MainWindow::on_actionSpline_Fit_triggered()
+{
+    qSpline = new SplineFit(this);
+    qSpline->seData(ui->lineEdit_15->text());
+    qSpline->show();
 }
 
 //*****************************************
@@ -2194,11 +2373,14 @@ void MainWindow::on_pushButton_11_clicked()
 
     //read measuremens
     MainWindow::ReadMeasured(gg);
-    cout<<"read spectrum no. "<<gg<<endl;
+    //cout<<"read spectrum no. "<<gg<<endl;
 
     if(check==1){
         check=0;
         return;
+    }
+    else{
+        //
     }
 
     if(g==0){
@@ -2215,6 +2397,7 @@ void MainWindow::on_pushButton_11_clicked()
     }
 
     }
+    cout<<"minwave: "<<minwave<<"; maxwave: "<<maxwave<<endl;
 
     for (int g=0; g<num; g++){
 
@@ -2226,27 +2409,30 @@ void MainWindow::on_pushButton_11_clicked()
         }
 
 
-    //read measuremens
-    MainWindow::ReadMeasured(gg);
-    cout<<"read spectrum no. "<<gg<<endl;
+        //read measuremens
+        MainWindow::ReadMeasured(gg);
+        //cout<<"read spectrum no. "<<gg<<endl;
 
-    if(check==1){
-        check=0;
-        return;
-    }
-
-    QString output11="crspec_";
-    string output1 = output11.toUtf8().constData();
-    std::ostringstream output1NameStream(output1);
-    output1NameStream<<path<<"/"<<output1<<gg<<".txt";
-    std::string output1Name = output1NameStream.str();
-    ofstream file2(output1Name.c_str());
-
-    for(int i=0; i<bini; i++){
-        if(measw[i]>= minwave & measw[i]<=maxwave){
-            file2<<measw[i]<<"\t"<<measi[i]<<endl;
+        if(check==1){
+            check=0;
+            return;
         }
-    }
+        else{
+            //
+        }
+
+        QString output11="crspec_";
+        string output1 = output11.toUtf8().constData();
+        std::ostringstream output1NameStream(output1);
+        output1NameStream<<path<<"/"<<output1<<gg<<".txt";
+        std::string output1Name = output1NameStream.str();
+        ofstream file2(output1Name.c_str());
+
+        for(int i=0; i<bini; i++){
+            if(measw[i]>= minwave & measw[i]<=maxwave){
+                file2<<measw[i]<<"\t"<<measi[i]<<endl;
+            }
+        }
 
     }
 
@@ -2269,11 +2455,14 @@ void MainWindow::on_pushButton_11_clicked()
 
     //read measuremens
     MainWindow::ReadMeasured(gg);
-    cout<<"read spectrum no. "<<gg<<endl;
+    //cout<<"read spectrum no. "<<gg<<endl;
 
     if(check==1){
         check=0;
         return;
+    }
+    else{
+        //
     }
 
     if(g==0){
@@ -2289,7 +2478,7 @@ void MainWindow::on_pushButton_11_clicked()
         }
     }
 
-     cout<<maxnu<<endl;
+     cout<<"Number of sequences: "<<maxnu<<endl;
 
     for (int s=0; s<maxnu; s++){
 
@@ -2303,7 +2492,7 @@ void MainWindow::on_pushButton_11_clicked()
         for(int i =0; i<measw.size(); i++){
 
             if((measw[i]>=lowave[s]) & (measw[i]<=upwave[s])){
-            file1<<measw[i]<<"\t"<<measi[i]<<endl;
+                file1<<measw[i]<<"\t"<<measi[i]<<endl;
             }
 
         }
@@ -2335,11 +2524,6 @@ void MainWindow::on_pushButton_11_clicked()
 
 }
 
-void MainWindow::on_actionSpline_Fit_triggered()
-{
-    qSpline = new SplineFit(this);
-    qSpline->show();
-}
 
 void MainWindow::on_pushButton_12_clicked()
 {
@@ -2422,5 +2606,324 @@ void MainWindow::on_pushButton_12_clicked()
     if (status) fits_report_error(stderr, status);
     return;
 
+    }
+}
+
+void MainWindow::on_actionBlaze_Correction_triggered()
+{
+    qBCorr = new BlazeCorr(this);
+    qBCorr->seData(ui->lineEdit_15->text());
+    qBCorr->show();
+
+}
+
+
+void MainWindow::on_actionMoments_triggered()
+{
+    qMom = new Moments(this);
+    qMom->seData(ui->lineEdit_15->text());
+    qMom->show();
+}
+
+// stop rebinning
+void MainWindow::on_pushButton_13_clicked()
+{
+    stopreb=1;
+}
+
+// stop correlation
+void MainWindow::on_pushButton_14_clicked()
+{
+    stopcor=1;
+}
+
+
+//***********************************************************
+// subtract templates using velocities by cross correlattion
+//***********************************************************
+void MainWindow::on_pushButton_15_clicked()
+{
+    int min=ui->spinBox_6->value();
+    int max=ui->spinBox_7->value();
+    double velst=ui->lineEdit_16->text().toDouble(), rv1=0.0, rv2=0.0, tbina=0.0, tbinb=0.0;
+    int irv1=0, irv2=0;
+    string  eins, zwei;
+
+    if(velst==0){
+        QMessageBox::information(this, "Error", "Velocity step size is zero. Did you executed CC first?");
+        return;
+    }
+    this->setCursor(QCursor(Qt::WaitCursor));
+
+    //read rebined template A
+    QString temp1=ui->lineEdit_10->text();
+    string tempa = temp1.toUtf8().constData();
+    std::ostringstream dataNameStream(tempa);
+    dataNameStream<<path<<"/"<<tempa;
+    std::string dataName = dataNameStream.str();
+
+    QFile checkfilea(dataName.c_str());
+
+    if(!checkfilea.exists()){
+        QMessageBox::information(this, "Error", "The template file "+checkfilea.fileName()+" does not exist.");
+        qDebug()<<"The file "<<checkfilea.fileName()<<" does not exist.";
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        return;
+    }
+
+    ifstream data(dataName.c_str());
+
+    int numbera =0;
+
+    while(std::getline(data, line))
+       ++ numbera;
+
+    data.clear();
+    data.seekg(0, ios::beg);
+
+    QVector<double> wta(numbera), ita(numbera);
+
+    for(int i=0; i<numbera; i++){
+        data >> eins >> zwei;
+        istringstream str(eins);
+        str >> wta[i];
+        istringstream str2(zwei);
+        str2 >> ita[i];
+        if(i==1){
+            tbina=wta[1]-wta[0];
+        }
+        else{
+            //
+        }
+    }
+
+    // read rebined template B
+    QString temp2=ui->lineEdit_11->text();
+    string tempb = temp2.toUtf8().constData();
+    std::ostringstream datbNameStream(tempb);
+    datbNameStream<<path<<"/"<<tempb;
+    std::string datbName = datbNameStream.str();
+
+    QFile checkfileb(datbName.c_str());
+
+    if(!checkfileb.exists()){
+        QMessageBox::information(this, "Error", "The template file "+checkfileb.fileName()+" does not exist.");
+        qDebug()<<"The file "<<checkfileb.fileName()<<" does not exist.";
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        return;
+    }
+
+    ifstream datb(datbName.c_str());
+
+    int numberb =0;
+
+    while(std::getline(datb, line))
+       ++ numberb;
+
+    datb.clear();
+    datb.seekg(0, ios::beg);
+
+    if(numberb!=numbera){
+        QMessageBox::information(this, "Warning", "Templates have different length.");
+    }
+    else{
+        //
+    }
+
+    QVector<double> wtb(numberb), itb(numberb);
+
+    for(int i=0; i<numberb; i++){
+        datb >> eins >> zwei;
+        istringstream str(eins);
+        str >> wtb[i];
+        istringstream str2(zwei);
+        str2 >> itb[i];
+        if(i==1){
+            tbinb=wtb[1]-wtb[0];
+        }
+        else{
+            //
+        }
+    }
+    if(tbina!=tbinb){
+        QMessageBox::information(this, "Warning", "Templates have different binning.");
+    }
+    else{
+        //
+    }
+    QVector<double> wt(1), it(1);
+    int tbin=0;
+    data.close();
+    datb.close();
+
+    if(ui->checkBox_17->isChecked()){
+        wt.resize(numbera);
+        it.resize(numbera);
+        tbin=numbera;
+    }
+    else{
+        wt.resize(numberb);
+        it.resize(numberb);
+        tbin=numberb;
+    }
+
+    for(int i =min; i<=max; i++){
+
+        QString input=ui->lineEdit_8->text();
+        string data1 = input.toUtf8().constData();
+        std::ostringstream dat1NameStream(data1);
+        dat1NameStream<<path<<"/"<<data1<<i<<".txt";
+        std::string dat1Name = dat1NameStream.str();
+
+        QFile checkfile1(dat1Name.c_str());
+
+        if(!checkfile1.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfile1.fileName()+" does not exist.");
+            qDebug()<<"The file "<<checkfile1.fileName()<<" does not exist.";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dat1(dat1Name.c_str());
+
+        dat1 >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> rv1;
+        istringstream ist2(zwei);
+        ist2 >> rv2;
+        irv1=rv1/velst;
+        irv2=rv2/velst;
+
+        dat1.close();
+
+        if(ui->checkBox_17->isChecked()){
+            for(int g=0; g<numbera; g++){
+                wt[g]=wta[g]+irv1*tbina;
+                it[g]=ita[g];
+            }
+        }
+        else{
+            for(int g=0; g<numberb; g++){
+                wt[g]=wtb[g]+irv2*tbinb;
+                it[g]=itb[g];
+            }
+        }
+
+        QString input2=ui->lineEdit_7->text();
+        string data2 = input2.toUtf8().constData();
+        std::ostringstream dat2NameStream(data1);
+        dat2NameStream<<path<<"/"<<data2<<i<<".txt";
+        std::string dat2Name = dat2NameStream.str();
+
+        QFile checkfile2(dat2Name.c_str());
+
+        if(!checkfile2.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfile2.fileName()+" does not exist.");
+            qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dat2(dat2Name.c_str());
+
+        int number =0;
+
+        while(std::getline(dat2, line))
+           ++ number;
+
+        dat2.clear();
+        dat2.seekg(0, ios::beg);
+        QVector<double> ws(number), is(number);
+
+        for(int g=0; g<number; g++){
+            dat2 >> eins >> zwei;
+            istringstream str(eins);
+            str >> ws[g];
+            istringstream str2(zwei);
+            str2 >> is[g];
+        }
+        dat2.close();
+
+        QString out=ui->lineEdit_26->text();
+        string out1 = out.toUtf8().constData();
+        std::ostringstream out1NameStream(data1);
+        out1NameStream<<path<<"/"<<out1<<i<<".txt";
+        std::string out1Name = out1NameStream.str();
+        ofstream sub1(out1Name.c_str());
+
+        double inter=0.0;
+
+        for(int g=0; g<number; g++){
+
+            for(int n=0; n<tbin; n++){
+                    if((ws[g]>=wt[n])&(ws[g]<=wt[n+1])){
+                        inter = is[g]-it[n]+(ws[g]-wt[n])/(wt[n+1]-wt[n])*(it[n+1]-it[n]);
+                        if(ui->checkBox_20->isChecked()){   // shift by A
+                            sub1<<setprecision(14)<<pow(10,(ws[g]-irv1*tbina))<<"\t"<<inter<<endl;
+                        }
+                        else{
+                            if(ui->checkBox_21->isChecked()){   // shift by B
+                                sub1<<setprecision(14)<<pow(10,(ws[g]-irv2*tbinb))<<"\t"<<inter<<endl;
+                            }
+                            else{
+                                sub1<<setprecision(14)<<pow(10,ws[g])<<"\t"<<inter<<endl;
+                            }
+                        }
+                        n=tbin;
+                    }
+            }
+        }
+
+    }
+    this->setCursor(QCursor(Qt::ArrowCursor));
+}
+
+void MainWindow::on_checkBox_20_stateChanged()
+{
+    if(ui->checkBox_20->isChecked()){
+        ui->checkBox_21->setChecked(false);
+    }
+}
+
+void MainWindow::on_checkBox_21_stateChanged()
+{
+    if(ui->checkBox_21->isChecked()){
+        ui->checkBox_20->setChecked(false);
+    }
+}
+
+void MainWindow::on_checkBox_22_clicked()
+{
+    if(ui->checkBox_22->isChecked()){
+        ui->checkBox_23->setChecked(false);
+        ui->checkBox_24->setChecked(false);
+    }
+    else{
+        ui->checkBox_23->setChecked(false);
+        ui->checkBox_24->setChecked(true);
+    }
+}
+
+void MainWindow::on_checkBox_23_clicked()
+{
+    if(ui->checkBox_23->isChecked()){
+        ui->checkBox_22->setChecked(false);
+        ui->checkBox_24->setChecked(false);
+    }
+    else{
+        ui->checkBox_22->setChecked(false);
+        ui->checkBox_24->setChecked(true);
+    }
+}
+
+void MainWindow::on_checkBox_24_clicked()
+{
+    if(ui->checkBox_24->isChecked()){
+        ui->checkBox_23->setChecked(false);
+        ui->checkBox_22->setChecked(false);
+    }
+    else{
+        ui->checkBox_23->setChecked(false);
+        ui->checkBox_22->setChecked(true);
     }
 }

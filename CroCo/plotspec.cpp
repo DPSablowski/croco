@@ -13,6 +13,7 @@
 #include <QLabel>
 #include <QVector>
 #include <QFile>
+#include <QObject>
 #include <QtDebug>
 #include <QCheckBox>
 #include <CCfits/CCfits>
@@ -32,25 +33,17 @@ PlotSpec::PlotSpec(QWidget *parent) :
     this->setWindowTitle("Spectrum Plotter");
 
     ui->lineEdit->setText("spectra_0.txt");
-    ui->customPlot_3->xAxis->setLabel("wavelength axis");
-    ui->customPlot_3->yAxis->setLabel("spectrum value");
+    ui->customPlot_3->xAxis->setLabel("Wavelength");
+    ui->customPlot_3->yAxis->setLabel("Normalized Intensity");
     ui->checkBox->setChecked(true);
-    ui->lineEdit_5->setText("/home/daniels/Observations/Tomer/single");
     qSpPath=ui->lineEdit_5->text();
     spPath = qSpPath.toUtf8().constData();
 
+    ui->lineEdit_2->setText("Wavelength");
+    ui->lineEdit_3->setText("Normalized Intensity");
+
     ui->comboBox->addItem("ASCII");
     ui->comboBox->addItem("fits");
-
-    ui->lineEdit_7->setText("DataVector");
-    ui->lineEdit_8->setText("Arg");
-    ui->lineEdit_9->setText("Fun");
-    qspExtension=ui->lineEdit_7->text();
-    spExtension = qspExtension.toUtf8().constData();
-    qspWavecol=ui->lineEdit_8->text();
-    spWavecol = qspWavecol.toUtf8().constData();
-    qspIntenscol=ui->lineEdit_9->text();
-    spIntenscol = qspIntenscol.toUtf8().constData();
 
     QFont legendFont = font();
     legendFont.setPointSize(16);
@@ -59,8 +52,17 @@ PlotSpec::PlotSpec(QWidget *parent) :
     ui->customPlot_3->yAxis->setLabelFont(legendFont);
     ui->customPlot_3->xAxis->setTickLabelFont(legendFont);
     ui->customPlot_3->yAxis->setTickLabelFont(legendFont);
-}
 
+    ui->comboBox_2->addItem("Black");
+    ui->comboBox_2->addItem("Blue");
+    ui->comboBox_2->addItem("Red");
+    ui->comboBox_2->addItem("Green");
+    ui->comboBox_2->addItem("Yellow");
+    ui->comboBox_2->addItem("Magenta");
+
+    connect(ui->customPlot_3, SIGNAL(mouseMove(QMouseEvent*)), this ,SLOT(showPointToolTip(QMouseEvent*)));
+
+}
 
 
 PlotSpec::~PlotSpec()
@@ -70,6 +72,28 @@ PlotSpec::~PlotSpec()
 
 string one, two, zeile;
 double xs1, xs2, ys1, ys2;
+
+//********************************************************
+//show mouse coordinates
+//********************************************************
+void PlotSpec::showPointToolTip(QMouseEvent *event)
+{
+
+    double xc = ui->customPlot_3->xAxis->pixelToCoord(event->pos().x());
+    double yc = ui->customPlot_3->yAxis->pixelToCoord(event->pos().y());
+
+    setToolTip(QString("%1 , %2").arg(xc).arg(yc));
+}
+
+
+void PlotSpec::seData(QString str, QString str2, QString str3, QString str4, QString str5)
+{
+    ui->lineEdit_5->setText(str);
+    ui->lineEdit->setText(str2);
+    ui->lineEdit_7->setText(str3);
+    ui->lineEdit_8->setText(str4);
+    ui->lineEdit_9->setText(str5);
+}
 
 //****************************************************************
 //plot spectrum
@@ -83,7 +107,33 @@ void PlotSpec::on_pushButton_2_clicked()
 
     ui->customPlot_3->clearGraphs();
 
-    QVector<double> a(1), b(1);
+    int pcolor=ui->comboBox_2->currentIndex();
+
+    QPen pen;
+
+    if(pcolor==0){
+        pen.setColor(Qt::black);
+    }
+    if(pcolor==1){
+        pen.setColor(Qt::blue);;
+    }
+    if(pcolor==2){
+        pen.setColor(Qt::red);
+    }
+    if(pcolor==3){
+        pen.setColor(Qt::green);
+    }
+    if(pcolor==4){
+        pen.setColor(Qt::yellow);
+    }
+    if(pcolor==5){
+        pen.setColor(Qt::magenta);
+    }
+
+    pen.setWidth(ui->spinBox_2->value());
+
+    QVector<double> a(1), b(1), fa(1), fb(1), fxe(1), fye(1);
+    int number_of_lines=0;
 
     if(ui->comboBox->currentIndex()==0){
     QString plot1=ui->lineEdit->text();
@@ -102,8 +152,6 @@ void PlotSpec::on_pushButton_2_clicked()
        return;
     }
 
-    int number_of_lines =0;
-
     while(std::getline(toplot1, zeile))
        ++ number_of_lines;
 
@@ -114,11 +162,14 @@ void PlotSpec::on_pushButton_2_clicked()
     b.resize(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> one >>two;
-    istringstream ist(one);
-    ist >> a[i];
-    istringstream ist2(two);
-    ist2 >> b[i];
+        toplot1 >> one >>two;
+        istringstream ist(one);
+        ist >> a[i];
+        istringstream ist2(two);
+        ist2 >> b[i];
+        if(ui->checkBox_5->isChecked()){
+            b[i]=b[i]/ui->doubleSpinBox_4->value();
+        }
     }
     toplot1.close();
     }
@@ -129,14 +180,14 @@ void PlotSpec::on_pushButton_2_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<spPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
+        //ifstream dat(datName.c_str());
 
 
         QFile checkfile1(datName.c_str());
 
         if(!checkfile1.exists()){
             qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+            QMessageBox::information(this, "Error1 ", "Error 1: File "+checkfile1.fileName()+" does not exist!");
             this->setCursor(QCursor(Qt::ArrowCursor));
             //check=1;
            return;
@@ -146,6 +197,13 @@ void PlotSpec::on_pushButton_2_clicked()
 
         try
         {
+            qspExtension = ui->lineEdit_7->text();
+            spExtension = qspExtension.toUtf8().constData();
+
+            qspWavecol=ui->lineEdit_8->text();
+            spWavecol = qspWavecol.toUtf8().constData();
+            qspIntenscol=ui->lineEdit_9->text();
+            spIntenscol = qspIntenscol.toUtf8().constData();
 
             //open file for reading
             auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
@@ -184,19 +242,83 @@ void PlotSpec::on_pushButton_2_clicked()
 
     }
 
+    if(ui->checkBox_6->isChecked()){
+        QString flux1=ui->lineEdit_10->text();
+        string flux11 = flux1.toUtf8().constData();
+        std::ostringstream dat2NameStream(flux11);
+        dat2NameStream<<spPath<<"/"<<flux11;
+        std::string dat2Name = dat2NameStream.str();
+
+        QFile checkfile2(dat2Name.c_str());
+
+        if(!checkfile2.exists()){
+            qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qSpPath+"/"+flux1+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+           return;
+        }
+
+        ifstream flux(dat2Name.c_str());
+
+        number_of_lines =0;
+
+        while(std::getline(flux, zeile))
+           ++ number_of_lines;
+
+        flux.clear();
+        flux.seekg(0, ios::beg);
+
+        fa.resize(number_of_lines);
+        fb.resize(number_of_lines);
+        fxe.resize(number_of_lines);
+        fye.resize(number_of_lines);
+        string drei, vier;
+
+        for (int i=0; i<number_of_lines; i++){
+            flux >> one >>two>>drei>>vier;
+            istringstream ist(one);
+            ist >> fa[i];
+            istringstream ist2(two);
+            ist2 >> fxe[i];
+            istringstream ist3(drei);
+            ist3 >> fb[i];
+            istringstream ist4(vier);
+            ist4 >> fye[i];
+        }
+    }
+
     ui->customPlot_3->addGraph();
     if(ui->checkBox_4->isChecked()){
     ui->customPlot_3->legend->setVisible(true);
     QFont legendFont = font();
-    legendFont.setPointSize(9);
+    legendFont.setPointSize(ui->spinBox->value());
     ui->customPlot_3->legend->setFont(legendFont);
     ui->customPlot_3->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
     QString label=ui->lineEdit_6->text();
     ui->customPlot_3->graph(0)->setName(label);
     }
     ui->customPlot_3->graph(0)->setData(a, b);
+    ui->customPlot_3->graph()->setPen(pen);
     ui->customPlot_3->xAxis->setRange(xs1, xs2);
-    ui->customPlot_3->yAxis->setRange(ys1, ys2);
+    if(ui->checkBox_5->isChecked()){
+        ys2=1.1;
+        ui->customPlot_3->yAxis->setRange(ys1, ys2);
+    }
+    else{
+        ui->customPlot_3->yAxis->setRange(ys1, ys2);
+
+    }
+    /*
+    if(ui->checkBox_6->isChecked()){
+        ui->customPlot_3->addGraph();
+        ui->customPlot_3->graph(1)->setLineStyle(QCPGraph::lsNone);
+        ui->customPlot_3->graph()->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 2));
+
+        QCPErrorBars *errorBars = new QCPErrorBars(ui->customPlot_3->xAxis, ui->customPlot_3->yAxis);
+        errorBars->removeFromLegend();
+        errorBars->setDataPlottable(ui->customPlot_3->graph(1));
+        ui->customPlot_3->graph(1)->setData(fa, fb);
+    }*/
     ui->customPlot_3->replot();
 
     this->setCursor(QCursor(Qt::ArrowCursor));
@@ -263,7 +385,7 @@ void PlotSpec::on_pushButton_3_clicked()
 
         if(!checkfile1.exists()){
             qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error1 ", "Error 1: File does not exist!");
+            QMessageBox::information(this, "Error1 ", "Error 1: File "+checkfile1.fileName()+" does not exist!");
             this->setCursor(QCursor(Qt::ArrowCursor));
             //check=1;
            return;
@@ -273,6 +395,13 @@ void PlotSpec::on_pushButton_3_clicked()
 
         try
         {
+            qspExtension = ui->lineEdit_7->text();
+            spExtension = qspExtension.toUtf8().constData();
+
+            qspWavecol=ui->lineEdit_8->text();
+            spWavecol = qspWavecol.toUtf8().constData();
+            qspIntenscol=ui->lineEdit_9->text();
+            spIntenscol = qspIntenscol.toUtf8().constData();
 
             //open file for reading
             auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
@@ -434,22 +563,4 @@ void PlotSpec::on_spinBox_valueChanged()
     ui->customPlot_3->yAxis->setLabelFont(legendFont);
     ui->customPlot_3->xAxis->setTickLabelFont(legendFont);
     ui->customPlot_3->yAxis->setTickLabelFont(legendFont);
-}
-
-void PlotSpec::on_lineEdit_7_textChanged()
-{
-    qspExtension=ui->lineEdit_7->text();
-    spExtension = qspExtension.toUtf8().constData();
-}
-
-void PlotSpec::on_lineEdit_8_textChanged()
-{
-    qspWavecol=ui->lineEdit_8->text();
-    spWavecol = qspWavecol.toUtf8().constData();
-}
-
-void PlotSpec::on_lineEdit_9_textChanged()
-{
-    qspIntenscol=ui->lineEdit_9->text();
-    spIntenscol = qspIntenscol.toUtf8().constData();
 }

@@ -24,6 +24,9 @@ private slots:
 
     void on_spinBox_3_valueChanged();
 
+public slots:
+    void seData(QString str);
+
 private:
     Ui::MapPlot *ui;
 };

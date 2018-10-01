@@ -1,26 +1,28 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'telluric.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.5.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../CroCo_git/croco/croco/telluric.h"
+#include "telluric.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'telluric.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.5.1. It"
+#error "This file was generated using the moc from 5.8.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Telluric_t {
-    QByteArrayData data[16];
-    char stringdata0[358];
+    QByteArrayData data[20];
+    char stringdata0[379];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,7 +46,11 @@ QT_MOC_LITERAL(11, 228, 23), // "on_pushButton_4_clicked"
 QT_MOC_LITERAL(12, 252, 23), // "on_pushButton_5_clicked"
 QT_MOC_LITERAL(13, 276, 23), // "on_pushButton_6_clicked"
 QT_MOC_LITERAL(14, 300, 33), // "on_comboBox_3_currentIndexCha..."
-QT_MOC_LITERAL(15, 334, 23) // "on_pushButton_7_clicked"
+QT_MOC_LITERAL(15, 334, 23), // "on_pushButton_7_clicked"
+QT_MOC_LITERAL(16, 358, 6), // "seData"
+QT_MOC_LITERAL(17, 365, 3), // "str"
+QT_MOC_LITERAL(18, 369, 4), // "str2"
+QT_MOC_LITERAL(19, 374, 4) // "str3"
 
     },
     "Telluric\0on_doubleSpinBox_valueChanged\0"
@@ -56,7 +62,8 @@ QT_MOC_LITERAL(15, 334, 23) // "on_pushButton_7_clicked"
     "on_pushButton_3_clicked\0on_pushButton_4_clicked\0"
     "on_pushButton_5_clicked\0on_pushButton_6_clicked\0"
     "on_comboBox_3_currentIndexChanged\0"
-    "on_pushButton_7_clicked"
+    "on_pushButton_7_clicked\0seData\0str\0"
+    "str2\0str3"
 };
 #undef QT_MOC_LITERAL
 
@@ -66,7 +73,7 @@ static const uint qt_meta_data_Telluric[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -74,20 +81,21 @@ static const uint qt_meta_data_Telluric[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   84,    2, 0x08 /* Private */,
-       3,    0,   85,    2, 0x08 /* Private */,
-       4,    0,   86,    2, 0x08 /* Private */,
-       5,    0,   87,    2, 0x08 /* Private */,
-       6,    0,   88,    2, 0x08 /* Private */,
-       7,    0,   89,    2, 0x08 /* Private */,
-       8,    0,   90,    2, 0x08 /* Private */,
-       9,    0,   91,    2, 0x08 /* Private */,
-      10,    0,   92,    2, 0x08 /* Private */,
-      11,    0,   93,    2, 0x08 /* Private */,
-      12,    0,   94,    2, 0x08 /* Private */,
-      13,    0,   95,    2, 0x08 /* Private */,
-      14,    0,   96,    2, 0x08 /* Private */,
-      15,    0,   97,    2, 0x08 /* Private */,
+       1,    0,   89,    2, 0x08 /* Private */,
+       3,    0,   90,    2, 0x08 /* Private */,
+       4,    0,   91,    2, 0x08 /* Private */,
+       5,    0,   92,    2, 0x08 /* Private */,
+       6,    0,   93,    2, 0x08 /* Private */,
+       7,    0,   94,    2, 0x08 /* Private */,
+       8,    0,   95,    2, 0x08 /* Private */,
+       9,    0,   96,    2, 0x08 /* Private */,
+      10,    0,   97,    2, 0x08 /* Private */,
+      11,    0,   98,    2, 0x08 /* Private */,
+      12,    0,   99,    2, 0x08 /* Private */,
+      13,    0,  100,    2, 0x08 /* Private */,
+      14,    0,  101,    2, 0x08 /* Private */,
+      15,    0,  102,    2, 0x08 /* Private */,
+      16,    3,  103,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -104,6 +112,7 @@ static const uint qt_meta_data_Telluric[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,   17,   18,   19,
 
        0        // eod
 };
@@ -128,10 +137,10 @@ void Telluric::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         case 11: _t->on_pushButton_6_clicked(); break;
         case 12: _t->on_comboBox_3_currentIndexChanged(); break;
         case 13: _t->on_pushButton_7_clicked(); break;
+        case 14: _t->seData((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject Telluric::staticMetaObject = {
@@ -159,14 +168,15 @@ int Telluric::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 15)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

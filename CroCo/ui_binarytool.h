@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'binarytool.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.1
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -71,12 +71,17 @@ public:
     QHBoxLayout *horizontalLayout;
     QLabel *label_2;
     QLineEdit *lineEdit_4;
+    QCheckBox *checkBox_12;
+    QSpinBox *spinBox_6;
+    QLabel *label_34;
+    QSpinBox *spinBox_7;
+    QLineEdit *lineEdit_11;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_3;
     QLineEdit *lineEdit_5;
     QHBoxLayout *horizontalLayout_23;
     QLabel *label_22;
-    QDoubleSpinBox *doubleSpinBox;
+    QLineEdit *lineEdit_10;
     QHBoxLayout *horizontalLayout_25;
     QLabel *label_25;
     QLineEdit *lineEdit_7;
@@ -139,6 +144,25 @@ public:
     QDoubleSpinBox *doubleSpinBox_9;
     QLabel *label_26;
     QDoubleSpinBox *doubleSpinBox_16;
+    QHBoxLayout *horizontalLayout_32;
+    QCheckBox *checkBox_8;
+    QDoubleSpinBox *doubleSpinBox;
+    QLabel *label_29;
+    QDoubleSpinBox *doubleSpinBox_18;
+    QHBoxLayout *horizontalLayout_33;
+    QCheckBox *checkBox_9;
+    QDoubleSpinBox *doubleSpinBox_19;
+    QLabel *label_30;
+    QDoubleSpinBox *doubleSpinBox_20;
+    QLabel *label_31;
+    QDoubleSpinBox *doubleSpinBox_21;
+    QHBoxLayout *horizontalLayout_34;
+    QLabel *label_32;
+    QCheckBox *checkBox_10;
+    QCheckBox *checkBox_11;
+    QDoubleSpinBox *doubleSpinBox_22;
+    QLabel *label_33;
+    QSpinBox *spinBox_5;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_4;
     QSpinBox *spinBox;
@@ -158,7 +182,7 @@ public:
     {
         if (BinaryTool->objectName().isEmpty())
             BinaryTool->setObjectName(QStringLiteral("BinaryTool"));
-        BinaryTool->resize(1119, 650);
+        BinaryTool->resize(1397, 802);
         QFont font;
         font.setPointSize(9);
         BinaryTool->setFont(font);
@@ -169,7 +193,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1099, 630));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1377, 782));
         horizontalLayout_21 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_21->setObjectName(QStringLiteral("horizontalLayout_21"));
         verticalLayout_2 = new QVBoxLayout();
@@ -309,7 +333,7 @@ public:
         sizePolicy.setHeightForWidth(doubleSpinBox_5->sizePolicy().hasHeightForWidth());
         doubleSpinBox_5->setSizePolicy(sizePolicy);
         doubleSpinBox_5->setDecimals(4);
-        doubleSpinBox_5->setMaximum(1e+07);
+        doubleSpinBox_5->setMaximum(1e+7);
 
         horizontalLayout_5->addWidget(doubleSpinBox_5);
 
@@ -390,6 +414,34 @@ public:
 
         horizontalLayout->addWidget(lineEdit_4);
 
+        checkBox_12 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_12->setObjectName(QStringLiteral("checkBox_12"));
+
+        horizontalLayout->addWidget(checkBox_12);
+
+        spinBox_6 = new QSpinBox(scrollAreaWidgetContents);
+        spinBox_6->setObjectName(QStringLiteral("spinBox_6"));
+
+        horizontalLayout->addWidget(spinBox_6);
+
+        label_34 = new QLabel(scrollAreaWidgetContents);
+        label_34->setObjectName(QStringLiteral("label_34"));
+
+        horizontalLayout->addWidget(label_34);
+
+        spinBox_7 = new QSpinBox(scrollAreaWidgetContents);
+        spinBox_7->setObjectName(QStringLiteral("spinBox_7"));
+
+        horizontalLayout->addWidget(spinBox_7);
+
+        lineEdit_11 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_11->setObjectName(QStringLiteral("lineEdit_11"));
+        sizePolicy.setHeightForWidth(lineEdit_11->sizePolicy().hasHeightForWidth());
+        lineEdit_11->setSizePolicy(sizePolicy);
+        lineEdit_11->setMaximumSize(QSize(35, 16777215));
+
+        horizontalLayout->addWidget(lineEdit_11);
+
 
         verticalLayout_2->addLayout(horizontalLayout);
 
@@ -417,13 +469,12 @@ public:
 
         horizontalLayout_23->addWidget(label_22);
 
-        doubleSpinBox = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
-        sizePolicy.setHeightForWidth(doubleSpinBox->sizePolicy().hasHeightForWidth());
-        doubleSpinBox->setSizePolicy(sizePolicy);
-        doubleSpinBox->setValue(2);
+        lineEdit_10 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_10->setObjectName(QStringLiteral("lineEdit_10"));
+        sizePolicy.setHeightForWidth(lineEdit_10->sizePolicy().hasHeightForWidth());
+        lineEdit_10->setSizePolicy(sizePolicy);
 
-        horizontalLayout_23->addWidget(doubleSpinBox);
+        horizontalLayout_23->addWidget(lineEdit_10);
 
 
         verticalLayout_2->addLayout(horizontalLayout_23);
@@ -689,7 +740,7 @@ public:
         doubleSpinBox_11->setSizePolicy(sizePolicy);
         doubleSpinBox_11->setMinimum(99);
         doubleSpinBox_11->setMaximum(9999.99);
-        doubleSpinBox_11->setValue(4000);
+        doubleSpinBox_11->setValue(6696);
 
         horizontalLayout_14->addWidget(doubleSpinBox_11);
 
@@ -709,7 +760,7 @@ public:
         doubleSpinBox_12->setSizePolicy(sizePolicy);
         doubleSpinBox_12->setMinimum(99);
         doubleSpinBox_12->setMaximum(9999.99);
-        doubleSpinBox_12->setValue(6000);
+        doubleSpinBox_12->setValue(6749);
 
         horizontalLayout_15->addWidget(doubleSpinBox_12);
 
@@ -749,6 +800,7 @@ public:
         doubleSpinBox_14->setSizePolicy(sizePolicy);
         doubleSpinBox_14->setDecimals(4);
         doubleSpinBox_14->setMaximum(999.99);
+        doubleSpinBox_14->setValue(20);
 
         horizontalLayout_17->addWidget(doubleSpinBox_14);
 
@@ -768,6 +820,7 @@ public:
         doubleSpinBox_15->setSizePolicy(sizePolicy);
         doubleSpinBox_15->setDecimals(4);
         doubleSpinBox_15->setMaximum(999.99);
+        doubleSpinBox_15->setValue(5);
 
         horizontalLayout_18->addWidget(doubleSpinBox_15);
 
@@ -785,6 +838,7 @@ public:
         doubleSpinBox_9->setObjectName(QStringLiteral("doubleSpinBox_9"));
         sizePolicy.setHeightForWidth(doubleSpinBox_9->sizePolicy().hasHeightForWidth());
         doubleSpinBox_9->setSizePolicy(sizePolicy);
+        doubleSpinBox_9->setValue(0.2);
 
         horizontalLayout_27->addWidget(doubleSpinBox_9);
 
@@ -802,12 +856,123 @@ public:
         doubleSpinBox_16->setObjectName(QStringLiteral("doubleSpinBox_16"));
         sizePolicy.setHeightForWidth(doubleSpinBox_16->sizePolicy().hasHeightForWidth());
         doubleSpinBox_16->setSizePolicy(sizePolicy);
-        doubleSpinBox_16->setMaximum(9.99);
+        doubleSpinBox_16->setMaximum(999.99);
+        doubleSpinBox_16->setValue(0.5);
 
         horizontalLayout_27->addWidget(doubleSpinBox_16);
 
 
         verticalLayout->addLayout(horizontalLayout_27);
+
+        horizontalLayout_32 = new QHBoxLayout();
+        horizontalLayout_32->setObjectName(QStringLiteral("horizontalLayout_32"));
+        checkBox_8 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_8->setObjectName(QStringLiteral("checkBox_8"));
+
+        horizontalLayout_32->addWidget(checkBox_8);
+
+        doubleSpinBox = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
+        sizePolicy.setHeightForWidth(doubleSpinBox->sizePolicy().hasHeightForWidth());
+        doubleSpinBox->setSizePolicy(sizePolicy);
+
+        horizontalLayout_32->addWidget(doubleSpinBox);
+
+        label_29 = new QLabel(scrollAreaWidgetContents);
+        label_29->setObjectName(QStringLiteral("label_29"));
+        sizePolicy5.setHeightForWidth(label_29->sizePolicy().hasHeightForWidth());
+        label_29->setSizePolicy(sizePolicy5);
+
+        horizontalLayout_32->addWidget(label_29);
+
+        doubleSpinBox_18 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_18->setObjectName(QStringLiteral("doubleSpinBox_18"));
+        sizePolicy.setHeightForWidth(doubleSpinBox_18->sizePolicy().hasHeightForWidth());
+        doubleSpinBox_18->setSizePolicy(sizePolicy);
+        doubleSpinBox_18->setMaximum(999.99);
+
+        horizontalLayout_32->addWidget(doubleSpinBox_18);
+
+
+        verticalLayout->addLayout(horizontalLayout_32);
+
+        horizontalLayout_33 = new QHBoxLayout();
+        horizontalLayout_33->setObjectName(QStringLiteral("horizontalLayout_33"));
+        checkBox_9 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
+
+        horizontalLayout_33->addWidget(checkBox_9);
+
+        doubleSpinBox_19 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_19->setObjectName(QStringLiteral("doubleSpinBox_19"));
+
+        horizontalLayout_33->addWidget(doubleSpinBox_19);
+
+        label_30 = new QLabel(scrollAreaWidgetContents);
+        label_30->setObjectName(QStringLiteral("label_30"));
+        sizePolicy5.setHeightForWidth(label_30->sizePolicy().hasHeightForWidth());
+        label_30->setSizePolicy(sizePolicy5);
+
+        horizontalLayout_33->addWidget(label_30);
+
+        doubleSpinBox_20 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_20->setObjectName(QStringLiteral("doubleSpinBox_20"));
+
+        horizontalLayout_33->addWidget(doubleSpinBox_20);
+
+        label_31 = new QLabel(scrollAreaWidgetContents);
+        label_31->setObjectName(QStringLiteral("label_31"));
+        sizePolicy5.setHeightForWidth(label_31->sizePolicy().hasHeightForWidth());
+        label_31->setSizePolicy(sizePolicy5);
+
+        horizontalLayout_33->addWidget(label_31);
+
+        doubleSpinBox_21 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_21->setObjectName(QStringLiteral("doubleSpinBox_21"));
+
+        horizontalLayout_33->addWidget(doubleSpinBox_21);
+
+
+        verticalLayout->addLayout(horizontalLayout_33);
+
+        horizontalLayout_34 = new QHBoxLayout();
+        horizontalLayout_34->setObjectName(QStringLiteral("horizontalLayout_34"));
+        label_32 = new QLabel(scrollAreaWidgetContents);
+        label_32->setObjectName(QStringLiteral("label_32"));
+
+        horizontalLayout_34->addWidget(label_32);
+
+        checkBox_10 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_10->setObjectName(QStringLiteral("checkBox_10"));
+
+        horizontalLayout_34->addWidget(checkBox_10);
+
+        checkBox_11 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_11->setObjectName(QStringLiteral("checkBox_11"));
+
+        horizontalLayout_34->addWidget(checkBox_11);
+
+        doubleSpinBox_22 = new QDoubleSpinBox(scrollAreaWidgetContents);
+        doubleSpinBox_22->setObjectName(QStringLiteral("doubleSpinBox_22"));
+        doubleSpinBox_22->setDecimals(3);
+        doubleSpinBox_22->setMinimum(-9.99);
+        doubleSpinBox_22->setMaximum(9.99);
+        doubleSpinBox_22->setValue(1);
+
+        horizontalLayout_34->addWidget(doubleSpinBox_22);
+
+        label_33 = new QLabel(scrollAreaWidgetContents);
+        label_33->setObjectName(QStringLiteral("label_33"));
+
+        horizontalLayout_34->addWidget(label_33);
+
+        spinBox_5 = new QSpinBox(scrollAreaWidgetContents);
+        spinBox_5->setObjectName(QStringLiteral("spinBox_5"));
+
+        horizontalLayout_34->addWidget(spinBox_5);
+
+
+        verticalLayout->addLayout(horizontalLayout_34);
 
         horizontalLayout_9 = new QHBoxLayout();
         horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
@@ -904,49 +1069,60 @@ public:
 
     void retranslateUi(QDialog *BinaryTool)
     {
-        BinaryTool->setWindowTitle(QApplication::translate("BinaryTool", "Dialog", 0));
-        label->setText(QApplication::translate("BinaryTool", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600; color:#000dfe;\">Orbit Parameter</span></p></body></html>", 0));
-        label_21->setText(QApplication::translate("BinaryTool", "Period:", 0));
-        label_5->setText(QApplication::translate("BinaryTool", "Eccentricity:", 0));
-        label_8->setText(QApplication::translate("BinaryTool", "RV Amplitude Primary:", 0));
-        label_9->setText(QApplication::translate("BinaryTool", "RV Amplitude Secondary:", 0));
-        label_10->setText(QApplication::translate("BinaryTool", "Systemic Velocity:", 0));
-        label_7->setText(QApplication::translate("BinaryTool", "Periastron Passage:", 0));
-        label_6->setText(QApplication::translate("BinaryTool", "Longitude of Periastron Primary:", 0));
-        pushButton_7->setText(QApplication::translate("BinaryTool", "Load", 0));
-        label_11->setText(QApplication::translate("BinaryTool", "Phase Step:", 0));
-        label_2->setText(QApplication::translate("BinaryTool", "Spectrum A:", 0));
-        label_3->setText(QApplication::translate("BinaryTool", "Spectrum B:", 0));
-        label_22->setText(QApplication::translate("BinaryTool", "Ratio A/B:", 0));
-        label_25->setText(QApplication::translate("BinaryTool", "Output:", 0));
-        checkBox->setText(QApplication::translate("BinaryTool", "Plot RV data from Cross-Correlation", 0));
-        label_23->setText(QApplication::translate("BinaryTool", "from", 0));
-        label_24->setText(QApplication::translate("BinaryTool", "to", 0));
-        checkBox_4->setText(QApplication::translate("BinaryTool", "flip", 0));
-        label_28->setText(QApplication::translate("BinaryTool", "Times:", 0));
-        checkBox_7->setText(QApplication::translate("BinaryTool", "Merge", 0));
-        pushButton_2->setText(QApplication::translate("BinaryTool", "RV", 0));
-        pushButton_4->setText(QApplication::translate("BinaryTool", "Combine", 0));
-        pushButton_6->setText(QApplication::translate("BinaryTool", "Save As:", 0));
-        checkBox_5->setText(QApplication::translate("BinaryTool", "pdf", 0));
-        checkBox_6->setText(QApplication::translate("BinaryTool", "png", 0));
-        label_27->setText(QApplication::translate("BinaryTool", "Font Size:", 0));
-        label_20->setText(QApplication::translate("BinaryTool", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600; color:#000dfe;\">Simple Binary Spectrum</span></p></body></html>", 0));
-        label_12->setText(QApplication::translate("BinaryTool", "Line List Primary:", 0));
-        label_13->setText(QApplication::translate("BinaryTool", "Line List Secondary:", 0));
-        checkBox_2->setText(QApplication::translate("BinaryTool", "Static", 0));
-        label_14->setText(QApplication::translate("BinaryTool", "Lower Wavelength:", 0));
-        label_15->setText(QApplication::translate("BinaryTool", "Upper Wavelength:", 0));
-        label_16->setText(QApplication::translate("BinaryTool", "Sampling:", 0));
-        label_17->setText(QApplication::translate("BinaryTool", "v*sin(i) of Primary:", 0));
-        label_18->setText(QApplication::translate("BinaryTool", "v*sin(i) of Secondary:", 0));
-        checkBox_3->setText(QApplication::translate("BinaryTool", "Pulsation, A:", 0));
-        label_26->setText(QApplication::translate("BinaryTool", "P:", 0));
-        label_4->setText(QApplication::translate("BinaryTool", "SNR:", 0));
-        label_19->setText(QApplication::translate("BinaryTool", "Work Path:", 0));
-        pushButton_3->setText(QApplication::translate("BinaryTool", "SB2", 0));
-        pushButton_5->setText(QApplication::translate("BinaryTool", "SB1", 0));
-        pushButton->setText(QApplication::translate("BinaryTool", "Close", 0));
+        BinaryTool->setWindowTitle(QApplication::translate("BinaryTool", "Dialog", Q_NULLPTR));
+        label->setText(QApplication::translate("BinaryTool", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600; color:#000dfe;\">Orbit Parameter</span></p></body></html>", Q_NULLPTR));
+        label_21->setText(QApplication::translate("BinaryTool", "Period:", Q_NULLPTR));
+        label_5->setText(QApplication::translate("BinaryTool", "Eccentricity:", Q_NULLPTR));
+        label_8->setText(QApplication::translate("BinaryTool", "RV Amplitude Primary:", Q_NULLPTR));
+        label_9->setText(QApplication::translate("BinaryTool", "RV Amplitude Secondary:", Q_NULLPTR));
+        label_10->setText(QApplication::translate("BinaryTool", "Systemic Velocity:", Q_NULLPTR));
+        label_7->setText(QApplication::translate("BinaryTool", "Periastron Passage:", Q_NULLPTR));
+        label_6->setText(QApplication::translate("BinaryTool", "Longitude of Periastron Primary:", Q_NULLPTR));
+        pushButton_7->setText(QApplication::translate("BinaryTool", "Load", Q_NULLPTR));
+        label_11->setText(QApplication::translate("BinaryTool", "Phase Step:", Q_NULLPTR));
+        label_2->setText(QApplication::translate("BinaryTool", "Spectrum A:", Q_NULLPTR));
+        checkBox_12->setText(QApplication::translate("BinaryTool", "from", Q_NULLPTR));
+        label_34->setText(QApplication::translate("BinaryTool", "to", Q_NULLPTR));
+        label_3->setText(QApplication::translate("BinaryTool", "Spectrum B:", Q_NULLPTR));
+        label_22->setText(QApplication::translate("BinaryTool", "Phases & Ratios A/B:", Q_NULLPTR));
+        label_25->setText(QApplication::translate("BinaryTool", "Output:", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("BinaryTool", "Plot RV data from Cross-Correlation", Q_NULLPTR));
+        label_23->setText(QApplication::translate("BinaryTool", "from", Q_NULLPTR));
+        label_24->setText(QApplication::translate("BinaryTool", "to", Q_NULLPTR));
+        checkBox_4->setText(QApplication::translate("BinaryTool", "flip", Q_NULLPTR));
+        label_28->setText(QApplication::translate("BinaryTool", "Times:", Q_NULLPTR));
+        checkBox_7->setText(QApplication::translate("BinaryTool", "Merge", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("BinaryTool", "RV", Q_NULLPTR));
+        pushButton_4->setText(QApplication::translate("BinaryTool", "Combine", Q_NULLPTR));
+        pushButton_6->setText(QApplication::translate("BinaryTool", "Save As:", Q_NULLPTR));
+        checkBox_5->setText(QApplication::translate("BinaryTool", "pdf", Q_NULLPTR));
+        checkBox_6->setText(QApplication::translate("BinaryTool", "png", Q_NULLPTR));
+        label_27->setText(QApplication::translate("BinaryTool", "Font Size:", Q_NULLPTR));
+        label_20->setText(QApplication::translate("BinaryTool", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600; color:#000dfe;\">Simple Binary Spectrum</span></p></body></html>", Q_NULLPTR));
+        label_12->setText(QApplication::translate("BinaryTool", "Line List Primary:", Q_NULLPTR));
+        label_13->setText(QApplication::translate("BinaryTool", "Line List Secondary:", Q_NULLPTR));
+        checkBox_2->setText(QApplication::translate("BinaryTool", "Static", Q_NULLPTR));
+        label_14->setText(QApplication::translate("BinaryTool", "Lower Wavelength:", Q_NULLPTR));
+        label_15->setText(QApplication::translate("BinaryTool", "Upper Wavelength:", Q_NULLPTR));
+        label_16->setText(QApplication::translate("BinaryTool", "Sampling:", Q_NULLPTR));
+        label_17->setText(QApplication::translate("BinaryTool", "v*sin(i) of Primary:", Q_NULLPTR));
+        label_18->setText(QApplication::translate("BinaryTool", "v*sin(i) of Secondary:", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("BinaryTool", "Pulsation A:", Q_NULLPTR));
+        label_26->setText(QApplication::translate("BinaryTool", "P:", Q_NULLPTR));
+        checkBox_8->setText(QApplication::translate("BinaryTool", "Pulsation B:", Q_NULLPTR));
+        label_29->setText(QApplication::translate("BinaryTool", "P:", Q_NULLPTR));
+        checkBox_9->setText(QApplication::translate("BinaryTool", "Spot A", Q_NULLPTR));
+        label_30->setText(QApplication::translate("BinaryTool", "P:", Q_NULLPTR));
+        label_31->setText(QApplication::translate("BinaryTool", "FWHM:", Q_NULLPTR));
+        label_32->setText(QApplication::translate("BinaryTool", "\"Flare\"", Q_NULLPTR));
+        checkBox_10->setText(QApplication::translate("BinaryTool", "damp", Q_NULLPTR));
+        checkBox_11->setText(QApplication::translate("BinaryTool", "broaden", Q_NULLPTR));
+        label_33->setText(QApplication::translate("BinaryTool", "spectrum #", Q_NULLPTR));
+        label_4->setText(QApplication::translate("BinaryTool", "SNR:", Q_NULLPTR));
+        label_19->setText(QApplication::translate("BinaryTool", "Work Path:", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("BinaryTool", "SB2", Q_NULLPTR));
+        pushButton_5->setText(QApplication::translate("BinaryTool", "SB1", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("BinaryTool", "Close", Q_NULLPTR));
     } // retranslateUi
 
 };

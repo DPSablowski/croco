@@ -57,8 +57,12 @@ private slots:
 
     void BTfindroot();
 
+    void CalcRVs();
 
     void on_pushButton_7_clicked();
+
+public slots:
+    void seData(QString str);
 
 private:
     Ui::BinaryTool *ui;

@@ -71,7 +71,7 @@ Template::Template(QWidget *parent) :
     ui->doubleSpinBox_17->setValue(1);
     multsum=ui->doubleSpinBox_17->value();
 
-    ui->lineEdit->setText("/home/daniels/work1/Disentangling/Template_Method/Log/Qt_LogCC/Data");
+    ui->lineEdit->setText(QDir::currentPath());
     qtpath=ui->lineEdit->text();
     tpath = qtpath.toUtf8().constData();
 
@@ -88,6 +88,15 @@ Template::Template(QWidget *parent) :
 Template::~Template()
 {
     delete ui;
+}
+
+void Template::seData(QString str1)
+{
+    ui->lineEdit->setText(str1);
+    qtpath=ui->lineEdit_4->text();
+    tpath = qtpath.toUtf8().constData();
+
+
 }
 
 //***********************************************************

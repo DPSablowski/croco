@@ -21,6 +21,8 @@
 #include <arithmetic.h>
 #include <crop.h>
 #include <splinefit.h>
+#include <blazecorr.h>
+#include <moments.h>
 
 namespace Ui {
 class MainWindow;
@@ -139,6 +141,26 @@ private slots:
 
     void on_pushButton_12_clicked();
 
+    void on_actionBlaze_Correction_triggered();
+
+    void on_actionMoments_triggered();
+
+    void on_pushButton_13_clicked();
+
+    void on_pushButton_14_clicked();
+
+    void on_pushButton_15_clicked();
+
+    void on_checkBox_20_stateChanged();
+
+    void on_checkBox_21_stateChanged();
+
+    void on_checkBox_22_clicked();
+
+    void on_checkBox_23_clicked();
+
+    void on_checkBox_24_clicked();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;
@@ -156,6 +178,8 @@ private:
     Arithmetic *qArith;
     Crop *qCrop;
     SplineFit *qSpline;
+    BlazeCorr *qBCorr;
+    Moments *qMom;
 
 };
 

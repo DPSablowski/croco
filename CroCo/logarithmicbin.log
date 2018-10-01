@@ -1,0 +1,7 @@
+******************************
+  Logarithmic Binning Log-File
+******************************
+Input files: croped_*.txt
+Output files: cropedm_*.txt
+Files from 0 to 264
+Rebinning step size: 0.75

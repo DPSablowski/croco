@@ -15,10 +15,15 @@ public:
     explicit Crop(QWidget *parent = 0);
     ~Crop();
 
+public slots:
+    void seData(QString str, QString str2, QString str3, QString str4, QString str5);
+
 private slots:
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
 
 private:
     Ui::Crop *ui;

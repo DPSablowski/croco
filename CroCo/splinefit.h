@@ -15,6 +15,9 @@ public:
     explicit SplineFit(QWidget *parent = 0);
     ~SplineFit();
 
+public slots:
+    void seData(QString str);
+
 private slots:
     void on_pushButton_clicked();
 
@@ -27,6 +30,12 @@ private slots:
     void writeCoords(QMouseEvent *event);
 
     void on_pushButton_3_clicked();
+
+    void on_pushButton_5_clicked();
+
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_6_clicked();
 
 private:
     Ui::SplineFit *ui;

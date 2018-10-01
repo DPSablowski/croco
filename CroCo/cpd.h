@@ -24,6 +24,9 @@ private slots:
 
     void on_lineEdit_5_textChanged();
 
+public slots:
+    void seData(QString str, QString str2, QString str3);
+
 private:
     Ui::CPD *ui;
 };

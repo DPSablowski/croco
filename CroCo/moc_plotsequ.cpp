@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'plotsequ.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.5.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,15 +12,17 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'plotsequ.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.5.1. It"
+#error "This file was generated using the moc from 5.8.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_PlotSequ_t {
-    QByteArrayData data[25];
-    char stringdata0[581];
+    QByteArrayData data[35];
+    char stringdata0[707];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,33 +32,44 @@ struct qt_meta_stringdata_PlotSequ_t {
 static const qt_meta_stringdata_PlotSequ_t qt_meta_stringdata_PlotSequ = {
     {
 QT_MOC_LITERAL(0, 0, 8), // "PlotSequ"
-QT_MOC_LITERAL(1, 9, 23), // "on_pushButton_3_clicked"
-QT_MOC_LITERAL(2, 33, 0), // ""
-QT_MOC_LITERAL(3, 34, 23), // "on_pushButton_2_clicked"
-QT_MOC_LITERAL(4, 58, 29), // "on_doubleSpinBox_valueChanged"
-QT_MOC_LITERAL(5, 88, 31), // "on_doubleSpinBox_2_valueChanged"
-QT_MOC_LITERAL(6, 120, 31), // "on_doubleSpinBox_3_valueChanged"
-QT_MOC_LITERAL(7, 152, 31), // "on_doubleSpinBox_4_valueChanged"
-QT_MOC_LITERAL(8, 184, 29), // "on_lineEdit_2_editingFinished"
-QT_MOC_LITERAL(9, 214, 29), // "on_lineEdit_3_editingFinished"
-QT_MOC_LITERAL(10, 244, 23), // "on_pushButton_4_clicked"
-QT_MOC_LITERAL(11, 268, 19), // "on_checkBox_clicked"
-QT_MOC_LITERAL(12, 288, 21), // "on_checkBox_3_clicked"
-QT_MOC_LITERAL(13, 310, 21), // "on_checkBox_2_clicked"
-QT_MOC_LITERAL(14, 332, 24), // "on_lineEdit_5_textEdited"
-QT_MOC_LITERAL(15, 357, 31), // "on_doubleSpinBox_5_valueChanged"
-QT_MOC_LITERAL(16, 389, 25), // "on_spinBox_3_valueChanged"
-QT_MOC_LITERAL(17, 415, 23), // "on_pushButton_5_clicked"
-QT_MOC_LITERAL(18, 439, 23), // "on_pushButton_6_clicked"
-QT_MOC_LITERAL(19, 463, 23), // "on_pushButton_7_clicked"
-QT_MOC_LITERAL(20, 487, 33), // "on_comboBox_2_currentIndexCha..."
-QT_MOC_LITERAL(21, 521, 16), // "showPointToolTip"
-QT_MOC_LITERAL(22, 538, 12), // "QMouseEvent*"
-QT_MOC_LITERAL(23, 551, 5), // "event"
-QT_MOC_LITERAL(24, 557, 23) // "on_pushButton_8_clicked"
+QT_MOC_LITERAL(1, 9, 6), // "seData"
+QT_MOC_LITERAL(2, 16, 0), // ""
+QT_MOC_LITERAL(3, 17, 3), // "str"
+QT_MOC_LITERAL(4, 21, 4), // "str2"
+QT_MOC_LITERAL(5, 26, 4), // "str3"
+QT_MOC_LITERAL(6, 31, 4), // "str4"
+QT_MOC_LITERAL(7, 36, 4), // "str5"
+QT_MOC_LITERAL(8, 41, 23), // "on_pushButton_3_clicked"
+QT_MOC_LITERAL(9, 65, 23), // "on_pushButton_2_clicked"
+QT_MOC_LITERAL(10, 89, 29), // "on_doubleSpinBox_valueChanged"
+QT_MOC_LITERAL(11, 119, 31), // "on_doubleSpinBox_2_valueChanged"
+QT_MOC_LITERAL(12, 151, 31), // "on_doubleSpinBox_3_valueChanged"
+QT_MOC_LITERAL(13, 183, 31), // "on_doubleSpinBox_4_valueChanged"
+QT_MOC_LITERAL(14, 215, 29), // "on_lineEdit_2_editingFinished"
+QT_MOC_LITERAL(15, 245, 29), // "on_lineEdit_3_editingFinished"
+QT_MOC_LITERAL(16, 275, 23), // "on_pushButton_4_clicked"
+QT_MOC_LITERAL(17, 299, 19), // "on_checkBox_clicked"
+QT_MOC_LITERAL(18, 319, 21), // "on_checkBox_3_clicked"
+QT_MOC_LITERAL(19, 341, 21), // "on_checkBox_2_clicked"
+QT_MOC_LITERAL(20, 363, 24), // "on_lineEdit_5_textEdited"
+QT_MOC_LITERAL(21, 388, 31), // "on_doubleSpinBox_5_valueChanged"
+QT_MOC_LITERAL(22, 420, 25), // "on_spinBox_3_valueChanged"
+QT_MOC_LITERAL(23, 446, 23), // "on_pushButton_5_clicked"
+QT_MOC_LITERAL(24, 470, 23), // "on_pushButton_6_clicked"
+QT_MOC_LITERAL(25, 494, 23), // "on_pushButton_7_clicked"
+QT_MOC_LITERAL(26, 518, 33), // "on_comboBox_2_currentIndexCha..."
+QT_MOC_LITERAL(27, 552, 16), // "showPointToolTip"
+QT_MOC_LITERAL(28, 569, 12), // "QMouseEvent*"
+QT_MOC_LITERAL(29, 582, 5), // "event"
+QT_MOC_LITERAL(30, 588, 23), // "on_pushButton_8_clicked"
+QT_MOC_LITERAL(31, 612, 23), // "on_pushButton_9_clicked"
+QT_MOC_LITERAL(32, 636, 24), // "on_pushButton_10_clicked"
+QT_MOC_LITERAL(33, 661, 22), // "on_checkBox_15_clicked"
+QT_MOC_LITERAL(34, 684, 22) // "on_checkBox_16_clicked"
 
     },
-    "PlotSequ\0on_pushButton_3_clicked\0\0"
+    "PlotSequ\0seData\0\0str\0str2\0str3\0str4\0"
+    "str5\0on_pushButton_3_clicked\0"
     "on_pushButton_2_clicked\0"
     "on_doubleSpinBox_valueChanged\0"
     "on_doubleSpinBox_2_valueChanged\0"
@@ -73,7 +86,9 @@ QT_MOC_LITERAL(24, 557, 23) // "on_pushButton_8_clicked"
     "on_pushButton_7_clicked\0"
     "on_comboBox_2_currentIndexChanged\0"
     "showPointToolTip\0QMouseEvent*\0event\0"
-    "on_pushButton_8_clicked"
+    "on_pushButton_8_clicked\0on_pushButton_9_clicked\0"
+    "on_pushButton_10_clicked\0"
+    "on_checkBox_15_clicked\0on_checkBox_16_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -83,7 +98,7 @@ static const uint qt_meta_data_PlotSequ[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      21,   14, // methods
+      26,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -91,29 +106,35 @@ static const uint qt_meta_data_PlotSequ[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  119,    2, 0x08 /* Private */,
-       3,    0,  120,    2, 0x08 /* Private */,
-       4,    0,  121,    2, 0x08 /* Private */,
-       5,    0,  122,    2, 0x08 /* Private */,
-       6,    0,  123,    2, 0x08 /* Private */,
-       7,    0,  124,    2, 0x08 /* Private */,
-       8,    0,  125,    2, 0x08 /* Private */,
-       9,    0,  126,    2, 0x08 /* Private */,
-      10,    0,  127,    2, 0x08 /* Private */,
-      11,    0,  128,    2, 0x08 /* Private */,
-      12,    0,  129,    2, 0x08 /* Private */,
-      13,    0,  130,    2, 0x08 /* Private */,
-      14,    0,  131,    2, 0x08 /* Private */,
-      15,    0,  132,    2, 0x08 /* Private */,
-      16,    0,  133,    2, 0x08 /* Private */,
-      17,    0,  134,    2, 0x08 /* Private */,
-      18,    0,  135,    2, 0x08 /* Private */,
-      19,    0,  136,    2, 0x08 /* Private */,
-      20,    0,  137,    2, 0x08 /* Private */,
-      21,    1,  138,    2, 0x08 /* Private */,
-      24,    0,  141,    2, 0x08 /* Private */,
+       1,    5,  144,    2, 0x0a /* Public */,
+       8,    0,  155,    2, 0x08 /* Private */,
+       9,    0,  156,    2, 0x08 /* Private */,
+      10,    0,  157,    2, 0x08 /* Private */,
+      11,    0,  158,    2, 0x08 /* Private */,
+      12,    0,  159,    2, 0x08 /* Private */,
+      13,    0,  160,    2, 0x08 /* Private */,
+      14,    0,  161,    2, 0x08 /* Private */,
+      15,    0,  162,    2, 0x08 /* Private */,
+      16,    0,  163,    2, 0x08 /* Private */,
+      17,    0,  164,    2, 0x08 /* Private */,
+      18,    0,  165,    2, 0x08 /* Private */,
+      19,    0,  166,    2, 0x08 /* Private */,
+      20,    0,  167,    2, 0x08 /* Private */,
+      21,    0,  168,    2, 0x08 /* Private */,
+      22,    0,  169,    2, 0x08 /* Private */,
+      23,    0,  170,    2, 0x08 /* Private */,
+      24,    0,  171,    2, 0x08 /* Private */,
+      25,    0,  172,    2, 0x08 /* Private */,
+      26,    0,  173,    2, 0x08 /* Private */,
+      27,    1,  174,    2, 0x08 /* Private */,
+      30,    0,  177,    2, 0x08 /* Private */,
+      31,    0,  178,    2, 0x08 /* Private */,
+      32,    0,  179,    2, 0x08 /* Private */,
+      33,    0,  180,    2, 0x08 /* Private */,
+      34,    0,  181,    2, 0x08 /* Private */,
 
  // slots: parameters
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString,    3,    4,    5,    6,    7,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -133,7 +154,11 @@ static const uint qt_meta_data_PlotSequ[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 22,   23,
+    QMetaType::Void, 0x80000000 | 28,   29,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -145,27 +170,32 @@ void PlotSequ::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         PlotSequ *_t = static_cast<PlotSequ *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->on_pushButton_3_clicked(); break;
-        case 1: _t->on_pushButton_2_clicked(); break;
-        case 2: _t->on_doubleSpinBox_valueChanged(); break;
-        case 3: _t->on_doubleSpinBox_2_valueChanged(); break;
-        case 4: _t->on_doubleSpinBox_3_valueChanged(); break;
-        case 5: _t->on_doubleSpinBox_4_valueChanged(); break;
-        case 6: _t->on_lineEdit_2_editingFinished(); break;
-        case 7: _t->on_lineEdit_3_editingFinished(); break;
-        case 8: _t->on_pushButton_4_clicked(); break;
-        case 9: _t->on_checkBox_clicked(); break;
-        case 10: _t->on_checkBox_3_clicked(); break;
-        case 11: _t->on_checkBox_2_clicked(); break;
-        case 12: _t->on_lineEdit_5_textEdited(); break;
-        case 13: _t->on_doubleSpinBox_5_valueChanged(); break;
-        case 14: _t->on_spinBox_3_valueChanged(); break;
-        case 15: _t->on_pushButton_5_clicked(); break;
-        case 16: _t->on_pushButton_6_clicked(); break;
-        case 17: _t->on_pushButton_7_clicked(); break;
-        case 18: _t->on_comboBox_2_currentIndexChanged(); break;
-        case 19: _t->showPointToolTip((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 20: _t->on_pushButton_8_clicked(); break;
+        case 0: _t->seData((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< QString(*)>(_a[4])),(*reinterpret_cast< QString(*)>(_a[5]))); break;
+        case 1: _t->on_pushButton_3_clicked(); break;
+        case 2: _t->on_pushButton_2_clicked(); break;
+        case 3: _t->on_doubleSpinBox_valueChanged(); break;
+        case 4: _t->on_doubleSpinBox_2_valueChanged(); break;
+        case 5: _t->on_doubleSpinBox_3_valueChanged(); break;
+        case 6: _t->on_doubleSpinBox_4_valueChanged(); break;
+        case 7: _t->on_lineEdit_2_editingFinished(); break;
+        case 8: _t->on_lineEdit_3_editingFinished(); break;
+        case 9: _t->on_pushButton_4_clicked(); break;
+        case 10: _t->on_checkBox_clicked(); break;
+        case 11: _t->on_checkBox_3_clicked(); break;
+        case 12: _t->on_checkBox_2_clicked(); break;
+        case 13: _t->on_lineEdit_5_textEdited(); break;
+        case 14: _t->on_doubleSpinBox_5_valueChanged(); break;
+        case 15: _t->on_spinBox_3_valueChanged(); break;
+        case 16: _t->on_pushButton_5_clicked(); break;
+        case 17: _t->on_pushButton_6_clicked(); break;
+        case 18: _t->on_pushButton_7_clicked(); break;
+        case 19: _t->on_comboBox_2_currentIndexChanged(); break;
+        case 20: _t->showPointToolTip((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 21: _t->on_pushButton_8_clicked(); break;
+        case 22: _t->on_pushButton_9_clicked(); break;
+        case 23: _t->on_pushButton_10_clicked(); break;
+        case 24: _t->on_checkBox_15_clicked(); break;
+        case 25: _t->on_checkBox_16_clicked(); break;
         default: ;
         }
     }
@@ -196,14 +226,15 @@ int PlotSequ::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 21)
+        if (_id < 26)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 21;
+        _id -= 26;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 21)
+        if (_id < 26)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 21;
+        _id -= 26;
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE
