@@ -12,6 +12,7 @@
 using namespace std;
 
 int abcrop=0;
+QVector<double> rangea(1), rangeb(1);
 
 Crop::Crop(QWidget *parent) :
     QDialog(parent),
@@ -24,8 +25,8 @@ Crop::Crop(QWidget *parent) :
     ui->comboBox->addItem("ASCII");
     ui->comboBox->addItem("FITS");
 
-    ui->lineEdit_2->setText(".txt");
-    ui->lineEdit_8->setText(".txt");
+    ui->lineEdit_2->setText("txt");
+    ui->lineEdit_8->setText("txt");
 
     ui->doubleSpinBox->setValue(6255.7);
     ui->doubleSpinBox_2->setValue(6262.2);
@@ -51,6 +52,56 @@ void Crop::seData(QString str, QString str2, QString str3, QString str4, QString
 // crop spectra
 //******************************************
 void Crop::on_pushButton_2_clicked()
+{
+    if(ui->checkBox_2->isChecked()){
+        QString qCrPath = ui->lineEdit_7->text();
+        string crPath = qCrPath.toUtf8().constData();
+
+        QString qinfile = ui->lineEdit_9->text();
+        string infile = qinfile.toUtf8().constData();
+
+        std::ostringstream datNameStream(infile);
+        datNameStream<<crPath<<"/"<<infile;
+        std::string datName = datNameStream.str();
+
+        QFile checkfile0(datName.c_str());
+
+        if(!checkfile0.exists()){
+            QMessageBox::information(this, "Error", "File "+checkfile0.fileName()+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        else{
+            ifstream range(datName.c_str());
+
+            string lines, one, two;
+            int nrange=0;
+
+            while(std::getline(range, lines))
+            ++nrange;
+
+            range.clear();
+            range.seekg(0, ios::beg);
+
+            rangea.resize(nrange);
+            rangeb.resize(nrange);
+
+            for(int g=0; g<nrange; g++){
+                range >> one >>two;
+                istringstream ist(one);
+                ist >> rangea[g];
+                istringstream ist2(two);
+                ist2 >> rangeb[g];
+            }
+            range.close();
+        }
+        Crop::cropSpectra();
+    }
+    else{
+        Crop::cropSpectra();
+    }
+}
+void Crop::cropSpectra()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
 
@@ -89,7 +140,7 @@ void Crop::on_pushButton_2_clicked()
             QFile checkfile1(datAName.c_str());
 
             if(!checkfile1.exists()){
-                QMessageBox::information(this, "Error", "File "+inputA+" does not exist!");
+                QMessageBox::information(this, "Error", "File "+checkfile1.fileName()+" does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
@@ -122,9 +173,26 @@ void Crop::on_pushButton_2_clicked()
 
             ofstream outp(outName.c_str());
 
-            for(int g =0; g<numpix;g++){
-                if((a[g]>=wlow) & (a[g]<=wupp)){
-                    outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
+            if(ui->checkBox_2->isChecked()){
+                for(int zu=0; zu<rangea.size(); zu++){
+                    for(int g =0; g<numpix;g++){
+                        if((a[g]>=rangea[zu]) & (a[g]<=rangeb[zu])){
+                            outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
+                        }
+                        else{
+                            //
+                        }
+                    }
+                }
+            }
+            else{
+                for(int g =0; g<numpix;g++){
+                    if((a[g]>=wlow) & (a[g]<=wupp)){
+                        outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
+                    }
+                    else{
+                        //
+                    }
                 }
             }
             numpix=0;
@@ -151,7 +219,7 @@ void Crop::on_pushButton_2_clicked()
             QFile checkfile1(datName.c_str());
 
             if(!checkfile1.exists()){
-                QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+input+ +i+ " does not exist!");
+                QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+checkfile1.fileName()+" does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
@@ -174,7 +242,7 @@ void Crop::on_pushButton_2_clicked()
                 string Intenscol = qIntenscol.toUtf8().constData();
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(Extension);
@@ -228,6 +296,9 @@ void Crop::on_pushButton_3_clicked()
 
     this->setCursor(QCursor(Qt::WaitCursor));
 
+    double wlow=ui->doubleSpinBox->value();
+    double wupp=ui->doubleSpinBox_2->value();
+
     int min=ui->spinBox->value();
     int max=ui->spinBox_2->value();
     int numpix=0;
@@ -254,7 +325,7 @@ void Crop::on_pushButton_3_clicked()
             QString inputA=ui->lineEdit->text();
             string dataA = inputA.toUtf8().constData();
             std::ostringstream datANameStream(dataA);
-            datANameStream<<crPath<<"/"<<dataA<<i<<ext;
+            datANameStream<<crPath<<"/"<<dataA<<i<<"."<<ext;
             std::string datAName = datANameStream.str();
 
             QFile checkfile1(datAName.c_str());
@@ -279,7 +350,7 @@ void Crop::on_pushButton_3_clicked()
             QString output=ui->lineEdit_6->text();
             string out = output.toUtf8().constData();
             std::ostringstream outNameStream(out);
-            outNameStream<<crPath<<"/"<<out<<i<<ext2;
+            outNameStream<<crPath<<"/"<<out<<i<<"."<<ext2;
             std::string outName = outNameStream.str();
 
             for(int g=0; g<numpix; g++){
@@ -303,7 +374,17 @@ void Crop::on_pushButton_3_clicked()
                 g=g+binst-1;
                 binint=binint/binst;
                 biniwa=biniwa/binst;
-                outp<<setprecision(14)<<biniwa<<"\t"<<binint<<endl;
+                if(ui->checkBox->isChecked()){
+                    if((a[g]>=wlow) & (a[g]<=wupp)){
+                        outp<<setprecision(14)<<biniwa<<"\t"<<binint<<endl;
+                    }
+                    else{
+                        //
+                    }
+                }
+                else{
+                    outp<<setprecision(14)<<biniwa<<"\t"<<binint<<endl;
+                }
                 binint=0;
                 biniwa=0;
             }
@@ -331,13 +412,13 @@ void Crop::on_pushButton_3_clicked()
             QString input=ui->lineEdit->text();
             string data = input.toUtf8().constData();
             std::ostringstream datNameStream(data);
-            datNameStream<<crPath<<"/"<<data<<i<<ext;
+            datNameStream<<crPath<<"/"<<data<<i<<"."<<ext;
             std::string datName = datNameStream.str();
 
             QFile checkfile1(datName.c_str());
 
             if(!checkfile1.exists()){
-                QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+input+ +i+ " does not exist!");
+                QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+checkfile1.fileName()+" does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
@@ -345,7 +426,7 @@ void Crop::on_pushButton_3_clicked()
             QString output=ui->lineEdit_6->text();
             string out = output.toUtf8().constData();
             std::ostringstream outNameStream(out);
-            outNameStream<<crPath<<"/"<<out<<i<<ext2;
+            outNameStream<<crPath<<"/"<<out<<i<<"."<<ext2;
             std::string outName = outNameStream.str();
 
             CCfits::FITS::setVerboseMode(true);
@@ -360,7 +441,7 @@ void Crop::on_pushButton_3_clicked()
                 string Intenscol = qIntenscol.toUtf8().constData();
 
                 //open file for reading
-                auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+                shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
                 // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(Extension);

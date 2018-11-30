@@ -29,6 +29,7 @@
 #include <thread>
 #include <omp.h>
 #include <algorithm>
+#include <spline.h>
 
 //running man icon from: https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/running_man.png
 
@@ -66,22 +67,23 @@ MainWindow::MainWindow(QWidget *parent) :
     qIntenscol=ui->lineEdit_20->text();
     Intenscol = qIntenscol.toUtf8().constData();
 
-    ui->lineEdit->setText("croped_");
-    ui->lineEdit_2->setText("Ha_vel_shift_1.txt");
-    ui->lineEdit_3->setText("Ha_vel_shift_2.txt");
+    ui->lineEdit->setText("Average_");
+    ui->lineEdit_2->setText("5344_5370_shift2_1.txt");
+    ui->lineEdit_3->setText("5344_5370_shift_2.txt");
     ui->lineEdit_4->setText("binarym_0.txt");
     ui->lineEdit_5->setText("croped_0.txt");
     ui->lineEdit_6->setText("tempmB.txt");
-    ui->lineEdit_7->setText("cropedm_");
+    ui->lineEdit_7->setText("Averagem_");
     ui->lineEdit_8->setText("binaryrv_");
     ui->lineEdit_10->setText("tempmA.txt");
     ui->lineEdit_11->setText("tempmB.txt");
     ui->lineEdit_14->setText("ccf_0_");
+    ui->lineEdit_26->setText("subA_2_");
     increment=ui->doubleSpinBox_12->value();
 
     ui->spinBox->setValue(0);      //default for numbers of spectra
-    ui->spinBox_2->setValue(60);    //default for doppler shift
-    ui->spinBox_3->setValue(100);   //default for velocity shift
+    ui->spinBox_2->setValue(30);    //default for doppler shift
+    ui->spinBox_3->setValue(70);   //default for velocity shift
     ui->spinBox_4->setValue(0);     //default first cc file
     ui->spinBox_5->setValue(1);     //default last cc file
 
@@ -91,13 +93,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_8->setValue(1);
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
-    ui->doubleSpinBox_16->setValue(0.5);
+    ui->doubleSpinBox_16->setValue(1);
     ui->lineEdit_15->setText(QDir::currentPath());
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
     ui->checkBox_9->setChecked(false);
     ui->checkBox_10->setChecked(true);
+    ui->checkBox_24->setChecked(true);
+    ui->checkBox_27->setChecked(true);
 
     ui->plainTextEdit->setStyleSheet("QPlainTextEdit{background: transparent;}");
 
@@ -269,7 +273,7 @@ void MainWindow::ReadMeasured(int gg){
             Intenscol = qIntenscol.toUtf8().constData();
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(Extension);
@@ -317,7 +321,7 @@ void MainWindow::ReadMeasured(int gg){
 
         if(!checkfile1.exists()){
             qDebug()<<"Error 2: The file "<<checkfile1.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error 2:", "Spectrum  "+input+ +gg+" does not exist!");
+            QMessageBox::information(this, "Error 2:", "Spectrum  "+checkfile1.fileName()+" does not exist!");
             check=1;
             this->setCursor(QCursor(Qt::ArrowCursor));
             return;
@@ -526,13 +530,14 @@ void MainWindow::on_pushButton_clicked()
     cout<<"global min diff: "<<diff<<endl;
 
     if(ui->checkBox_14->isChecked()){
-        diff = abs(log10(absminw+ui->doubleSpinBox_19->value())-log10(absminw));
+        //diff = abs(log10(absminw+ui->doubleSpinBox_19->value())-log10(absminw));
+        diff = ui->lineEdit_28->text().toDouble();
         LogFile<<"Use custom step size: "<<diff<<endl;
     }
 
     else{
         diff=diff*increment;
-        LogFile<<"Use step size: "<<diff<<endl;
+        LogFile<<setprecision(14)<<"Use step size: "<<diff<<endl;
     }
 
     cout<<"new step size: "<<diff<<endl;
@@ -726,6 +731,9 @@ void MainWindow::on_pushButton_clicked()
 //******************************************************
 
         ui->progressBar->setValue(0);
+        tk::spline sp;
+        vector<double> Ys(4), Xs(4);
+        ui->progressBar->setValue(0);
 
     for(int g=0; g<num; g++){
 
@@ -786,13 +794,13 @@ void MainWindow::on_pushButton_clicked()
          measw.resize(bini);
 
          for (int i=0; i<bini; i++){
-         dat1 >> eins >>zwei;
-         istringstream istr(eins);
-         istr >> measw[i];
-         measw[i]=log10(measw[i]);
-         istringstream istr2(zwei);
-         istr2 >> measi[i];
-         measi[i]=measi[i];
+            dat1 >> eins >>zwei;
+            istringstream istr(eins);
+            istr >> measw[i];
+            measw[i]=log10(measw[i]);
+            istringstream istr2(zwei);
+            istr2 >> measi[i];
+            measi[i]=measi[i];
          }
          dat1.close();
 
@@ -816,26 +824,121 @@ void MainWindow::on_pushButton_clicked()
 
          resamw.resize(logbin);
          resami.resize(logbin);
+         double coefa=0.0, coefb=0.0, coefc=0.0;
 
          aa=0;
 
          for(int i=0; i<logbin; i++){
 
              resamw[i]=measw[0]+i*diff;
-             resami[i]=0;
+             resami[i]=0.0;
 
-             for(int e=aa; e<aa+5; e++){
+             for(int e=0; e<bini; e++){
 
-                 if(measw[e]==resamw[i]){
-                     resami[i]=measi[e];
-                     aa=e;
-                 }
-                 if((measw[e]<resamw[i])&(measw[e+1]>resamw[i])){
-                     resami[i]=measi[e]+(resamw[i]-measw[e])/(measw[e+1]-measw[e])*(measi[e+1]-measi[e]);
-                     aa=e;
+                 // linear interpolation
+                 if(ui->checkBox_27->isChecked()){
+                    if(measw[e]==resamw[i]){
+                        resami[i]=measi[e];
+                        aa=e;
+                    }
+                    else{
+                        if((measw[e]<resamw[i])&(measw[e+1]>resamw[i])){
+                            resami[i]=measi[e]+(resamw[i]-measw[e])/(measw[e+1]-measw[e])*(measi[e+1]-measi[e]);
+                            aa=e;
+                        }
+                        else{
+                            //
+                        }
+                    }
+                }
+                // spline interpolation
+                 else{
+                     if(resamw[i]<measw[4]){ // use first three data points
+                        /* with coefficients
+                         coefa = (measw[0]*(measi[1]-measi[2])+measw[1]*(measi[2]-measi[0])+measw[2]*(measi[0]-measi[1]))/((measw[0]-measw[1])*(measw[0]-measw[2])*(measw[2]-measw[1]));
+                         coefb = -(pow(measw[0],2)*(measi[1]-measi[2])+pow(measw[1],2)*(measi[2]-measi[0])+pow(measw[2],2)*(measi[0]-measi[1]))/((measw[0]-measw[1])*(measw[0]-measw[2])*(measw[2]-measw[1]));
+                         coefc = -(pow(measw[0],2)*(measw[1]*measi[2]-measw[2]*measi[1])+measw[0]*(pow(measw[2],2)*measi[1]-pow(measw[1],2)*measi[2])+measw[1]*measw[2]*measi[0]*(measw[1]-measw[2]))/((measw[0]-measw[1])*(measw[0]-measw[2])*(measw[2]-measw[1]));
+                         resami[i]=coefc+coefb*resamw[i]+coefa*pow(resamw[i],2);
+                         if((i==0) & (e==0)){
+                            cout<<coefa<<"\t"<<coefb<<"\t"<<coefc<<endl;
+                            cout<<resamw[i]<<"\t"<<resami[i]<<endl;
+                            cout<<endl;
+                         }*/
+                         //resami[i]=measi[1]+((measi[2]+measi[0])/2*(resamw[i]-measw[1])/diff)+((measi[2]-2*measi[1]+measi[0])/4*pow(((resamw[i]-measw[1])/diff),2));
+                         Xs[0]=measw[0];
+                         Xs[1]=measw[1];
+                         Xs[2]=measw[2];
+                         Xs[3]=measw[3];
+                         Ys[0]=measi[0];
+                         Ys[1]=measi[1];
+                         Ys[2]=measi[2];
+                         Ys[3]=measi[3];
+                         coefa=resamw[i];
+                         sp.set_points(Xs,Ys);
+                         resami[i]=sp(coefa);
+                         e=bini;
+                         aa=0;
+                     }
+                     else{
+                         if(resamw[i]>(measw[bini-4])){  // use last three data points
+                             /*coefa = (measw[bini-3]*(measi[bini-2]-measi[bini-1])+measw[bini-2]*(measi[bini-1]-measi[bini-3])+measw[bini-1]*(measi[bini-3]-measi[bini-2]))/((measw[bini-3]-measw[bini-2])*(measw[bini-3]-measw[bini-1])*(measw[bini-1]-measw[bini-2]));
+                             coefb = -(pow(measw[bini-3],2)*(measi[bini-2]-measi[bini-1])+pow(measw[bini-2],2)*(measi[bini-1]-measi[bini-3])+pow(measw[bini-1],2)*(measi[bini-3]-measi[bini-2]))/((measw[bini-3]-measw[bini-2])*(measw[bini-3]-measw[bini-1])*(measw[bini-1]-measw[bini-2]));
+                             coefc = -(pow(measw[bini-3],2)*(measw[bini-2]*measi[bini-1]-measw[bini-1]*measi[bini-2])+measw[bini-3]*(pow(measw[bini-1],2)*measi[bini-2]-pow(measw[bini-2],2)*measi[bini-1])+measw[bini-2]*measw[bini-1]*measi[bini-3]*(measw[bini-2]-measw[bini-1]))/((measw[bini-3]-measw[bini-2])*(measw[bini-3]-measw[bini-1])*(measw[bini-1]-measw[bini-2]));
+                             resami[i]=coefc+coefb*resamw[i]+coefa*pow(resamw[i],2);*/
+                             //resami[i]=measi[bini-2]+((measi[bini-1]+measi[bini-3])/2*(resamw[i]-measw[bini-2])/diff)+((measi[bini-1]-2*measi[bini-2]+measi[bini-3])/4*pow(((resamw[i]-measw[bini-2])/diff),2));
+                             Xs[0]=measw[bini-4];
+                             Xs[1]=measw[bini-3];
+                             Xs[2]=measw[bini-2];
+                             Xs[3]=measw[bini-1];
+                             Ys[0]=measi[bini-4];
+                             Ys[1]=measi[bini-3];
+                             Ys[2]=measi[bini-2];
+                             Ys[3]=measi[bini-1];
+                             coefa=resamw[i];
+                             sp.set_points(Xs,Ys);
+                             resami[i]=sp(coefa);
+                             e=bini;
+                         }
+                         else{
+                             if(resamw[i]==measw[e]){
+                                 resami[i]=measi[e];
+                                 aa=e;
+                                 e=bini;
+                             }
+                             else{
+                                if((resamw[i]>measw[e]-diff/2) & (resamw[i]<measw[e]+diff/2)){
+                                    /* coefa = (measw[e-1]*(measi[e]-measi[e+1])+measw[e]*(measi[e+1]-measi[e-1])+measw[e+1]*(measi[e-1]-measi[e]))/((measw[e-1]-measw[e])*(measw[e-1]-measw[e+1])*(measw[e+1]-measw[e]));
+                                    coefb = -(pow(measw[e-1],2)*(measi[e]-measi[e+1])+pow(measw[e],2)*(measi[e+1]-measi[e-1])+pow(measw[e+1],2)*(measi[e-1]-measi[e]))/((measw[e-1]-measw[e])*(measw[e-1]-measw[e+1])*(measw[e+1]-measw[e]));
+                                    coefc = -(pow(measw[e-1],2)*(measw[e]*measi[e+1]-measw[e+1]*measi[e])+measw[e-1]*(pow(measw[e+1],2)*measi[e]-pow(measw[e],2)*measi[e+1])+measw[e]*measw[e+1]*measi[e-1]*(measw[e]-measw[e+1]))/((measw[e-1]-measw[e])*(measw[e-1]-measw[e+1])*(measw[e+1]-measw[e]));
+                                    resami[i]=coefc+coefb*resamw[i]+coefa*pow(resamw[i],2);*/
+                                    //resami[i]=measi[e]+((measi[e+1]+measi[e-1])*(resamw[i]-measw[e])/(2*diff))+((measi[e+1]-2*measi[e]+measi[e-1])/4*pow(((resamw[i]-measw[e])/diff),2));
+                                    Xs[0]=measw[e-1];
+                                    Xs[1]=measw[e];
+                                    Xs[2]=measw[e+1];
+                                    Xs[3]=measw[e+2];
+                                    Ys[0]=measi[e-1];
+                                    Ys[1]=measi[e];
+                                    Ys[2]=measi[e+1];
+                                    Ys[3]=measi[e+2];
+                                    coefa=resamw[i];
+                                    sp.set_points(Xs,Ys);
+                                    resami[i]=sp(coefa);
+                                    aa=e;
+                                    e=bini;
+                                }
+                                else{
+
+                                }
+                             }
+                         }
+                     }
                  }
              }
+             if((resami[i]==0.0)){
+                 resami[i]=measi[aa];
+             }
              file1<<std::setprecision(14)<<resamw[i]<<"\t"<<resami[i]<<endl;
+
          }
          file1.close();
 
@@ -1319,6 +1422,7 @@ void MainWindow::on_pushButton_4_clicked()
     measn=ui->doubleSpinBox_13->value();
     tempn=ui->doubleSpinBox_14->value();
     tempn2=ui->doubleSpinBox_16->value();
+    ui->progressBar->setValue(0);
 
     //read rebined template A
     QString input2=ui->lineEdit_10->text();
@@ -1568,7 +1672,7 @@ void MainWindow::on_pushButton_4_clicked()
 
     for (int n=0; n<2*vsteps; n++){
             for(int m=0; m<2*dosteps; m++){
-                ccf[n][m]=0;
+                ccf[n][m]=0.0;
             }
          }
 
@@ -2639,15 +2743,23 @@ void MainWindow::on_pushButton_14_clicked()
 
 
 //***********************************************************
-// subtract templates using velocities by cross correlattion
+// subtract templates using velocities from cross correlattion
 //***********************************************************
 void MainWindow::on_pushButton_15_clicked()
 {
     int min=ui->spinBox_6->value();
     int max=ui->spinBox_7->value();
+    int adiff=0;
     double velst=ui->lineEdit_16->text().toDouble(), rv1=0.0, rv2=0.0, tbina=0.0, tbinb=0.0;
-    int irv1=0, irv2=0;
+    double irv1=0.0, irv2=0.0, xs=0.0;
+
+    double kAB = ui->doubleSpinBox_21->value();
+    double fA = kAB/(1+kAB);
+    double fB = 1/(1+kAB);
+
     string  eins, zwei;
+    tk::spline sp;
+    vector<double> Ys(3), Xs(3);
 
     if(velst==0){
         QMessageBox::information(this, "Error", "Velocity step size is zero. Did you executed CC first?");
@@ -2767,6 +2879,62 @@ void MainWindow::on_pushButton_15_clicked()
         tbin=numberb;
     }
 
+    QVector<double> sysshift(1);
+
+    // read file with shifts for subtraction
+    if(ui->checkBox_25->isChecked()){
+        QString inputs=ui->lineEdit_27->text();
+        string datas = inputs.toUtf8().constData();
+        std::ostringstream datsNameStream(datas);
+        datsNameStream<<path<<"/"<<datas;
+        std::string datsName = datsNameStream.str();
+
+        QFile checkfiles(datsName.c_str());
+
+        if(!checkfiles.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfiles.fileName()+" does not exist.");
+            qDebug()<<"The file "<<checkfiles.fileName()<<" does not exist.";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dats(datsName.c_str());
+
+        int nshift =0;
+
+        while(std::getline(dats, line))
+           ++ nshift;
+
+        dats.clear();
+        dats.seekg(0, ios::beg);
+
+        if(nshift!=(max-min+1)){
+            QMessageBox::information(this, "Error", "Number of entries in file "+checkfiles.fileName()+"does not equal number of spectra.");
+            return;
+        }
+
+        sysshift.resize(nshift);
+
+        for(int g=0; g<nshift; g++){
+            dats >> eins;
+            istringstream str(eins);
+            str >> sysshift[g];
+
+        }
+        dats.close();
+
+    }
+    else{
+        //single file
+        if(ui->checkBox_26->isChecked()){
+            sysshift[0]=ui->doubleSpinBox_20->value();
+        }
+        else{
+            //
+        }
+    }
+    int count=0;
+
     for(int i =min; i<=max; i++){
 
         QString input=ui->lineEdit_8->text();
@@ -2791,21 +2959,49 @@ void MainWindow::on_pushButton_15_clicked()
         ist >> rv1;
         istringstream ist2(zwei);
         ist2 >> rv2;
-        irv1=rv1/velst;
-        irv2=rv2/velst;
+        // add systematic shift
+        if(ui->checkBox_25->isChecked()){
+            irv1=(rv1+sysshift[count])/velst;
+            irv2=(rv2+sysshift[count])/velst;
+        }
+        else{
+            if(ui->checkBox_26->isChecked()){
+                irv1=(rv1+sysshift[0])/velst;
+                irv2=(rv2+sysshift[0])/velst;
+            }
+            else{
+                irv1=rv1/velst;
+                irv2=rv2/velst;
+            }
+        }
+        cout<<rv1<<"\t"<<rv2<<endl;
+        cout<<irv1<<"\t"<<irv2<<endl;
+        cout<<irv1*tbina<<"\t"<<rv2*tbina<<endl;
+        double tdiff=0.0;
 
         dat1.close();
+
+        double multiA =ui->lineEdit_24->text().toDouble();
+        double multiB =ui->lineEdit_25->text().toDouble();
 
         if(ui->checkBox_17->isChecked()){
             for(int g=0; g<numbera; g++){
                 wt[g]=wta[g]+irv1*tbina;
-                it[g]=ita[g];
+                it[g]=ita[g]+fA;
+                if(ui->checkBox_15->isChecked()){
+                    it[g]=it[g]*multiA;
+                }
+                tdiff=tbina;
             }
         }
         else{
             for(int g=0; g<numberb; g++){
                 wt[g]=wtb[g]+irv2*tbinb;
-                it[g]=itb[g];
+                it[g]=itb[g]+fB;
+                if(ui->checkBox_16->isChecked()){
+                    it[g]=it[g]*multiB;
+                }
+                tdiff=tbinb;
             }
         }
 
@@ -2856,8 +3052,109 @@ void MainWindow::on_pushButton_15_clicked()
         for(int g=0; g<number; g++){
 
             for(int n=0; n<tbin; n++){
-                    if((ws[g]>=wt[n])&(ws[g]<=wt[n+1])){
-                        inter = is[g]-it[n]+(ws[g]-wt[n])/(wt[n+1]-wt[n])*(it[n+1]-it[n]);
+                if((n+1)<=wt.size()){
+
+                    if(ui->checkBox_27->isChecked()){ // linear interpolation
+                        if((ws[g]>=wt[n])&(ws[g]<=wt[n+1])){
+                            inter = is[g]-(it[n]+(ws[g]-wt[n])/(wt[n+1]-wt[n])*(it[n+1]-it[n]));
+                            if(ui->checkBox_17->isChecked()){
+                                inter = inter/fB;
+                            }
+                            else{
+                                if(ui->checkBox_18->isChecked()){
+                                    inter = inter/fA;
+                                }
+                                else{
+                                    //inter = inter;
+                                }
+                            }
+                            if(ui->checkBox_20->isChecked()){   // shift by A
+                                sub1<<setprecision(14)<<pow(10,(ws[g]-irv1*tbina))<<"\t"<<inter<<endl;
+                            }
+                            else{
+                                if(ui->checkBox_21->isChecked()){   // shift by B
+                                    sub1<<setprecision(14)<<pow(10,(ws[g]-irv2*tbinb))<<"\t"<<inter<<endl;
+                                }
+                                else{
+                                    sub1<<setprecision(14)<<pow(10,ws[g])<<"\t"<<inter<<endl;
+                                }
+                            }
+                            n=tbin;
+                        }
+                        else{
+                            //
+                        }
+                    }
+                    else{ // spline interpolation
+                        if(ws[g]<wt[3]){    // using first three points
+                            Xs[0]=wt[0];
+                            Xs[1]=wt[1];
+                            Xs[2]=wt[2];
+                            //Xs[3]=wt[3];
+                            Ys[0]=it[0];
+                            Ys[1]=it[1];
+                            Ys[2]=it[2];
+                            //Ys[3]=measi[3];
+                            xs=ws[g];
+                            sp.set_points(Xs,Ys);
+                            inter=is[g]-sp(xs);
+                            n=tbin;
+                            adiff=0;
+                        }
+                        else{
+                            if(ws[g]>wt[tbin-3]){
+                                Xs[0]=wt[tbin-3];
+                                Xs[1]=wt[tbin-2];
+                                Xs[2]=wt[tbin-1];
+                                //Xs[3]=wt[3];
+                                Ys[0]=it[tbin-3];
+                                Ys[1]=it[tbin-2];
+                                Ys[2]=it[tbin-1];
+                                //Ys[3]=measi[3];
+                                xs=ws[g];
+                                sp.set_points(Xs,Ys);
+                                inter=is[g]-sp(xs);
+
+                                n=tbin;
+                            }
+                            else{
+                                if((ws[g]>wt[n]-tdiff/2) & (ws[g]<wt[n]+tdiff/2)){
+                                    Xs[0]=wt[n-1];
+                                    Xs[1]=wt[n];
+                                    Xs[2]=wt[n+1];
+                                    //Xs[3]=wt[n+2];
+                                    Ys[0]=it[n-1];
+                                    Ys[1]=it[n];
+                                    Ys[2]=it[n+1];
+                                    //Ys[3]=measi[n+2];
+                                    xs=ws[g];
+                                    sp.set_points(Xs,Ys);
+                                    inter=is[g]-sp(xs);
+                                    adiff=n;
+                                    n=tbin;
+                                }
+                                else{
+                                    //
+                                }
+                            }
+                        }
+                        if(inter==0){
+                            inter=it[adiff];
+                        }
+                        else{
+                            //
+                        }
+                        if(ui->checkBox_17->isChecked()){
+                            inter = inter/fB;
+                        }
+                        else{
+                            if(ui->checkBox_18->isChecked()){
+                                inter = inter/fA;
+                            }
+                            else{
+                                //inter = inter;
+                            }
+                        }
                         if(ui->checkBox_20->isChecked()){   // shift by A
                             sub1<<setprecision(14)<<pow(10,(ws[g]-irv1*tbina))<<"\t"<<inter<<endl;
                         }
@@ -2869,10 +3166,14 @@ void MainWindow::on_pushButton_15_clicked()
                                 sub1<<setprecision(14)<<pow(10,ws[g])<<"\t"<<inter<<endl;
                             }
                         }
-                        n=tbin;
                     }
+                }
+                else{
+                    //
+                }
             }
         }
+        ++count;
 
     }
     this->setCursor(QCursor(Qt::ArrowCursor));
@@ -2926,4 +3227,313 @@ void MainWindow::on_checkBox_24_clicked()
         ui->checkBox_23->setChecked(false);
         ui->checkBox_22->setChecked(true);
     }
+}
+
+void MainWindow::on_doubleSpinBox_20_valueChanged()
+{
+    if(ui->checkBox_26->isChecked()){
+        ui->spinBox_7->setValue(ui->spinBox_6->value());
+        ui->spinBox_4->setValue(ui->spinBox_6->value());
+        ui->spinBox_5->setValue(ui->spinBox_6->value());
+
+        MainWindow::on_pushButton_15_clicked();
+
+        ui->lineEdit_14->setText(ui->lineEdit_26->text());
+        MainWindow::on_pushButton_9_clicked();
+        MainWindow::on_pushButton_8_clicked();
+    }
+    else{
+
+    }
+}
+
+void MainWindow::on_checkBox_27_clicked()
+{
+    if(ui->checkBox_27->isChecked()){
+        ui->checkBox_28->setChecked(false);
+    }
+    else{
+        ui->checkBox_28->setChecked(true);
+    }
+}
+
+void MainWindow::on_checkBox_28_clicked()
+{
+    if(ui->checkBox_28->isChecked()){
+        ui->checkBox_27->setChecked(false);
+    }
+    else{
+        ui->checkBox_27->setChecked(true);
+    }
+}
+
+//********************************************
+// subtract full spline
+//********************************************
+void MainWindow::on_pushButton_16_clicked()
+{
+    int min=ui->spinBox_6->value();
+    int max=ui->spinBox_7->value();
+    int adiff=0;
+    double velst=ui->lineEdit_16->text().toDouble(), rv1=0.0, rv2=0.0, tbina=0.0, tbinb=0.0;
+    double irv1=0.0, irv2=0.0, xs=0.0;
+
+    double kAB = ui->doubleSpinBox_21->value();
+    double fA = kAB/(1+kAB);
+    double fB = 1/(1+kAB);
+
+    string  eins, zwei;
+    tk::spline sp;
+
+    if(velst==0){
+        QMessageBox::information(this, "Error", "Velocity step size is zero. Did you executed CC first?");
+        return;
+    }
+    this->setCursor(QCursor(Qt::WaitCursor));
+
+    //read rebined template A
+    QString temp1;
+    if(ui->checkBox_17->isChecked()){
+        temp1=ui->lineEdit_10->text();
+    }
+    else{
+        if(ui->checkBox_18->isChecked()){
+            temp1=ui->lineEdit_11->text();
+        }
+        else{
+            QMessageBox::information(this, "Error", "Nothing to subtract. Choose either A or B.");
+            return;
+        }
+    }
+
+    string tempa = temp1.toUtf8().constData();
+    std::ostringstream dataNameStream(tempa);
+    dataNameStream<<path<<"/"<<tempa;
+    std::string dataName = dataNameStream.str();
+
+    QFile checkfilea(dataName.c_str());
+
+    if(!checkfilea.exists()){
+        QMessageBox::information(this, "Error", "The template file "+checkfilea.fileName()+" does not exist.");
+        qDebug()<<"The file "<<checkfilea.fileName()<<" does not exist.";
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        return;
+    }
+
+    ifstream data(dataName.c_str());
+
+    int numbera =0;
+
+    while(std::getline(data, line))
+       ++ numbera;
+
+    data.clear();
+    data.seekg(0, ios::beg);
+
+    QVector<double> wta(numbera), ita(numbera);
+     vector<double> Ys(numbera), Xs(numbera);
+
+    for(int i=0; i<numbera; i++){
+        data >> eins >> zwei;
+        istringstream str(eins);
+        str >> wta[i];
+        istringstream str2(zwei);
+        str2 >> ita[i];
+        if(i==1){
+            tbina=wta[1]-wta[0];
+        }
+        else{
+            //
+        }
+    }
+
+    QVector<double> sysshift(1);
+
+    // read file with shifts for subtraction
+    if(ui->checkBox_25->isChecked()){
+        QString inputs=ui->lineEdit_27->text();
+        string datas = inputs.toUtf8().constData();
+        std::ostringstream datsNameStream(datas);
+        datsNameStream<<path<<"/"<<datas;
+        std::string datsName = datsNameStream.str();
+
+        QFile checkfiles(datsName.c_str());
+
+        if(!checkfiles.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfiles.fileName()+" does not exist.");
+            qDebug()<<"The file "<<checkfiles.fileName()<<" does not exist.";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dats(datsName.c_str());
+
+        int nshift =0;
+
+        while(std::getline(dats, line))
+           ++ nshift;
+
+        dats.clear();
+        dats.seekg(0, ios::beg);
+
+        if(nshift!=(max-min+1)){
+            QMessageBox::information(this, "Error", "Number of entries in file "+checkfiles.fileName()+"does not equal number of spectra.");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        sysshift.resize(nshift);
+
+        for(int g=0; g<nshift; g++){
+            dats >> eins;
+            istringstream str(eins);
+            str >> sysshift[g];
+
+        }
+        dats.close();
+
+    }
+    else{
+        //single file
+        if(ui->checkBox_26->isChecked()){
+            sysshift[0]=ui->doubleSpinBox_20->value();
+        }
+        else{
+            //
+        }
+    }
+    int count=0;
+
+    for(int i =min; i<=max; i++){
+
+        QString input=ui->lineEdit_8->text();
+        string data1 = input.toUtf8().constData();
+        std::ostringstream dat1NameStream(data1);
+        dat1NameStream<<path<<"/"<<data1<<i<<".txt";
+        std::string dat1Name = dat1NameStream.str();
+
+        QFile checkfile1(dat1Name.c_str());
+
+        if(!checkfile1.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfile1.fileName()+" does not exist.");
+            qDebug()<<"The file "<<checkfile1.fileName()<<" does not exist.";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dat1(dat1Name.c_str());
+
+        dat1 >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> rv1;
+        istringstream ist2(zwei);
+        ist2 >> rv2;
+        // add systematic shift
+        if(ui->checkBox_25->isChecked()){
+            irv1=(rv1+sysshift[count])/velst;
+            irv2=(rv2+sysshift[count])/velst;
+        }
+        else{
+            if(ui->checkBox_26->isChecked()){
+                irv1=(rv1+sysshift[0])/velst;
+                irv2=(rv2+sysshift[0])/velst;
+            }
+            else{
+                irv1=rv1/velst;
+                irv2=rv2/velst;
+            }
+        }
+        cout<<rv1<<"\t"<<rv2<<endl;
+        cout<<irv1<<"\t"<<irv2<<endl;
+        cout<<irv1*tbina<<"\t"<<rv2*tbina<<endl;
+        double tdiff=0.0;
+
+        dat1.close();
+
+        double multiA =ui->lineEdit_24->text().toDouble();
+        double multiB =ui->lineEdit_25->text().toDouble();
+
+        if(ui->checkBox_17->isChecked()){
+            for(int g=0; g<numbera; g++){
+                Xs[g]=wta[g]+irv1*tbina;
+                Ys[g]=ita[g]+fA;
+                if(ui->checkBox_15->isChecked()){
+                    Ys[g]=ita[g]*multiA;
+                }
+                tdiff=tbina;
+            }
+        }
+        else{
+            for(int g=0; g<numbera; g++){
+                Xs[g]=wta[g]+irv2*tbinb;
+                Ys[g]=ita[g]+fB;
+                if(ui->checkBox_16->isChecked()){
+                    Ys[g]=ita[g]*multiB;
+                }
+                tdiff=tbinb;
+            }
+        }
+
+        QString input2=ui->lineEdit_7->text();
+        string data2 = input2.toUtf8().constData();
+        std::ostringstream dat2NameStream(data1);
+        dat2NameStream<<path<<"/"<<data2<<i<<".txt";
+        std::string dat2Name = dat2NameStream.str();
+
+        QFile checkfile2(dat2Name.c_str());
+
+        if(!checkfile2.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfile2.fileName()+" does not exist.");
+            qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dat2(dat2Name.c_str());
+
+        int number =0;
+
+        while(std::getline(dat2, line))
+           ++ number;
+
+        dat2.clear();
+        dat2.seekg(0, ios::beg);
+        QVector<double> ws(number), is(number);
+
+        for(int g=0; g<number; g++){
+            dat2 >> eins >> zwei;
+            istringstream str(eins);
+            str >> ws[g];
+            istringstream str2(zwei);
+            str2 >> is[g];
+        }
+        dat2.close();
+
+        QString out=ui->lineEdit_26->text();
+        string out1 = out.toUtf8().constData();
+        std::ostringstream out1NameStream(data1);
+        out1NameStream<<path<<"/"<<out1<<i<<".txt";
+        std::string out1Name = out1NameStream.str();
+        ofstream sub1(out1Name.c_str());
+
+        sp.set_points(Xs,Ys);
+
+        for(int g=0; g<number; g++){
+            xs=ws[g];
+            sub1<<ws[g]<<"\t";
+            if(ui->checkBox_17->isChecked()){
+                sub1<<(is[g]-sp(xs))/fB<<endl;
+            }
+            else{
+                if(ui->checkBox_18->isChecked()){
+                    sub1<<(is[g]-sp(xs))/fA<<endl;
+                }
+                else{
+
+                }
+            }
+        }
+        sub1.close();
+    }
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }

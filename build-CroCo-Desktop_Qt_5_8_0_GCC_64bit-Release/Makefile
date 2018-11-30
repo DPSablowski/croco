@@ -13,8 +13,8 @@ MAKEFILE      = Makefile
 CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CFLAGS        = -pipe -O2 -fopenmp -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -fopenmp -O2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I../CroCo -I. -I../../../../Qt/5.8/gcc_64/include -I../../../../Qt/5.8/gcc_64/include/QtPrintSupport -I../../../../Qt/5.8/gcc_64/include/QtWidgets -I../../../../Qt/5.8/gcc_64/include/QtGui -I../../../../Qt/5.8/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I../../../../Qt/5.8/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/daniel/Qt/5.8/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -35,8 +35,8 @@ COMPRESS      = gzip -9f
 DISTNAME      = CroCo1.0.0
 DISTDIR = /home/daniel/Disentangling/CroCo/croco2/build-CroCo-Desktop_Qt_5_8_0_GCC_64bit-Release/.tmp/CroCo1.0.0
 LINK          = g++
-LFLAGS        = -Wl,-O1 -Wl,-rpath,/home/daniel/Qt/5.8/gcc_64/lib
-LIBS          = $(SUBLIBS) -lcfitsio -lCCfits -lm -lstdc++ -L/home/daniel/Qt/5.8/gcc_64/lib -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LFLAGS        = -fopenmp -Wl,-O1 -Wl,-rpath,/home/daniel/Qt/5.8/gcc_64/lib
+LIBS          = $(SUBLIBS) -lcfitsio -lCCfits -lm -lstdc++ -lgomp -L/home/daniel/Qt/5.8/gcc_64/lib -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -64,7 +64,8 @@ SOURCES       = ../CroCo/main.cpp \
 		../CroCo/arithmetic.cpp \
 		../CroCo/crop.cpp \
 		../CroCo/splinefit.cpp \
-		../CroCo/blazecorr.cpp qrc_images.cpp \
+		../CroCo/blazecorr.cpp \
+		../CroCo/moments.cpp qrc_images.cpp \
 		moc_mainwindow.cpp \
 		moc_qcustomplot.cpp \
 		moc_plotspec.cpp \
@@ -80,7 +81,8 @@ SOURCES       = ../CroCo/main.cpp \
 		moc_arithmetic.cpp \
 		moc_crop.cpp \
 		moc_splinefit.cpp \
-		moc_blazecorr.cpp
+		moc_blazecorr.cpp \
+		moc_moments.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		qcustomplot.o \
@@ -98,6 +100,7 @@ OBJECTS       = main.o \
 		crop.o \
 		splinefit.o \
 		blazecorr.o \
+		moments.o \
 		qrc_images.o \
 		moc_mainwindow.o \
 		moc_qcustomplot.o \
@@ -114,7 +117,8 @@ OBJECTS       = main.o \
 		moc_arithmetic.o \
 		moc_crop.o \
 		moc_splinefit.o \
-		moc_blazecorr.o
+		moc_blazecorr.o \
+		moc_moments.o
 DIST          = ../../../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt/5.8/gcc_64/mkspecs/common/linux.conf \
@@ -265,6 +269,7 @@ DIST          = ../../../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/spec_post.prf \
+		../CroCo/.qmake.stash \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/toolchain.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/default_pre.prf \
@@ -299,7 +304,8 @@ DIST          = ../../../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
 		../CroCo/crop.h \
 		../CroCo/splinefit.h \
 		../CroCo/massega.h \
-		../CroCo/blazecorr.h ../CroCo/main.cpp \
+		../CroCo/blazecorr.h \
+		../CroCo/moments.h ../CroCo/main.cpp \
 		../CroCo/mainwindow.cpp \
 		../CroCo/qcustomplot.cpp \
 		../CroCo/plotspec.cpp \
@@ -315,7 +321,8 @@ DIST          = ../../../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
 		../CroCo/arithmetic.cpp \
 		../CroCo/crop.cpp \
 		../CroCo/splinefit.cpp \
-		../CroCo/blazecorr.cpp
+		../CroCo/blazecorr.cpp \
+		../CroCo/moments.cpp
 QMAKE_TARGET  = CroCo
 DESTDIR       = 
 TARGET        = CroCo
@@ -324,7 +331,7 @@ TARGET        = CroCo
 first: all
 ####### Build rules
 
-$(TARGET): ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h ui_splinefit.h ui_blazecorr.h $(OBJECTS)  
+$(TARGET): ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h ui_splinefit.h ui_blazecorr.h ui_moments.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../CroCo/CroCo.pro ../../../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf ../../../../Qt/5.8/gcc_64/mkspecs/features/spec_pre.prf \
@@ -477,6 +484,7 @@ Makefile: ../CroCo/CroCo.pro ../../../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.c
 		../../../../Qt/5.8/gcc_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/toolchain.prf \
 		../../../../Qt/5.8/gcc_64/mkspecs/features/default_pre.prf \
@@ -652,6 +660,7 @@ Makefile: ../CroCo/CroCo.pro ../../../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.c
 ../../../../Qt/5.8/gcc_64/mkspecs/features/qt_config.prf:
 ../../../../Qt/5.8/gcc_64/mkspecs/linux-g++/qmake.conf:
 ../../../../Qt/5.8/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt/5.8/gcc_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt/5.8/gcc_64/mkspecs/features/toolchain.prf:
 ../../../../Qt/5.8/gcc_64/mkspecs/features/default_pre.prf:
@@ -692,9 +701,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../CroCo/images.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.8/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../CroCo/mainwindow.h ../CroCo/qcustomplot.h ../CroCo/plotspec.h ../CroCo/plotsequ.h ../CroCo/rvcurve.h ../CroCo/template.h ../CroCo/binarytool.h ../CroCo/telluric.h ../CroCo/mapplot.h ../CroCo/rvcalc.h ../CroCo/rename.h ../CroCo/cpd.h ../CroCo/arithmetic.h ../CroCo/crop.h ../CroCo/splinefit.h ../CroCo/massega.h ../CroCo/blazecorr.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../CroCo/main.cpp ../CroCo/mainwindow.cpp ../CroCo/qcustomplot.cpp ../CroCo/plotspec.cpp ../CroCo/plotsequ.cpp ../CroCo/rvcurve.cpp ../CroCo/template.cpp ../CroCo/binarytool.cpp ../CroCo/telluric.cpp ../CroCo/mapplot.cpp ../CroCo/rvcalc.cpp ../CroCo/rename.cpp ../CroCo/cpd.cpp ../CroCo/arithmetic.cpp ../CroCo/crop.cpp ../CroCo/splinefit.cpp ../CroCo/blazecorr.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../CroCo/mainwindow.ui ../CroCo/plotspec.ui ../CroCo/plotsequ.ui ../CroCo/rvcurve.ui ../CroCo/template.ui ../CroCo/binarytool.ui ../CroCo/telluric.ui ../CroCo/mapplot.ui ../CroCo/rvcalc.ui ../CroCo/rename.ui ../CroCo/cpd.ui ../CroCo/arithmetic.ui ../CroCo/crop.ui ../CroCo/splinefit.ui ../CroCo/blazecorr.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../CroCo/mainwindow.h ../CroCo/qcustomplot.h ../CroCo/plotspec.h ../CroCo/plotsequ.h ../CroCo/rvcurve.h ../CroCo/template.h ../CroCo/binarytool.h ../CroCo/telluric.h ../CroCo/mapplot.h ../CroCo/rvcalc.h ../CroCo/rename.h ../CroCo/cpd.h ../CroCo/arithmetic.h ../CroCo/crop.h ../CroCo/splinefit.h ../CroCo/massega.h ../CroCo/blazecorr.h ../CroCo/moments.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../CroCo/main.cpp ../CroCo/mainwindow.cpp ../CroCo/qcustomplot.cpp ../CroCo/plotspec.cpp ../CroCo/plotsequ.cpp ../CroCo/rvcurve.cpp ../CroCo/template.cpp ../CroCo/binarytool.cpp ../CroCo/telluric.cpp ../CroCo/mapplot.cpp ../CroCo/rvcalc.cpp ../CroCo/rename.cpp ../CroCo/cpd.cpp ../CroCo/arithmetic.cpp ../CroCo/crop.cpp ../CroCo/splinefit.cpp ../CroCo/blazecorr.cpp ../CroCo/moments.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../CroCo/mainwindow.ui ../CroCo/plotspec.ui ../CroCo/plotsequ.ui ../CroCo/rvcurve.ui ../CroCo/template.ui ../CroCo/binarytool.ui ../CroCo/telluric.ui ../CroCo/mapplot.ui ../CroCo/rvcalc.ui ../CroCo/rename.ui ../CroCo/cpd.ui ../CroCo/arithmetic.ui ../CroCo/crop.ui ../CroCo/splinefit.ui ../CroCo/blazecorr.ui ../CroCo/moments.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -743,11 +752,11 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: ../../../../Qt/5.8/gcc_64/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h ../../../../Qt/5.8/gcc_64/mkspecs/features/data/dummy.cpp
+	g++ -pipe -fopenmp -O2 -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h ../../../../Qt/5.8/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp moc_crop.cpp moc_splinefit.cpp moc_blazecorr.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp moc_crop.cpp moc_splinefit.cpp moc_blazecorr.cpp moc_moments.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp moc_crop.cpp moc_splinefit.cpp moc_blazecorr.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_qcustomplot.cpp moc_plotspec.cpp moc_plotsequ.cpp moc_rvcurve.cpp moc_template.cpp moc_binarytool.cpp moc_telluric.cpp moc_mapplot.cpp moc_rvcalc.cpp moc_rename.cpp moc_cpd.cpp moc_arithmetic.cpp moc_crop.cpp moc_splinefit.cpp moc_blazecorr.cpp moc_moments.cpp
 moc_mainwindow.cpp: ../../../../Qt/5.8/gcc_64/include/QtWidgets/QMainWindow \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qmainwindow.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -1091,6 +1100,7 @@ moc_mainwindow.cpp: ../../../../Qt/5.8/gcc_64/include/QtWidgets/QMainWindow \
 		../CroCo/crop.h \
 		../CroCo/splinefit.h \
 		../CroCo/blazecorr.h \
+		../CroCo/moments.h \
 		../CroCo/mainwindow.h \
 		moc_predefs.h \
 		../../../../Qt/5.8/gcc_64/bin/moc
@@ -3301,11 +3311,118 @@ moc_blazecorr.cpp: ../../../../Qt/5.8/gcc_64/include/QtWidgets/QDialog \
 		../../../../Qt/5.8/gcc_64/bin/moc
 	/home/daniel/Qt/5.8/gcc_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/home/daniel/Qt/5.8/gcc_64/mkspecs/linux-g++ -I/home/daniel/Disentangling/CroCo/croco2/CroCo -I/home/daniel/Qt/5.8/gcc_64/include -I/home/daniel/Qt/5.8/gcc_64/include/QtPrintSupport -I/home/daniel/Qt/5.8/gcc_64/include/QtWidgets -I/home/daniel/Qt/5.8/gcc_64/include/QtGui -I/home/daniel/Qt/5.8/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../CroCo/blazecorr.h -o moc_blazecorr.cpp
 
+moc_moments.cpp: ../../../../Qt/5.8/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtguiglobal.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtcore-config.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qnumeric.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qversiontagging.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtgui-config.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qhashfunctions.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmargins.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qrect.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsize.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpalette.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qcolor.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qrgb.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qrgba64.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qbrush.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qmatrix.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpolygon.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qregion.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qline.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtransform.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qimage.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpixelformat.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpixmap.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qfont.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qcursor.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qevent.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qset.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qurl.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qurlquery.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qvector2d.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtouchdevice.h \
+		../CroCo/moments.h \
+		moc_predefs.h \
+		../../../../Qt/5.8/gcc_64/bin/moc
+	/home/daniel/Qt/5.8/gcc_64/bin/moc $(DEFINES) --include ./moc_predefs.h -I/home/daniel/Qt/5.8/gcc_64/mkspecs/linux-g++ -I/home/daniel/Disentangling/CroCo/croco2/CroCo -I/home/daniel/Qt/5.8/gcc_64/include -I/home/daniel/Qt/5.8/gcc_64/include/QtPrintSupport -I/home/daniel/Qt/5.8/gcc_64/include/QtWidgets -I/home/daniel/Qt/5.8/gcc_64/include/QtGui -I/home/daniel/Qt/5.8/gcc_64/include/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../CroCo/moments.h -o moc_moments.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h ui_splinefit.h ui_blazecorr.h
+compiler_uic_make_all: ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h ui_splinefit.h ui_blazecorr.h ui_moments.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h ui_splinefit.h ui_blazecorr.h
+	-$(DEL_FILE) ui_mainwindow.h ui_plotspec.h ui_plotsequ.h ui_rvcurve.h ui_template.h ui_binarytool.h ui_telluric.h ui_mapplot.h ui_rvcalc.h ui_rename.h ui_cpd.h ui_arithmetic.h ui_crop.h ui_splinefit.h ui_blazecorr.h ui_moments.h
 ui_mainwindow.h: ../CroCo/mainwindow.ui \
 		../../../../Qt/5.8/gcc_64/bin/uic \
 		../CroCo/qcustomplot.h \
@@ -9114,6 +9231,10 @@ ui_blazecorr.h: ../CroCo/blazecorr.ui \
 		../../../../Qt/5.8/gcc_64/include/QtPrintSupport/qtprintsupportversion.h
 	/home/daniel/Qt/5.8/gcc_64/bin/uic ../CroCo/blazecorr.ui -o ui_blazecorr.h
 
+ui_moments.h: ../CroCo/moments.ui \
+		../../../../Qt/5.8/gcc_64/bin/uic
+	/home/daniel/Qt/5.8/gcc_64/bin/uic ../CroCo/moments.ui -o ui_moments.h
+
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
@@ -9468,6 +9589,7 @@ main.o: ../CroCo/main.cpp ../CroCo/mainwindow.h \
 		../CroCo/crop.h \
 		../CroCo/splinefit.h \
 		../CroCo/blazecorr.h \
+		../CroCo/moments.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qapplication.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qdesktopwidget.h \
@@ -9820,6 +9942,7 @@ mainwindow.o: ../CroCo/mainwindow.cpp ../CroCo/mainwindow.h \
 		../CroCo/crop.h \
 		../CroCo/splinefit.h \
 		../CroCo/blazecorr.h \
+		../CroCo/moments.h \
 		../CroCo/ui_mainwindow.h \
 		../../../../Qt/5.8/gcc_64/include/QtCore/QVariant \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QAction \
@@ -15271,24 +15394,26 @@ arithmetic.o: ../CroCo/arithmetic.cpp ../CroCo/arithmetic.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QCheckBox \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcheckbox.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/QGridLayout \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QDoubleSpinBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qvalidator.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qregularexpression.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QFrame \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qboxlayout.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlayout.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qgridlayout.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QHeaderView \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qheaderview.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemview.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractscrollarea.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qframe.h \
 		../../../../Qt/5.8/gcc_64/include/QtCore/qabstractitemmodel.h \
 		../../../../Qt/5.8/gcc_64/include/QtCore/qitemselectionmodel.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyleoption.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractspinbox.h \
-		../../../../Qt/5.8/gcc_64/include/QtGui/qvalidator.h \
-		../../../../Qt/5.8/gcc_64/include/QtCore/qregularexpression.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qslider.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractslider.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyle.h \
@@ -15307,7 +15432,7 @@ arithmetic.o: ../CroCo/arithmetic.cpp ../CroCo/arithmetic.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qpushbutton.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QSpacerItem \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QSpinBox \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QVBoxLayout \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QMessageBox \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qmessagebox.h \
 		../../../../Qt/5.8/gcc_64/include/QtCore/QFile
@@ -16096,13 +16221,27 @@ blazecorr.o: ../CroCo/blazecorr.cpp ../CroCo/blazecorr.h \
 		../../../../Qt/5.8/gcc_64/include/QtGui/qinputmethod.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QButtonGroup \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qbuttongroup.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/QDoubleSpinBox \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QCheckBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcheckbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QComboBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcombobox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyleoption.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractspinbox.h \
 		../../../../Qt/5.8/gcc_64/include/QtGui/qvalidator.h \
 		../../../../Qt/5.8/gcc_64/include/QtCore/qregularexpression.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/QFrame \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qslider.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractslider.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyle.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtabbar.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtabwidget.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qrubberband.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qabstractitemmodel.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QDoubleSpinBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QFrame \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QGridLayout \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qgridlayout.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlayout.h \
@@ -16113,16 +16252,7 @@ blazecorr.o: ../CroCo/blazecorr.cpp ../CroCo/blazecorr.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qheaderview.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemview.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractscrollarea.h \
-		../../../../Qt/5.8/gcc_64/include/QtCore/qabstractitemmodel.h \
 		../../../../Qt/5.8/gcc_64/include/QtCore/qitemselectionmodel.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyleoption.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qslider.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractslider.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyle.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtabbar.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtabwidget.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qrubberband.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QLabel \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlabel.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QLineEdit \
@@ -16135,14 +16265,10 @@ blazecorr.o: ../CroCo/blazecorr.cpp ../CroCo/blazecorr.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qprogressbar.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QPushButton \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qpushbutton.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractbutton.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QScrollArea \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qscrollarea.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QSpacerItem \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QSpinBox \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/QTableWidget \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtablewidget.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtableview.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QVBoxLayout \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QWidget \
 		../CroCo/qcustomplot.h \
@@ -16372,11 +16498,9 @@ blazecorr.o: ../CroCo/blazecorr.cpp ../CroCo/blazecorr.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/QtWidgetsDepends \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qaccessiblewidget.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcalendarwidget.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcheckbox.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcolordialog.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcolormap.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcolumnview.h \
-		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcombobox.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcommandlinkbutton.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcommonstyle.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcompleter.h \
@@ -16454,6 +16578,8 @@ blazecorr.o: ../CroCo/blazecorr.cpp ../CroCo/blazecorr.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstylepainter.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyleplugin.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qsystemtrayicon.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtableview.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtablewidget.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtextbrowser.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtoolbar.h \
 		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtoolbox.h \
@@ -16479,6 +16605,174 @@ blazecorr.o: ../CroCo/blazecorr.cpp ../CroCo/blazecorr.h \
 		../../../../Qt/5.8/gcc_64/include/QtPrintSupport/qtprintsupportversion.h \
 		../CroCo/spline.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o blazecorr.o ../CroCo/blazecorr.cpp
+
+moments.o: ../CroCo/moments.cpp ../CroCo/moments.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QDialog \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qdialog.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtguiglobal.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtcore-config.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qnumeric.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qversiontagging.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtgui-config.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qhashfunctions.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qbytearraylist.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmargins.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qrect.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsize.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpalette.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qcolor.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qrgb.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qrgba64.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qbrush.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qmatrix.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpolygon.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qregion.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qline.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtransform.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qimage.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpixelformat.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpixmap.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qfont.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qcursor.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qevent.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qset.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qurl.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qurlquery.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qvector2d.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtouchdevice.h \
+		../CroCo/ui_moments.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QAction \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qaction.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qicon.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qactiongroup.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qcoreapplication.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qeventloop.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QButtonGroup \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QCheckBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qcheckbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QFrame \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QHBoxLayout \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qboxlayout.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlayout.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qgridlayout.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QHeaderView \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qheaderview.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemview.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qabstractitemmodel.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qitemselectionmodel.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyleoption.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qvalidator.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/qregularexpression.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qslider.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qabstractslider.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qstyle.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtabbar.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtabwidget.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qrubberband.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QLabel \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlabel.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qlineedit.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtextcursor.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtextformat.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/5.8/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QPushButton \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qpushbutton.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QSpacerItem \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QSpinBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qspinbox.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QTableWidget \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtablewidget.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qtableview.h \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QVBoxLayout \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/QMessageBox \
+		../../../../Qt/5.8/gcc_64/include/QtWidgets/qmessagebox.h \
+		../../../../Qt/5.8/gcc_64/include/QtCore/QFile \
+		../../../../Qt/5.8/gcc_64/include/QtCore/QDebug
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moments.o ../CroCo/moments.cpp
 
 qrc_images.o: qrc_images.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_images.o qrc_images.cpp
@@ -16530,6 +16824,9 @@ moc_splinefit.o: moc_splinefit.cpp
 
 moc_blazecorr.o: moc_blazecorr.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_blazecorr.o moc_blazecorr.cpp
+
+moc_moments.o: moc_moments.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_moments.o moc_moments.cpp
 
 ####### Install
 

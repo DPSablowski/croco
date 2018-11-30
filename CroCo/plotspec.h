@@ -29,14 +29,6 @@ private slots:
 
     void on_pushButton_3_clicked();
 
-    void on_doubleSpinBox_valueChanged();
-
-    void on_doubleSpinBox_2_valueChanged();
-
-    void on_doubleSpinBox_3_valueChanged();
-
-    void on_doubleSpinBox_4_valueChanged();
-
     void on_lineEdit_2_editingFinished();
 
     void on_lineEdit_3_editingFinished();

@@ -111,6 +111,10 @@ BinaryTool::BinaryTool(QWidget *parent) :
     ui->lineEdit_10->setText("ratios.dat");
     ui->lineEdit_11->setText(".dat");
 
+    ui->spinBox_6->setEnabled(false);
+    ui->spinBox_7->setEnabled(false);
+    ui->lineEdit_11->setEnabled(false);
+
     ui->spinBox_3->setValue(19);
 
     ui->lineEdit_3->setText(QDir::currentPath());
@@ -225,7 +229,6 @@ void BinaryTool::CalcRVs(){
     ostringstream sratioNameStream(sratio);
     sratioNameStream<<BPath<<"/"<<sratio;
     string sratioName = sratioNameStream.str();
-    ifstream sRatio(sratioName.c_str());
 
     QFile checkfile(sratioName.c_str());
 
@@ -235,6 +238,7 @@ void BinaryTool::CalcRVs(){
                 this->setCursor(QCursor(Qt::ArrowCursor));
                return;
             }
+            ifstream sRatio(sratioName.c_str());
 
             while(std::getline(sRatio, line))
                        ++ number;
@@ -261,7 +265,12 @@ void BinaryTool::CalcRVs(){
 
     for(int m=0; m<number; m++){
 
-        t[m]=BTT0+phas[m]*BTP;
+        if(ui->checkBox_13->isChecked()){
+            t[m]=BTT0+phas[m]*BTP;
+        }
+        else{
+            t[m]=phas[m];
+        }
 
         if(BTe!=0){
             BTt=t[m];
@@ -277,7 +286,7 @@ void BinaryTool::CalcRVs(){
 
         V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
         V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
-        cout<<V1[m]<<"\t"<<V2[m]<<endl;
+        cout<<t[m]<<"\t"<<phas[m]<<"\t"<<V1[m]<<"\t"<<V2[m]<<endl;
     }
 }
 
@@ -365,7 +374,6 @@ void BinaryTool::on_pushButton_2_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<BPath<<"/"<<data<<u<<".txt";
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile(datName.c_str());
 
@@ -376,6 +384,7 @@ void BinaryTool::on_pushButton_2_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
            return;
         }
+        ifstream dat(datName.c_str());
 
         dat >> eins >>zwei;
         istringstream ist(eins);
@@ -384,8 +393,8 @@ void BinaryTool::on_pushButton_2_clicked()
         ist2 >> rvb2[u];
         rvb3[u]=rvb1[u]+rvb2[u];
         if(ui->checkBox_4->isChecked()){
-        rvb3[u]=-rvb3[u];
-        rvb1[u]=-rvb1[u];
+            rvb3[u]=-rvb3[u];
+            rvb1[u]=-rvb1[u];
         }
         rvb4[u]=rvb1[u]-V1[u];
         rvb5[u]=rvb3[u]-V2[u];
@@ -461,7 +470,9 @@ void BinaryTool::on_pushButton_2_clicked()
      ui->customPlot->addGraph();
      ui->customPlot->graph(0)->setData(t, V1);
      ui->customPlot->addGraph();
+     ui->customPlot->graph(0)->rescaleAxes();
      ui->customPlot->graph(1)->setData(t, V2);
+     ui->customPlot->graph(1)->rescaleAxes(true);
      ui->customPlot->addGraph();
      ui->customPlot->graph(2)->setLineStyle(QCPGraph::lsNone);
      ui->customPlot->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 2));
@@ -480,10 +491,6 @@ void BinaryTool::on_pushButton_2_clicked()
      ui->customPlot->graph(3)->setPen(pen2);
      ui->customPlot->graph(4)->setPen(pen3);
      ui->customPlot->graph(5)->setPen(pen4);
-     ui->customPlot->graph(0)->rescaleAxes();
-     ui->customPlot->graph(1)->rescaleAxes(true);
-     ui->customPlot->graph(2)->rescaleAxes(true);
-     ui->customPlot->graph(3)->rescaleAxes(true);
 
      ui->customPlot->xAxis->setLabel("Time");
      ui->customPlot->yAxis->setLabel("Velocity [km/s]");
@@ -662,16 +669,16 @@ void BinaryTool::on_pushButton_3_clicked()
                     ostringstream input23NameStream(input23);
                     input23NameStream<<input23;
                     string input3Name = input23NameStream.str();
-                    ifstream input3(input3Name.c_str());
 
                     QFile checkfile3(input3Name.c_str());
 
                           if(!checkfile3.exists()){
                             qDebug()<<"Error: The file "<<checkfile3.fileName()<<" does not exist.";
-                            QMessageBox::information(this, "Error", "Error: Line list "+checkfile3.fileName()+" for telluric features does not exist!");
+                            QMessageBox::information(this, "Error", "Error: Line list "+checkfile3.fileName()+" for static features does not exist!");
                             this->setCursor(QCursor(Qt::ArrowCursor));
                             return;
-                                   }
+                          }
+                          ifstream input3(input3Name.c_str());
 
                           while(std::getline(input3, line))
                                ++ num_lines3;
@@ -843,29 +850,35 @@ void BinaryTool::on_pushButton_3_clicked()
 
         if(m==1){ // generate template
             for(int n=0; n < num_lines1; n++){
-                temi1[n]=(1-linesi1[n]*num_lines1*exp(-0.25/(pow((vsi11/c*linesw01[n]),2))*pow((linesw01[n]-w),2)))/num_lines1;
-                tempi1+=temi1[n];
+                    temi1[n]=(1-linesi1[n]*num_lines1*exp(-0.25/(pow((vsi11/c*linesw01[n]),2))*pow((linesw01[n]-w),2)))/num_lines1;
+                    tempi1+=temi1[n];
                 }
                 for(int n=0; n < num_lines2; n++){
-                temi2[n]=(1-linesi2[n]*num_lines2*exp(-0.25/(pow((vsi12/c*linesw02[n]),2))*pow((linesw02[n]-w),2)))/num_lines2;
-                tempi2+=temi2[n];
+                    temi2[n]=(1-linesi2[n]*num_lines2*exp(-0.25/(pow((vsi12/c*linesw02[n]),2))*pow((linesw02[n]-w),2)))/num_lines2;
+                    tempi2+=temi2[n];
                 }
 
-                file2<<w<< "\t"<<tempi1/2<<"\n";
-                file3<<w<< "\t"<<tempi2/2<<"\n";
+                if(ui->checkBox_14->isChecked()){
+                    file2<<w<< "\t"<<tempi1+gauss()/SNR+1/SNR<<"\n";
+                    file3<<w<< "\t"<<tempi2+gauss()/SNR+1/SNR<<"\n";
+                }
+                else{
+                    file2<<w<< "\t"<<tempi1/2<<"\n";
+                    file3<<w<< "\t"<<tempi2/2<<"\n";
+                }
                 tempi1=0;
                 tempi2=0;
         }
 
         if(ui->checkBox_2->isChecked()){
             for(int n=0; n<place; n++){
-            intenst[n]=linesit[n]*exp(-2.77254/(pow(FWHMt[n],2)+pow((2*dw),2))*pow((lineswt[n]-w),2));
-            Intensi+=intenst[n];
+                intenst[n]=linesit[n]*exp(-2.77254/(pow(FWHMt[n],2)+pow((2*dw),2))*pow((lineswt[n]-w),2));
+                Intensi+=intenst[n];
             }
         }
 
         if(ui->checkBox_2->isChecked()){
-        file1<<1-Intensi/3+gauss()/SNR+1/SNR<<"\n";
+            file1<<1-Intensi/3+gauss()/SNR+1/SNR<<"\n";
         }
         else {
             file1<<1-Intensi/2+gauss()/SNR+1/SNR<<"\n";
@@ -959,8 +972,8 @@ void BinaryTool::on_pushButton_4_clicked()
         ist2 >> ratio1[i];
         istringstream ist3(drei);
         ist3 >> ratio2[i];
-        cout<<ratio1[i]<<"\t"<<ratio2[i]<<endl;
-        }
+        cout<<phas[i]<<"\t"<<ratio1[i]<<"\t"<<ratio2[i]<<endl;
+    }
     sRatio.close();
 
     QString comp2 = ui->lineEdit_5->text();
@@ -968,7 +981,6 @@ void BinaryTool::on_pushButton_4_clicked()
     ostringstream input2NameStream(input22);
     input2NameStream<<BPath<<"/"<<input22;
     string input2Name = input2NameStream.str();
-    ifstream input2(input2Name.c_str());
 
     QFile checkfile2(input2Name.c_str());
 
@@ -978,6 +990,7 @@ void BinaryTool::on_pushButton_4_clicked()
        this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
+    ifstream input2(input2Name.c_str());
 
     int number2 =0;
 
@@ -987,26 +1000,27 @@ void BinaryTool::on_pushButton_4_clicked()
     input2.clear();
     input2.seekg(0, ios::beg);
 
+    /*
     if(number!=number2){
-       qDebug()<<"Error 5: Different data size";
-       QMessageBox::information(this, "Error", "Error 5: Different size of data");
+       qDebug()<<"Warning: Different data size";
+       QMessageBox::information(this, "Warning", "Warning: Different size of data");
        this->setCursor(QCursor(Qt::ArrowCursor));
        //return;
-    }
+    }*/
 
     QVector<double> WC2(number2), IC2(number2);
 
     for (int i =0; i < number2; i++){
         input2 >> eins >> zwei;
-        istringstream istr5(eins+" "+zwei);
+        istringstream istr5(eins);
         istr5 >> WC2[i];
         istringstream istr6(zwei);
         istr6 >> IC2[i];
-        IC2[i]=IC2[i];
     }
 
     input2.close();
 
+    //combine template B with sequence
     if(ui->checkBox_12->isChecked()){
        int nmin = ui->spinBox_6->value();
        int nmax = ui->spinBox_7->value();
@@ -1014,12 +1028,18 @@ void BinaryTool::on_pushButton_4_clicked()
        QString qexts = ui->lineEdit_11->text();
        string exts = qexts.toUtf8().constData();
 
+       if((nmax-nmin+1)!=t.size()){
+           qDebug()<<"Error 5: Number of spectra does not match number of phases.";
+           QMessageBox::information(this, "Error", " Error 5: Number of spectra does not match the number of phases spedified in "+checkfile.fileName()+".");
+           return;
+       }
+
        for(int i =0; i<(nmax-nmin+1); i++){
 
            QString comp1 = ui->lineEdit_4->text();
            string input11 = comp1.toUtf8().constData();
            ostringstream input1NameStream(input11);
-           input1NameStream<<BPath<<"/"<<input11<<i<<exts;
+           input1NameStream<<BPath<<"/"<<input11<<nmin+i<<exts;
            string input1Name = input1NameStream.str();
 
            QFile checkfile1(input1Name.c_str());
@@ -1043,7 +1063,7 @@ void BinaryTool::on_pushButton_4_clicked()
 
            for (int i =0; i < number; i++){
                input1 >> eins >> zwei;
-               istringstream istr3(eins+" "+zwei);
+               istringstream istr3(eins);
                istr3 >> WC1[i];
                istringstream istr4(zwei);
                istr4 >> IC1[i];
@@ -1054,7 +1074,7 @@ void BinaryTool::on_pushButton_4_clicked()
            std::string timeName = timeNameStream.str();
            ofstream tim(timeName.c_str());
 
-           int shift1, shift2, aa=0;
+           int aa=0;
 
            QVector<double> WCs1(number), WCs2(number2), CI(number), ICs1(number), ICs2(number);
 
@@ -1116,6 +1136,8 @@ void BinaryTool::on_pushButton_4_clicked()
 
        }
     }
+
+    // combine template A and B
     else{
 
         QString comp1 = ui->lineEdit_4->text();
@@ -1145,16 +1167,15 @@ void BinaryTool::on_pushButton_4_clicked()
 
         for (int i =0; i < number; i++){
             input1 >> eins >> zwei;
-            istringstream istr3(eins+" "+zwei);
+            istringstream istr3(eins);
             istr3 >> WC1[i];
             istringstream istr4(zwei);
             istr4 >> IC1[i];
-            IC1[i]=IC1[i];
          }
 
          input1.close();
 
-         if(WC1[1]-WC1[0]!=WC2[1]-WC2[0]){
+         if((WC1[1]-WC1[0])!=(WC2[1]-WC2[0])){
              qDebug()<<"Error 6: Data with unequal binning!";
              QMessageBox::information(this, "Error", "Error 6: Data with unequal binning!");
              this->setCursor(QCursor(Qt::ArrowCursor));
@@ -1174,8 +1195,8 @@ void BinaryTool::on_pushButton_4_clicked()
            ofstream tem1(filet1Name.c_str());
 
            for(int i=0; i<number2; i++){
-           tem1<<WC1[i]<<" "<<IC1[i]<<endl;
-       }
+                tem1<<WC1[i]<<" "<<IC1[i]<<endl;
+            }
 
                std::ostringstream filetNameStream("tempB.txt");
                filetNameStream<<BPath<<"/"<<"tempB.txt";
@@ -1183,15 +1204,15 @@ void BinaryTool::on_pushButton_4_clicked()
                ofstream tem(filetName.c_str());
 
                for(int i=0; i<number2; i++){
-               tem<<WC2[i]<<" "<<IC2[i]<<endl;
-           }
+                    tem<<WC2[i]<<" "<<IC2[i]<<endl;
+                }
 
            std::ostringstream timeNameStream("time.txt");
            timeNameStream<<BPath<<"/"<<"time.txt";
            std::string timeName = timeNameStream.str();
            ofstream tim(timeName.c_str());
 
-           int shift1, shift2, aa=0;
+           int aa=0;
            //double diff=WC1[1]-WC1[0];
            QVector<double> WCs1(number), WCs2(number2), CI(number), ICs1(number), ICs2(number);
 
@@ -1219,36 +1240,48 @@ void BinaryTool::on_pushButton_4_clicked()
                aa = 0;
 
                for(int e=0; e<number; e++){
-                   for(int u=aa; u<aa+5; u++){
+                   for(int u=0; u<WC1.size(); u++){
 
                     if((WCs1[u]==WC1[e])){
                         CI[e]=ICs1[u];
-
-                        aa=u;
+                        u=WC1.size();
+                        //aa=u;
                     }
-                    if((WCs1[u]<WC1[e]) & (WCs1[u+1]>WC1[e])){
-                        CI[e]=(ICs1[u]+(WC1[e]-WCs1[u])/(WCs1[u+1]-WCs1[u])*(ICs1[u+1]-ICs1[u]));
-
-                        aa=u;
+                    else{
+                        if((WCs1[u]<=WC1[e]) & (WCs1[u+1]>WC1[e])){
+                            CI[e]=(ICs1[u]+(WC1[e]-WCs1[u])/(WCs1[u+1]-WCs1[u])*(ICs1[u+1]-ICs1[u]));
+                            u=WC1.size();
+                            //aa=u;
+                        }
+                        else{
+                            CI[e]=0;
+                        }
                     }
-                   }
+                  }
                }
 
 
                aa=0;
 
                for(int e=0; e<number; e++){
-                   for(int u=aa; u<aa+5; u++){
+                   for(int u=0; u<WC1.size(); u++){
 
                     if((WCs2[u]==WC1[e])){
                         CI[e]+=ICs2[u];
-                        aa=u;
+                        u=WC1.size();
+                        //aa=u;
                     }
-                    if((WCs2[u]<WC1[e]) & (WCs2[u+1]>WC1[e])){
-                        CI[e]+=(ICs2[u]+(WC1[e]-WCs2[u])/(WCs2[u+1]-WCs2[u])*(ICs2[u+1]-ICs2[u]));
-                        aa=u;
+                    else{
+                        if((WCs2[u]<=WC1[e]) & (WCs2[u+1]>WC1[e])){
+                            CI[e]+=(ICs2[u]+(WC1[e]-WCs2[u])/(WCs2[u+1]-WCs2[u])*(ICs2[u+1]-ICs2[u]));
+                            u=WC1.size();
+                            //aa=u;
+                        }
+                        else{
+                            CI[e]+=0;
+                        }
                     }
-                   }
+                  }
                }
 
                 for(int e=0; e<number; e++){
@@ -1567,173 +1600,180 @@ void BinaryTool::BTfindroot(){
         //initial points
         Pm[0][0]=2*M_PI*(BTt-BTT0)/BTP-2*BTe;
         for (int i=0; i<n+1; i++){
-        for (int j=0; j<n; j++){
-        if(i>0 & i==j+1){
-        e[i][j]=1;
-        }
-        else{
-        e[i][j]=0;
-        }
-        if(i==0){
-
-        X[j]=Pm[i][j];
-        //cout <<X[j]<<"\t";
-        }
-        if(i!=0){
-        Pm[i][j]=Pm[0][j]+step*e[i][j];
-        X[j]=Pm[i][j];
-        //cout <<X[j]<<"\t";
-        }
-        }
-        y[i]=BTfunction(X, BTt, BTT0, BTP, BTe);
-        eval++;
-        //cout <<y[i]<<endl;
+            for (int j=0; j<n; j++){
+                if(i>0 & i==j+1){
+                    e[i][j]=1;
+                }
+                else{
+                    e[i][j]=0;
+                }
+                if(i==0){
+                    X[j]=Pm[i][j];
+                    //cout <<X[j]<<"\t";
+                }
+                if(i!=0){
+                    Pm[i][j]=Pm[0][j]+step*e[i][j];
+                    X[j]=Pm[i][j];
+                    //cout <<X[j]<<"\t";
+                }
+            }
+            y[i]=BTfunction(X, BTt, BTT0, BTP, BTe);
+            eval++;
+            //cout <<y[i]<<endl;
         }
 
         //start main loop
         for (int tc=0; tc<zaehler; tc++){
 
-        //initialize next step
-        ym=0;
-        ys=0;
-        for (int i=0; i<n; i++){
-        Z[i]=0;
-        }
+            //initialize next step
+            ym=0;
+            ys=0;
+            for (int i=0; i<n; i++){
+                Z[i]=0;
+            }
 
-        //looking for highest value
-        yh=y[0];
-        for (int j=0; j<n+1; j++){
-        if(y[j]>=yh){
-        yh = y[j];
-        Ph = j;
-        }}
+            //looking for highest value
+            yh=y[0];
+            for (int j=0; j<n+1; j++){
+                if(y[j]>=yh){
+                    yh = y[j];
+                    Ph = j;
+                }
+            }
 
-        //looking for smallest value
-        yl=yh;
-        for (int j=0; j<n+1; j++){
-        if(y[j]<yl){
-        yl=y[j];
-        Pl = j;
-        }}
+            //looking for smallest value
+            yl=yh;
+            for (int j=0; j<n+1; j++){
+                if(y[j]<yl){
+                    yl=y[j];
+                    Pl = j;
+                }
+            }
 
-        // second highest value
-        ysh=yl;
+            // second highest value
+            ysh=yl;
+            yh=y[Ph];
+            yl=y[Pl];
+            ysh=y[Psh];
 
-        yh=y[Ph];
-        yl=y[Pl];
-        ysh=y[Psh];
+            //computing mean and sigma
+            for (int i=0; i<n+1; i++){
+                ym+=y[i]/(n+1);
+            }
+            for (int i=0; i<n+1; i++){
+                ys+=sqrt(pow((y[i]-ym),2));
+            }
+            ys=ys/(n);
 
-        //computing mean and sigma
-        for (int i=0; i<n+1; i++){
-        ym+=y[i]/(n+1);
-        }
-        for (int i=0; i<n+1; i++){
-        ys+=sqrt(pow((y[i]-ym),2));
-        }
-        ys=ys/(n);
+            //compute centroid
+            for (int j=0; j<n; j++){
+                for (int i=0; i<n+1; i++){
+                    if (i!=Ph){
+                        Z[j]+=Pm[i][j]/n;
+                    }
+                }
+            }
 
-        //compute centroid
-        for (int j=0; j<n; j++){
-        for (int i=0; i<n+1; i++){
-        if (i!=Ph){
-        Z[j]+=Pm[i][j]/n;
-        }}}
+            //reflect highest value at centroid
+            for (int i=0; i<n; i++){
+                C[i]=Z[i]+alpha*(Z[i]-Pm[Ph][i]);
+            }
+            yi=BTfunction(C, BTt, BTT0, BTP, BTe);
+            eval++;
 
-        //reflect highest value at centroid
-        for (int i=0; i<n; i++){
-        C[i]=Z[i]+alpha*(Z[i]-Pm[Ph][i]);
-        }
-        yi=BTfunction(C, BTt, BTT0, BTP, BTe);
-        eval++;
+            if(yi<yl){
+                for (int i=0; i<n; i++){
+                    Em[i]=Z[i]+gamma*(C[i]-Z[i]);
+                }
+                yt=BTfunction(Em, BTt, BTT0, BTP, BTe);
+                eval++;
+                if(yt<yl){
+                    for (int i=0; i<n; i++){
+                        Pm[Ph][i]=Em[i];
+                    }
+                    y[Ph]=yt;//BTfunction(E);
+                    //eval++;
+                }
+                if (yt>=yl){
+                    for (int i=0; i<n; i++){
+                        Pm[Ph][i]=C[i];
+                    }
+                    eval++;
+                    y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
+                }
+            }
 
-        if(yi<yl){
-        for (int i=0; i<n; i++){
-        Em[i]=Z[i]+gamma*(C[i]-Z[i]);
-        }
-        yt=BTfunction(Em, BTt, BTT0, BTP, BTe);
-        eval++;
-        if(yt<yl){
-        for (int i=0; i<n; i++){
-        Pm[Ph][i]=Em[i];
-        }
-        y[Ph]=yt;//BTfunction(E);
-        //eval++;
-        }
-        if (yt>=yl){
-        for (int i=0; i<n; i++){
-        Pm[Ph][i]=C[i];
-        }
-        eval++;
-        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
-        }}
+            if(yi>=yl){
+                if(yi<=ysh){
+                    for(int i=0; i<n; i++){
+                        Pm[Ph][i]=C[i];
+                    }
+                    eval++;
+                    y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
+                }
+                if(yi>ysh){
+                    if(yi<=yh){
+                        for(int i=0; i<n; i++){
+                            Pm[Ph][i]=C[i];
+                        }
+                        eval++;
+                        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
+                        yh=y[Ph];
+                    }
+                    for(int i=0; i<n; i++){
+                        S[i]=Z[i]+beta*(Pm[Ph][i]-Z[i]);
+                    }
+                    yt=BTfunction(S, BTt, BTT0, BTP, BTe);
+                    eval++;
+                    if(yt>yh){
+                        for (int j=0; j<n+1; j++){
+                            for (int i=0; i<n; i++){
+                                Pm[j][i]=Pm[Pl][i]+btot*(Pm[j][i]-Pm[Pl][i]); //total contraction
+                                X[i]=Pm[j][i];
+                            }
+                            y[j]=BTfunction(X, BTt, BTT0, BTP, BTe);
+                            eval++;
+                        }
+                    }
 
-        if(yi>=yl){
-        if(yi<=ysh){
-        for(int i=0; i<n; i++){
-        Pm[Ph][i]=C[i];
-        }
-        eval++;
-        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
-        }
-        if(yi>ysh){
-        if(yi<=yh){
-        for(int i=0; i<n; i++){
-        Pm[Ph][i]=C[i];
-        }
-        eval++;
-        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
-        yh=y[Ph];
-        }
-        for(int i=0; i<n; i++){
-        S[i]=Z[i]+beta*(Pm[Ph][i]-Z[i]);
-        }
-        yt=BTfunction(S, BTt, BTT0, BTP, BTe);
-        eval++;
-        if(yt>yh){
-        for (int j=0; j<n+1; j++){
-        for (int i=0; i<n; i++){
-        Pm[j][i]=Pm[Pl][i]+btot*(Pm[j][i]-Pm[Pl][i]); //total contraction
-        X[i]=Pm[j][i];
-        }
-        y[j]=BTfunction(X, BTt, BTT0, BTP, BTe);
-        eval++;
-        }}
-
-        if(yt<=yh){
-        for(int i=0; i<n; i++){
-        Pm[Ph][i]=S[i];
-        }
-        eval++;
-        y[Ph]=BTfunction(S, BTt, BTT0, BTP, BTe);
-        }}
-
-        }
+                    if(yt<=yh){
+                        for(int i=0; i<n; i++){
+                            Pm[Ph][i]=S[i];
+                        }
+                        eval++;
+                        y[Ph]=BTfunction(S, BTt, BTT0, BTP, BTe);
+                    }
+                }
+            }
 
         }//end main loop
 
         //looking for highest value
         yh=y[0];
         for (int j=0; j<n+1; j++){
-        if(y[j]>=yh){
-        yh = y[j];
-        Ph = j;
-        }}
+            if(y[j]>=yh){
+                yh = y[j];
+                Ph = j;
+            }
+        }
 
         //looking for smallest value
         yl=yh;
         for (int j=0; j<n+1; j++){
-        if(y[j]<yl){
-        yl=y[j];
-        Pl = j;
-        }}
+            if(y[j]<yl){
+                yl=y[j];
+                Pl = j;
+            }
+        }
 
         //looking for second highest value
         ysh=yl;
         for (int j=0; j<n+1; j++){
-        if(y[j]>ysh & (y[j]<yh)){
-        ysh=y[j];
-        Psh=j;
-        }}
+            if(y[j]>ysh & (y[j]<yh)){
+                ysh=y[j];
+                Psh=j;
+            }
+        }
 
         BTE=Pm[Pl][0];
 
@@ -1752,3 +1792,17 @@ void BinaryTool::on_pushButton_7_clicked()
     ui->doubleSpinBox_4->setValue(LPERIa[dey]);
 }
 
+
+void BinaryTool::on_checkBox_12_clicked()
+{
+    if(ui->checkBox_12->isChecked()){
+        ui->spinBox_6->setEnabled(true);
+        ui->spinBox_7->setEnabled(true);
+        ui->lineEdit_11->setEnabled(true);
+    }
+    else{
+        ui->spinBox_6->setEnabled(false);
+        ui->spinBox_7->setEnabled(false);
+        ui->lineEdit_11->setEnabled(false);
+    }
+}

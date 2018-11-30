@@ -161,6 +161,14 @@ private slots:
 
     void on_checkBox_24_clicked();
 
+    void on_doubleSpinBox_20_valueChanged();
+
+    void on_checkBox_27_clicked();
+
+    void on_checkBox_28_clicked();
+
+    void on_pushButton_16_clicked();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;

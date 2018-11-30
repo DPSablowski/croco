@@ -82,6 +82,7 @@ public:
     QHBoxLayout *horizontalLayout_23;
     QLabel *label_22;
     QLineEdit *lineEdit_10;
+    QCheckBox *checkBox_13;
     QHBoxLayout *horizontalLayout_25;
     QLabel *label_25;
     QLineEdit *lineEdit_7;
@@ -166,6 +167,7 @@ public:
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_4;
     QSpinBox *spinBox;
+    QCheckBox *checkBox_14;
     QHBoxLayout *horizontalLayout_19;
     QLabel *label_19;
     QLineEdit *lineEdit_3;
@@ -182,7 +184,7 @@ public:
     {
         if (BinaryTool->objectName().isEmpty())
             BinaryTool->setObjectName(QStringLiteral("BinaryTool"));
-        BinaryTool->resize(1397, 802);
+        BinaryTool->resize(1397, 895);
         QFont font;
         font.setPointSize(9);
         BinaryTool->setFont(font);
@@ -193,7 +195,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1377, 782));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1389, 846));
         horizontalLayout_21 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_21->setObjectName(QStringLiteral("horizontalLayout_21"));
         verticalLayout_2 = new QVBoxLayout();
@@ -475,6 +477,11 @@ public:
         lineEdit_10->setSizePolicy(sizePolicy);
 
         horizontalLayout_23->addWidget(lineEdit_10);
+
+        checkBox_13 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_13->setObjectName(QStringLiteral("checkBox_13"));
+
+        horizontalLayout_23->addWidget(checkBox_13);
 
 
         verticalLayout_2->addLayout(horizontalLayout_23);
@@ -990,6 +997,11 @@ public:
 
         horizontalLayout_9->addWidget(spinBox);
 
+        checkBox_14 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_14->setObjectName(QStringLiteral("checkBox_14"));
+
+        horizontalLayout_9->addWidget(checkBox_14);
+
 
         verticalLayout->addLayout(horizontalLayout_9);
 
@@ -1084,7 +1096,8 @@ public:
         checkBox_12->setText(QApplication::translate("BinaryTool", "from", Q_NULLPTR));
         label_34->setText(QApplication::translate("BinaryTool", "to", Q_NULLPTR));
         label_3->setText(QApplication::translate("BinaryTool", "Spectrum B:", Q_NULLPTR));
-        label_22->setText(QApplication::translate("BinaryTool", "Phases & Ratios A/B:", Q_NULLPTR));
+        label_22->setText(QApplication::translate("BinaryTool", "Phases/Times & Ratios A/B:", Q_NULLPTR));
+        checkBox_13->setText(QApplication::translate("BinaryTool", "Phases", Q_NULLPTR));
         label_25->setText(QApplication::translate("BinaryTool", "Output:", Q_NULLPTR));
         checkBox->setText(QApplication::translate("BinaryTool", "Plot RV data from Cross-Correlation", Q_NULLPTR));
         label_23->setText(QApplication::translate("BinaryTool", "from", Q_NULLPTR));
@@ -1119,6 +1132,7 @@ public:
         checkBox_11->setText(QApplication::translate("BinaryTool", "broaden", Q_NULLPTR));
         label_33->setText(QApplication::translate("BinaryTool", "spectrum #", Q_NULLPTR));
         label_4->setText(QApplication::translate("BinaryTool", "SNR:", Q_NULLPTR));
+        checkBox_14->setText(QApplication::translate("BinaryTool", "apply to templates", Q_NULLPTR));
         label_19->setText(QApplication::translate("BinaryTool", "Work Path:", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("BinaryTool", "SB2", Q_NULLPTR));
         pushButton_5->setText(QApplication::translate("BinaryTool", "SB1", Q_NULLPTR));

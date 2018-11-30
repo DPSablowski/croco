@@ -61,6 +61,8 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void on_checkBox_12_clicked();
+
 public slots:
     void seData(QString str);
 

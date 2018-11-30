@@ -74,7 +74,10 @@ public:
     QLabel *label_7;
     QLineEdit *lineEdit_3;
     QHBoxLayout *horizontalLayout_4;
+    QCheckBox *checkBox_6;
+    QLineEdit *lineEdit_10;
     QSpacerItem *horizontalSpacer_4;
+    QCheckBox *checkBox_5;
     QLabel *label_9;
     QLineEdit *lineEdit_5;
     QLabel *label_8;
@@ -91,7 +94,7 @@ public:
     {
         if (PlotSpec->objectName().isEmpty())
             PlotSpec->setObjectName(QStringLiteral("PlotSpec"));
-        PlotSpec->resize(1076, 403);
+        PlotSpec->resize(1349, 454);
         QPalette palette;
         QBrush brush(QColor(0, 0, 0, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -167,7 +170,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1250, 358));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1351, 409));
         gridLayout = new QGridLayout(scrollAreaWidgetContents);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         customPlot_3 = new QCustomPlot(scrollAreaWidgetContents);
@@ -375,9 +378,24 @@ public:
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        checkBox_6 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+
+        horizontalLayout_4->addWidget(checkBox_6);
+
+        lineEdit_10 = new QLineEdit(scrollAreaWidgetContents);
+        lineEdit_10->setObjectName(QStringLiteral("lineEdit_10"));
+
+        horizontalLayout_4->addWidget(lineEdit_10);
+
         horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer_4);
+
+        checkBox_5 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+
+        horizontalLayout_4->addWidget(checkBox_5);
 
         label_9 = new QLabel(scrollAreaWidgetContents);
         label_9->setObjectName(QStringLiteral("label_9"));
@@ -477,6 +495,8 @@ public:
         label_13->setText(QApplication::translate("PlotSpec", "I.Col.", Q_NULLPTR));
         label_6->setText(QApplication::translate("PlotSpec", "x Label", Q_NULLPTR));
         label_7->setText(QApplication::translate("PlotSpec", "y Label", Q_NULLPTR));
+        checkBox_6->setText(QApplication::translate("PlotSpec", "Flux-Data", Q_NULLPTR));
+        checkBox_5->setText(QApplication::translate("PlotSpec", "divide by y2", Q_NULLPTR));
         label_9->setText(QApplication::translate("PlotSpec", "work path", Q_NULLPTR));
         label_8->setText(QApplication::translate("PlotSpec", "Save as", Q_NULLPTR));
         checkBox->setText(QApplication::translate("PlotSpec", "pdf", Q_NULLPTR));

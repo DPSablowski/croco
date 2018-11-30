@@ -13,9 +13,11 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -38,6 +40,7 @@ public:
     QSpinBox *spinBox;
     QLabel *label_3;
     QSpinBox *spinBox_2;
+    QLabel *label_13;
     QLineEdit *lineEdit_2;
     QSpacerItem *horizontalSpacer_3;
     QHBoxLayout *horizontalLayout_2;
@@ -57,10 +60,16 @@ public:
     QDoubleSpinBox *doubleSpinBox_2;
     QPushButton *pushButton_4;
     QSpacerItem *horizontalSpacer_5;
+    QHBoxLayout *horizontalLayout_6;
+    QCheckBox *checkBox_2;
+    QLineEdit *lineEdit_9;
+    QSpacerItem *horizontalSpacer_6;
+    QFrame *line;
     QHBoxLayout *horizontalLayout_5;
     QPushButton *pushButton_3;
     QSpinBox *spinBox_3;
     QLabel *label_11;
+    QCheckBox *checkBox;
     QSpacerItem *horizontalSpacer_2;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_9;
@@ -70,13 +79,14 @@ public:
     QLabel *label_10;
     QLineEdit *lineEdit_7;
     QSpacerItem *horizontalSpacer;
+    QSpacerItem *verticalSpacer;
     QPushButton *pushButton;
 
     void setupUi(QDialog *Crop)
     {
         if (Crop->objectName().isEmpty())
             Crop->setObjectName(QStringLiteral("Crop"));
-        Crop->resize(995, 346);
+        Crop->resize(933, 395);
         verticalLayout = new QVBoxLayout(Crop);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout = new QHBoxLayout();
@@ -117,6 +127,11 @@ public:
         spinBox_2->setMaximum(9999);
 
         horizontalLayout->addWidget(spinBox_2);
+
+        label_13 = new QLabel(Crop);
+        label_13->setObjectName(QStringLiteral("label_13"));
+
+        horizontalLayout->addWidget(label_13);
 
         lineEdit_2 = new QLineEdit(Crop);
         lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
@@ -230,6 +245,34 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_3);
 
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        checkBox_2 = new QCheckBox(Crop);
+        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+
+        horizontalLayout_6->addWidget(checkBox_2);
+
+        lineEdit_9 = new QLineEdit(Crop);
+        lineEdit_9->setObjectName(QStringLiteral("lineEdit_9"));
+        sizePolicy1.setHeightForWidth(lineEdit_9->sizePolicy().hasHeightForWidth());
+        lineEdit_9->setSizePolicy(sizePolicy1);
+
+        horizontalLayout_6->addWidget(lineEdit_9);
+
+        horizontalSpacer_6 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_6->addItem(horizontalSpacer_6);
+
+
+        verticalLayout->addLayout(horizontalLayout_6);
+
+        line = new QFrame(Crop);
+        line->setObjectName(QStringLiteral("line"));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout->addWidget(line);
+
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
         pushButton_3 = new QPushButton(Crop);
@@ -247,6 +290,11 @@ public:
         label_11->setObjectName(QStringLiteral("label_11"));
 
         horizontalLayout_5->addWidget(label_11);
+
+        checkBox = new QCheckBox(Crop);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+
+        horizontalLayout_5->addWidget(checkBox);
 
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -300,6 +348,10 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_4);
 
+        verticalSpacer = new QSpacerItem(20, 8, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer);
+
         pushButton = new QPushButton(Crop);
         pushButton->setObjectName(QStringLiteral("pushButton"));
         sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
@@ -320,6 +372,7 @@ public:
         label->setText(QApplication::translate("Crop", "Input Spectra", Q_NULLPTR));
         label_2->setText(QApplication::translate("Crop", "from", Q_NULLPTR));
         label_3->setText(QApplication::translate("Crop", "to", Q_NULLPTR));
+        label_13->setText(QApplication::translate("Crop", ".", Q_NULLPTR));
         label_5->setText(QApplication::translate("Crop", "Extension", Q_NULLPTR));
         label_4->setText(QApplication::translate("Crop", "W.Col.", Q_NULLPTR));
         label_6->setText(QApplication::translate("Crop", "I.Col.", Q_NULLPTR));
@@ -327,8 +380,10 @@ public:
         label_7->setText(QApplication::translate("Crop", "from", Q_NULLPTR));
         label_8->setText(QApplication::translate("Crop", "to", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("Crop", "Abort", Q_NULLPTR));
+        checkBox_2->setText(QApplication::translate("Crop", "File with multiple ranges:", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("Crop", "Bin", Q_NULLPTR));
         label_11->setText(QApplication::translate("Crop", "X", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("Crop", "and crop", Q_NULLPTR));
         label_9->setText(QApplication::translate("Crop", "Output", Q_NULLPTR));
         label_12->setText(QApplication::translate("Crop", "*.", Q_NULLPTR));
         label_10->setText(QApplication::translate("Crop", "Work Path:", Q_NULLPTR));

@@ -37,6 +37,12 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_checkBox_5_clicked();
+
+    void on_checkBox_4_clicked();
+
+    void on_checkBox_6_clicked();
+
 private:
     Ui::SplineFit *ui;
 };

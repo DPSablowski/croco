@@ -54,6 +54,10 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_14;
     QLineEdit *lineEdit_6;
+    QHBoxLayout *horizontalLayout_14;
+    QCheckBox *checkBox_5;
+    QCheckBox *checkBox_4;
+    QCheckBox *checkBox_6;
     QHBoxLayout *horizontalLayout;
     QLabel *label_6;
     QLineEdit *lineEdit_2;
@@ -100,7 +104,7 @@ public:
     {
         if (SplineFit->objectName().isEmpty())
             SplineFit->setObjectName(QStringLiteral("SplineFit"));
-        SplineFit->resize(1321, 713);
+        SplineFit->resize(1321, 835);
         gridLayout_2 = new QGridLayout(SplineFit);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         scrollArea = new QScrollArea(SplineFit);
@@ -108,7 +112,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1295, 687));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1293, 807));
         gridLayout = new QGridLayout(scrollAreaWidgetContents);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         verticalLayout = new QVBoxLayout();
@@ -198,6 +202,31 @@ public:
 
 
         verticalLayout->addLayout(horizontalLayout_2);
+
+        horizontalLayout_14 = new QHBoxLayout();
+        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
+        checkBox_5 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+
+        horizontalLayout_14->addWidget(checkBox_5);
+
+        checkBox_4 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+
+        horizontalLayout_14->addWidget(checkBox_4);
+
+        checkBox_6 = new QCheckBox(scrollAreaWidgetContents);
+        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(checkBox_6->sizePolicy().hasHeightForWidth());
+        checkBox_6->setSizePolicy(sizePolicy2);
+
+        horizontalLayout_14->addWidget(checkBox_6);
+
+
+        verticalLayout->addLayout(horizontalLayout_14);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -443,11 +472,11 @@ public:
 
         customPlot = new QCustomPlot(scrollAreaWidgetContents);
         customPlot->setObjectName(QStringLiteral("customPlot"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(customPlot->sizePolicy().hasHeightForWidth());
-        customPlot->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(customPlot->sizePolicy().hasHeightForWidth());
+        customPlot->setSizePolicy(sizePolicy3);
         customPlot->setCursor(QCursor(Qt::CrossCursor));
 
         gridLayout->addWidget(customPlot, 0, 1, 1, 1);
@@ -470,6 +499,9 @@ public:
         label_13->setText(QApplication::translate("SplineFit", "Result:", Q_NULLPTR));
         label_12->setText(QApplication::translate("SplineFit", "Spline File:", Q_NULLPTR));
         label_14->setText(QApplication::translate("SplineFit", "Spline Points:", Q_NULLPTR));
+        checkBox_5->setText(QApplication::translate("SplineFit", "1/y", Q_NULLPTR));
+        checkBox_4->setText(QApplication::translate("SplineFit", "-(y-1)", Q_NULLPTR));
+        checkBox_6->setText(QApplication::translate("SplineFit", "+(y-1)", Q_NULLPTR));
         label_6->setText(QApplication::translate("SplineFit", "Work Path:", Q_NULLPTR));
         checkBox->setText(QApplication::translate("SplineFit", "Sequence from", Q_NULLPTR));
         label_4->setText(QApplication::translate("SplineFit", "to", Q_NULLPTR));

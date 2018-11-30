@@ -158,7 +158,7 @@ void Telluric::tellRead(){
             teIntenscol = qteIntenscol.toUtf8().constData();
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(teExtension);

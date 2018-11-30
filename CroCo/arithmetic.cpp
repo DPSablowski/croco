@@ -34,6 +34,8 @@ Arithmetic::Arithmetic(QWidget *parent) :
     ui->lineEdit_13->setText("Hb_vel_shift_2.txt");
     ui->lineEdit_11->setText("rein_vel_shift_times.dat");
     ui->lineEdit_10->setText("rein_vel_times.dat");
+    ui->lineEdit_6->setEnabled(false);
+    ui->spinBox_2->setEnabled(false);
 
 
 }
@@ -91,7 +93,7 @@ void Arithmetic::on_pushButton_2_clicked()
             QFile checkfile1(datAName.c_str());
 
             if(!checkfile1.exists()){
-                QMessageBox::information(this, "Error", "File"+qAPath+"/"+inputA+" does not exist!");
+                QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
                return;
             }
@@ -158,13 +160,28 @@ void Arithmetic::on_pushButton_2_clicked()
     QFile checkfile1(datAName.c_str());
 
     if(!checkfile1.exists()){
-        QMessageBox::information(this, "Error", "File"+qAPath+"/"+inputA+" does not exist!");
+        QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
     ifstream inA(datAName.c_str());
 
     QString inputB=ui->lineEdit_2->text();
+
+    if(inputB.isEmpty()){
+        if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox_3->isChecked()) or (ui->checkBox_4->isChecked())){
+            QMessageBox::information(this, "Error", "There is no file B given.");
+            return;
+        }
+        else{
+            //
+        }
+
+    }
+    else{
+        //
+    }
+
     string dataB = inputB.toUtf8().constData();
     std::ostringstream datBNameStream(dataB);
     datBNameStream<<aPath<<"/"<<dataB;
@@ -173,7 +190,7 @@ void Arithmetic::on_pushButton_2_clicked()
     QFile checkfile2(datBName.c_str());
 
     if(!checkfile2.exists()){
-        QMessageBox::information(this, "Error", "File"+qAPath+"/"+inputB+" does not exist!");
+        QMessageBox::information(this, "Error", "File"+checkfile2.fileName()+" does not exist!");
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
@@ -205,29 +222,32 @@ void Arithmetic::on_pushButton_2_clicked()
     QVector<double> a(numpixA), b(numpixA), c(numpixB), d(numpixB), e(numpixA), f(numpixA);
 
     for(int g=0; g<numpixA; g++){
-    inA >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[g];
-    if(ui->checkBox_10->isChecked()){
-        a[g]=a[g]*(1+ui->doubleSpinBox->value()/lspeed);
-    }
-    e[g]=a[g];
-    istringstream ist2(zwei);
-    ist2 >> b[g];
+        inA >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[g];
+        if(ui->checkBox_10->isChecked()){
+            a[g]=a[g]*(1+ui->doubleSpinBox->value()/lspeed);
+        }
+        else{
+
+        }
+        e[g]=a[g];
+        istringstream ist2(zwei);
+        ist2 >> b[g];
     }
 
     inA.close();
 
     for(int g=0; g<numpixB; g++){
-    inB >> eins >>zwei;
-    istringstream ist3(eins);
-    ist3 >> c[g];
-    if(ui->checkBox_11->isChecked()){
-        c[g]=c[g]*(1+ui->doubleSpinBox_2->value()/lspeed);
-    }
-    istringstream ist4(zwei);
-    ist4 >> d[g];
-    }
+        inB >> eins >>zwei;
+        istringstream ist3(eins);
+        ist3 >> c[g];
+        if(ui->checkBox_11->isChecked()){
+            c[g]=c[g]*(1+ui->doubleSpinBox_2->value()/lspeed);
+        }
+        istringstream ist4(zwei);
+        ist4 >> d[g];
+        }
 
     QString output=ui->lineEdit_3->text();
     string out = output.toUtf8().constData();
@@ -236,7 +256,7 @@ void Arithmetic::on_pushButton_2_clicked()
     std::string outName = outNameStream.str();
     ofstream outp(outName.c_str());
 
-    int aa=0;
+if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox_3->isChecked()) or (ui->checkBox_4->isChecked())){
     double dinter=0;
 
         for(int g=0; g<numpixA; g++){
@@ -280,6 +300,30 @@ void Arithmetic::on_pushButton_2_clicked()
                 f[g] = b[g];
             }
             outp<<scientific<<e[g]<<" "<<f[g]<<endl;
+        }
+}
+        else{
+            for(int g=0; g<b.size(); g++){
+                if(ui->checkBox_5->isChecked()){
+                QString qValue = ui->lineEdit_5->text();
+                bool ok = false;
+                double value = qValue.toDouble(&ok);
+                b[g]=b[g]+value;
+            }
+                if(ui->checkBox_6->isChecked()){
+                    QString qValue = ui->lineEdit_5->text();
+                    bool ok = false;
+                    double value = qValue.toDouble(&ok);
+                    b[g]=b[g]*value;
+                }
+                if(ui->checkBox_8->isChecked()){
+                    a[g]=log10(a[g]);
+                }
+                if(ui->checkBox_9->isChecked()){
+                    a[g]=pow(10,a[g]);
+                }
+                outp<<scientific<<a[g]<<" "<<b[g]<<endl;
+            }
         }
     }
 
@@ -721,4 +765,203 @@ void Arithmetic::on_pushButton_4_clicked()
     else{
 
     }
+}
+
+//************************************************
+// Flux ratio changed, update continuum values
+//************************************************
+void Arithmetic::on_doubleSpinBox_3_valueChanged(const QString &arg1)
+{
+    double kAB = ui->doubleSpinBox_3->value();
+    double fA = kAB/(1+kAB);
+    double fB = 1/(1+kAB);
+
+    ui->lineEdit_16->setText(QString::number(fA));
+    ui->lineEdit_17->setText(QString::number(fB));
+}
+
+//****************************************
+// Correct for flux ratio
+//****************************************
+void Arithmetic::on_pushButton_5_clicked()
+{
+    double kAB = ui->doubleSpinBox_3->value();
+    double fA = kAB/(1+kAB);
+    double fB = 1/(1+kAB);
+
+    QString inputA=ui->lineEdit->text();
+    string dataA = inputA.toUtf8().constData();
+    std::ostringstream datANameStream(dataA);
+    datANameStream<<aPath<<"/"<<dataA;
+    std::string datAName = datANameStream.str();
+
+    QFile checkfile1(datAName.c_str());
+
+    if(!checkfile1.exists()){
+        QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+    ifstream inA(datAName.c_str());
+
+    QString inputB=ui->lineEdit_2->text();
+    string dataB = inputB.toUtf8().constData();
+    std::ostringstream datBNameStream(dataB);
+    datBNameStream<<aPath<<"/"<<dataB;
+    std::string datBName = datBNameStream.str();
+
+    QFile checkfile2(datBName.c_str());
+
+    if(!checkfile2.exists()){
+        QMessageBox::information(this, "Error", "File"+checkfile2.fileName()+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+    ifstream inB(datBName.c_str());
+
+    int numpixA=0;
+    int numpixB=0;
+    string line, eins, zwei;
+
+    while(std::getline(inA, line))
+       ++numpixA;
+
+    inA.clear();
+    inA.seekg(0, ios::beg);
+
+    while(std::getline(inB, line))
+       ++numpixB;
+
+    inB.clear();
+    inB.seekg(0, ios::beg);
+
+    QVector<double> a(numpixA), b(numpixA), c(numpixB), d(numpixB);
+
+    QString output=ui->lineEdit_12->text();
+    string out = output.toUtf8().constData();
+    std::ostringstream outNameStream(out);
+    outNameStream<<aPath<<"/"<<out;
+    std::string outName = outNameStream.str();
+    ofstream outp(outName.c_str());
+
+    QString output2=ui->lineEdit_13->text();
+    string out2 = output2.toUtf8().constData();
+    std::ostringstream out2NameStream(out2);
+    out2NameStream<<aPath<<"/"<<out2;
+    std::string out2Name = out2NameStream.str();
+    ofstream outp2(out2Name.c_str());
+
+    for(int g=0; g<numpixA; g++){
+        inA >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[g];
+        istringstream ist2(zwei);
+        ist2 >> b[g];
+        b[g]=(0.5*b[g]+(fA-0.5))/fA;
+        outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
+    }
+
+    inA.close();
+    outp.close();
+
+    for(int g=0; g<numpixB; g++){
+        inB >> eins >>zwei;
+        istringstream ist3(eins);
+        ist3 >> c[g];
+        istringstream ist4(zwei);
+        ist4 >> d[g];
+        d[g]=(0.5*d[g]+(fB-0.5))/fB;
+        outp2<<setprecision(14)<<c[g]<<"\t"<<d[g]<<endl;
+    }
+    inB.close();
+    outp2.close();
+
+}
+
+//***********************************
+// Help button
+//***********************************
+void Arithmetic::on_pushButton_6_clicked()
+{
+    QMessageBox::information(this, "Help", "This windows allowes arithmetic manipulation of 1d spectra in ASCII format.\n"
+                                           "Specify the name of output on line 4. The sequence check box works only on spectrum A. Pushing Do will execute arithmetic on these files\n"
+                                           "Add Error Column will add a third column to the file given in A and write to file given in line editor next to the Add Error Column push button."
+                                           "Shift will shift the spectra A or/and B by the values given by the double spin boxes top right. They can be computed by specifying a wavelength 0 and the wavelengths A and/orB of that line within the files\n"
+                                           "Normalize is a two point normalization which can be used to force a line within a sequence of spectra on the same continuum.\n"
+                                           "Correct Flux allowes to correct component spectra from disentangling to a given flux ratio. We assume spectra normalized to 1 with an initial specified flux ratio of 1.");
+}
+
+// sequnce
+void Arithmetic::on_checkBox_7_clicked()
+{
+    if(ui->checkBox_7->isChecked()){
+        ui->lineEdit_6->setEnabled(true);
+        ui->spinBox_2->setEnabled(true);
+    }
+    else{
+        ui->lineEdit_6->setEnabled(false);
+        ui->spinBox_2->setEnabled(false);
+    }
+}
+
+//*****************************************************
+// add error column to file and add header for iSpec
+//*****************************************************
+void Arithmetic::on_pushButton_7_clicked()
+{
+    double errora = ui->doubleSpinBox_4->value();
+
+    QString inputA=ui->lineEdit->text();
+    string dataA = inputA.toUtf8().constData();
+    std::ostringstream datANameStream(dataA);
+    datANameStream<<aPath<<"/"<<dataA;
+    std::string datAName = datANameStream.str();
+
+    QFile checkfile1(datAName.c_str());
+
+    if(!checkfile1.exists()){
+        QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+    ifstream inA(datAName.c_str());
+
+    int numpixA=0;
+
+    string line, eins, zwei;
+
+    while(std::getline(inA, line))
+       ++numpixA;
+
+    inA.clear();
+    inA.seekg(0, ios::beg);
+
+    QVector<double> a(numpixA), b(numpixA);
+
+    QString output2=ui->lineEdit_18->text();
+    string out2 = output2.toUtf8().constData();
+    std::ostringstream out2NameStream(out2);
+    out2NameStream<<aPath<<"/"<<out2;
+    std::string out2Name = out2NameStream.str();
+    ofstream outp2(out2Name.c_str());
+
+    if(ui->checkBox_16->isChecked()){
+        outp2<<"waveobs\tflux\terr"<<endl;
+    }
+    else{
+        //
+    }
+    for(int g=0; g<numpixA; g++){
+        inA >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[g];
+        if(ui->checkBox_17->isChecked()){
+            a[g]=a[g]/10;
+        }
+        istringstream ist2(zwei);
+        ist2 >> b[g];
+        outp2<<setprecision(14)<<a[g]<<"\t"<<b[g]<<"\t"<<errora<<endl;
+    }
+    outp2.close();
+    inA.close();
 }

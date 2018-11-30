@@ -70,8 +70,6 @@ PlotSpec::~PlotSpec()
     delete ui;
 }
 
-string one, two, zeile;
-double xs1, xs2, ys1, ys2;
 
 //********************************************************
 //show mouse coordinates
@@ -101,6 +99,7 @@ void PlotSpec::seData(QString str, QString str2, QString str3, QString str4, QSt
 void PlotSpec::on_pushButton_2_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
+    string one, two, zeile;
 
     qSpPath=ui->lineEdit_5->text();
     spPath = qSpPath.toUtf8().constData();
@@ -161,6 +160,7 @@ void PlotSpec::on_pushButton_2_clicked()
     a.resize(number_of_lines);
     b.resize(number_of_lines);
 
+
     for (int i=0; i<number_of_lines; i++){
         toplot1 >> one >>two;
         istringstream ist(one);
@@ -206,7 +206,7 @@ void PlotSpec::on_pushButton_2_clicked()
             spIntenscol = qspIntenscol.toUtf8().constData();
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(spExtension);
@@ -299,13 +299,12 @@ void PlotSpec::on_pushButton_2_clicked()
     }
     ui->customPlot_3->graph(0)->setData(a, b);
     ui->customPlot_3->graph()->setPen(pen);
-    ui->customPlot_3->xAxis->setRange(xs1, xs2);
+    ui->customPlot_3->xAxis->setRange(ui->doubleSpinBox->value(), ui->doubleSpinBox_2->value());
     if(ui->checkBox_5->isChecked()){
-        ys2=1.1;
-        ui->customPlot_3->yAxis->setRange(ys1, ys2);
+        ui->customPlot_3->yAxis->setRange(ui->doubleSpinBox_3->value(), 1.10);
     }
     else{
-        ui->customPlot_3->yAxis->setRange(ys1, ys2);
+        ui->customPlot_3->yAxis->setRange(ui->doubleSpinBox_3->value(), ui->doubleSpinBox_4->value());
 
     }
     /*
@@ -330,6 +329,8 @@ void PlotSpec::on_pushButton_2_clicked()
 void PlotSpec::on_pushButton_3_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
+    string one, two, zeile;
+    double xs1, xs2, ys1, ys2;
 
     qSpPath=ui->lineEdit_5->text();
     spPath = qSpPath.toUtf8().constData();
@@ -364,11 +365,11 @@ void PlotSpec::on_pushButton_3_clicked()
     b.resize(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> one >>two;
-    istringstream ist(one);
-    ist >> a[i];
-    istringstream ist2(two);
-    ist2 >> b[i];
+        toplot1 >> one >>two;
+        istringstream ist(one);
+        ist >> a[i];
+        istringstream ist2(two);
+        ist2 >> b[i];
     }
     toplot1.close();
     }
@@ -404,7 +405,7 @@ void PlotSpec::on_pushButton_3_clicked()
             spIntenscol = qspIntenscol.toUtf8().constData();
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(spExtension);
@@ -476,28 +477,6 @@ void PlotSpec::on_pushButton_3_clicked()
     ui->doubleSpinBox_4->setValue(ys2);
 
     this->setCursor(QCursor(Qt::ArrowCursor));
-}
-
-
-
-void PlotSpec::on_doubleSpinBox_valueChanged()
-{
-    xs1=ui->doubleSpinBox->value();
-}
-
-void PlotSpec::on_doubleSpinBox_2_valueChanged()
-{
-    xs2=ui->doubleSpinBox_2->value();
-}
-
-void PlotSpec::on_doubleSpinBox_3_valueChanged()
-{
-    ys1=ui->doubleSpinBox_3->value();
-}
-
-void PlotSpec::on_doubleSpinBox_4_valueChanged()
-{
-    ys2=ui->doubleSpinBox_4->value();
 }
 
 void PlotSpec::on_lineEdit_2_editingFinished()

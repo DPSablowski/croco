@@ -187,7 +187,9 @@ void RVCalc::on_doubleSpinBox_9_valueChanged()
 }
 
 
-//
+//******************************************
+// "Show" button to plot orbit and data
+//******************************************
 void RVCalc::on_pushButton_2_clicked()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
@@ -349,19 +351,25 @@ void RVCalc::on_pushButton_2_clicked()
         QPen pen3;
         pen3.setWidth(ui->spinBox_5->value()+1);
         pen3.setColor(Qt::black);
+        double yr1 = ui->doubleSpinBox_7->value();
+        double yr2 = ui->doubleSpinBox_16->value();
+        int thc = 2*ui->spinBox_5->value();
 
         ui->customPlot->addGraph();
         ui->customPlot->graph(2)->setData(at, bt);
         ui->customPlot->graph(2)->setPen(pen2);
         ui->customPlot->graph(2)->setLineStyle(QCPGraph::lsNone);
-        ui->customPlot->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+        ui->customPlot->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, thc));
         ui->customPlot->graph(2)->rescaleAxes(true);
         ui->customPlot->addGraph();
         ui->customPlot->graph(3)->setData(at, ct);
         ui->customPlot->graph(3)->setPen(pen3);
         ui->customPlot->graph(3)->setLineStyle(QCPGraph::lsNone);
-        ui->customPlot->graph(3)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+        ui->customPlot->graph(3)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, thc));
         ui->customPlot->graph(3)->rescaleAxes(true);
+        if(ui->checkBox_10->isChecked()){
+            ui->customPlot->yAxis->setRange(yr1, yr2);
+        }
         if(ui->checkBox_2->isChecked()){
             ui->customPlot->xAxis->setRange(-0.1, 1.1);
         }

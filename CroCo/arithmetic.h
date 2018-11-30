@@ -44,6 +44,16 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_doubleSpinBox_3_valueChanged(const QString &arg1);
+
+    void on_pushButton_5_clicked();
+
+    void on_pushButton_6_clicked();
+
+    void on_checkBox_7_clicked();
+
+    void on_pushButton_7_clicked();
+
 public slots:
     void seData(QString str, QString str2, QString str3);
 

@@ -36,3 +36,19 @@ libgcc_s.so.1
 libc.so.6
 
 to run the program: ./CroCo
+
+# With Qt Creator
+
+Download the Qt creator and a qt library from the website.
+
+Some additional libraries are required, e.g. on Ubuntu:
+
+sudo apt-get install libglu1-mesa-dev* armadillo* openBLAS* CCfits*
+
+You also need the spline.h from: http://kluge.in-chemnitz.de/opensource/spline/
+
+copy it to /usr/include/
+
+You can load the .pro file with the Qt creator:
+If a message box pops up, klick ok then click "configure project". If done, click the "play" button left bottom corner of the Qt creator.
+

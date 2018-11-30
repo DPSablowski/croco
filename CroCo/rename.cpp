@@ -276,7 +276,7 @@ void Rename::on_spinBox_5_valueChanged()
             spIntenscol = qspIntenscol.toUtf8().constData();
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(dat4Name.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(dat4Name.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(spExtension);

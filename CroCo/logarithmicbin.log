@@ -5,3 +5,57 @@ Input files: croped_*.txt
 Output files: cropedm_*.txt
 Files from 0 to 264
 Rebinning step size: 0.75
+
+__________________________________________________
+ Tue Oct 16 09:56:42 2018
+
+
+Input files: Average_*.txt
+Output files: cropedm_*.txt
+Files from 0 to 27
+Rebinning step size: 0.5
+
+__________________________________________________
+ Tue Oct 16 10:02:44 2018
+
+
+Input files: Average_*.txt
+Output files: cropedm_*.txt
+Files from 0 to 27
+Rebinning step size: 0.5
+
+__________________________________________________
+ Thu Oct 25 14:03:22 2018
+
+
+Input files: Average_*.txt
+Output files: Averagem_*.txt
+Files from 0 to 21
+Rebinning step size: 0.1
+
+__________________________________________________
+ Fri Oct 26 10:10:38 2018
+
+
+Input files: spectra_*.txt
+Output files: spectram_qua_*.txt
+Files from 0 to 19
+Rebinning step size: 0.75
+
+__________________________________________________
+ Fri Oct 26 10:43:42 2018
+
+
+Input files: spectra_*.txt
+Output files: spectram_qua_*.txt
+Files from 0 to 19
+Rebinning step size: 0.75
+
+__________________________________________________
+ Fri Oct 26 10:51:28 2018
+
+
+Input files: spectra_*.txt
+Output files: spectram_qua_*.txt
+Files from 0 to 1
+Rebinning step size: 0.75

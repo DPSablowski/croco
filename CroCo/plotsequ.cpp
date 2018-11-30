@@ -28,7 +28,7 @@ PlotSequ::PlotSequ(QWidget *parent) :
     this->setWindowTitle("Sequence Plotter");
 
     ui->customPlot->xAxis->setLabel("Wavelength [A]");
-    ui->customPlot->yAxis->setLabel("normalized Intensity");
+    ui->customPlot->yAxis->setLabel("Normalized Intensity");
     ui->checkBox->setChecked(true);
     qSeqPath=ui->lineEdit_5->text();
     seqPath = qSeqPath.toUtf8().constData();
@@ -48,6 +48,10 @@ PlotSequ::PlotSequ(QWidget *parent) :
     ui->customPlot->yAxis->setLabelFont(legendFont);
     ui->customPlot->xAxis->setTickLabelFont(legendFont);
     ui->customPlot->yAxis->setTickLabelFont(legendFont);
+    ui->customPlot->xAxis->setAutoTickStep(false);
+    ui->customPlot->yAxis->setAutoTickStep(false);
+    ui->customPlot->xAxis->setTickStep(0.5);
+    ui->customPlot->yAxis->setTickStep(0.25);
 
     ui->comboBox_2->addItem("Black");
     ui->comboBox_2->addItem("Blue");
@@ -199,7 +203,7 @@ void PlotSequ::on_pushButton_3_clicked()
 
 
                 //open file for reading
-                auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read));
+                shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read));
                 cout<<"test"<<endl;
 
 
@@ -401,7 +405,7 @@ void PlotSequ::on_pushButton_2_clicked()
                 seIntenscol = qseIntenscol.toUtf8().constData();
 
                 //open file for reading
-                auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+                shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
                 // Create pointer to extension
                     CCfits::ExtHDU& datavector = input_file->extension(seExtension);
@@ -1116,6 +1120,117 @@ void PlotSequ::on_pushButton_5_clicked()
 //***************************************************
 void PlotSequ::on_pushButton_6_clicked()
 {
+    // use file with file numbers to be averaged
+    if(ui->checkBox_12->isChecked()){
+
+        qSeqPath=ui->lineEdit_5->text();
+        seqPath=qSeqPath.toUtf8().constData();
+
+        QString input1=ui->lineEdit_15->text();
+        string data1 = input1.toUtf8().constData();
+        std::ostringstream dat1NameStream(data1);
+        dat1NameStream<<seqPath<<"/"<<data1;
+        std::string dat1Name = dat1NameStream.str();
+
+        QFile checkfile(dat1Name.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+checkfile.fileName()+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dat1(dat1Name.c_str());
+        string lines, one, two;
+
+        int number_of_ave=0;
+
+        while(std::getline(dat1, lines))
+           ++ number_of_ave;
+
+        dat1.clear();
+        dat1.seekg(0, ios::beg);
+        QVector<double> otime(1);
+
+        // use files with times to calculate mean times of averaged spectra
+        if(ui->checkBox_14->isChecked()){
+            QString input2=ui->lineEdit_16->text();
+            string data2 = input2.toUtf8().constData();
+            std::ostringstream dat2NameStream(data2);
+            dat2NameStream<<seqPath<<"/"<<data2;
+            std::string dat2Name = dat2NameStream.str();
+
+            QFile checkfile2(dat2Name.c_str());
+
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "File "+checkfile2.fileName()+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+
+            ifstream dat2(dat2Name.c_str());
+
+            int number_of_t=0;
+
+            while(std::getline(dat2, lines))
+               ++ number_of_t;
+
+            dat2.clear();
+            dat2.seekg(0, ios::beg);
+            otime.resize(number_of_t);
+
+            for (int i=0; i<number_of_t; i++){
+                dat2 >> one;
+                istringstream ist(one);
+                ist >> otime[i];
+            }
+
+
+        }
+        int minave=0, maxave=0;
+        double timave=0.0;
+
+        for (int i=0; i<number_of_ave; i++){
+            dat1 >> one >>two;
+            istringstream ist(one);
+            ist >> minave;
+            istringstream ist2(two);
+            ist2 >> maxave;
+
+            ui->spinBox->setValue(minave);
+            ui->spinBox_2->setValue(maxave);
+
+            ui->lineEdit_10->setText("Average_"+QString::number(i)+".txt");
+
+            PlotSequ::CoAverage();
+
+            if(ui->checkBox_14->isChecked()){
+                for(int e =minave; e<=maxave; e++){
+                    timave+=otime[e];
+                }
+                cout<<setprecision(14)<<timave/(maxave-minave+1)<<endl;
+                timave=0.0;
+            }
+
+        }
+        dat1.close();
+
+        QMessageBox::information(this, "Message", "Averaged spectra written to Average_*.txt.");
+
+
+    }
+    else{
+        PlotSequ::CoAverage();
+    }
+}
+
+//********************************************
+// CoAverage Spectra
+//********************************************
+void PlotSequ::CoAverage()
+{
     this->setCursor(QCursor(Qt::WaitCursor));
 
     string line, eins, zwei;
@@ -1139,8 +1254,6 @@ void PlotSequ::on_pushButton_6_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<seqPath<<"/"<<data<<u<<sext;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
-
 
         QFile checkfile(datName.c_str());
 
@@ -1151,6 +1264,8 @@ void PlotSequ::on_pushButton_6_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
            return;
             }
+
+        ifstream dat(datName.c_str());
 
         number_of_lines =0;
 
@@ -1170,11 +1285,11 @@ void PlotSequ::on_pushButton_6_clicked()
 
         if(u==min){
         for (int i=0; i<number_of_lines; i++){
-        dat >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> aad[i];
-        istringstream ist2(zwei);
-        ist2 >> bad[i];
+            dat >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> aad[i];
+            istringstream ist2(zwei);
+            ist2 >> bad[i];
         }
         dat.close();
         }
@@ -1190,8 +1305,6 @@ void PlotSequ::on_pushButton_6_clicked()
             dat.close();
 
             int aa=0;
-
-            cout<<"test"<<endl;
 
             for(int i = 0; i<number_of_lines-1; i++){
 
@@ -1211,8 +1324,12 @@ void PlotSequ::on_pushButton_6_clicked()
          }
 
         }
+        else{
+            QMessageBox::information(this, "Error", "This function works on two-column ASCII files only.");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
     }
-    cout<<"test"<<endl;
 
         QString input=ui->lineEdit_10->text();
         string data = input.toUtf8().constData();
@@ -1222,19 +1339,24 @@ void PlotSequ::on_pushButton_6_clicked()
 
         QFile qOut(datName.c_str());
 
-        if(qOut.exists()){
-            QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(this, "Warning!", "The file already exists. \n\n Do you want to overwrite it?",
-                                          QMessageBox::Yes|QMessageBox::No);
-            if (reply == QMessageBox::Yes) {
-              qDebug() << "Yes was clicked";
-            }
-
-        else {
-          qDebug() << "Yes was *not* clicked";
-          this->setCursor(QCursor(Qt::ArrowCursor));
-          return;
+        if(ui->checkBox_12->isChecked()){
+            //
         }
+        else{
+            if(qOut.exists()){
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(this, "Warning!", "The file already exists. \n\n Do you want to overwrite it?",
+                                          QMessageBox::Yes|QMessageBox::No);
+                if (reply == QMessageBox::Yes) {
+                    qDebug() << "Yes was clicked";
+                }
+
+                else {
+                    qDebug() << "Yes was *not* clicked";
+                    this->setCursor(QCursor(Qt::ArrowCursor));
+                    return;
+                }
+            }
         }
 
         ofstream out(datName.c_str());
@@ -1459,7 +1581,7 @@ void PlotSequ::on_pushButton_8_clicked()
             {
 
                 //open file for reading
-                auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+                shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
                 // Create pointer to extension
                     CCfits::ExtHDU& datavector = input_file->extension(seExtension);
@@ -2372,7 +2494,7 @@ void PlotSequ::on_pushButton_9_clicked()
         {
 
             //open file for reading
-            auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
             // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(seExtension);
@@ -2862,7 +2984,7 @@ void PlotSequ::on_pushButton_10_clicked()
             {
 
                 //open file for reading
-                auto_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
+                shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
                 // Create pointer to extension
                     CCfits::ExtHDU& datavector = input_file->extension(seExtension);
@@ -3244,4 +3366,41 @@ void PlotSequ::on_checkBox_16_clicked()
     else{
 
     }
+}
+
+void PlotSequ::on_doubleSpinBox_15_valueChanged()
+{
+    ui->customPlot->xAxis->setTickStep(ui->doubleSpinBox_15->value());
+    PlotSequ::on_pushButton_2_clicked();
+}
+
+void PlotSequ::on_doubleSpinBox_16_valueChanged()
+{
+    ui->customPlot->yAxis->setTickStep(ui->doubleSpinBox_16->value());
+    PlotSequ::on_pushButton_2_clicked();
+}
+
+//******************************************
+// move backward
+//******************************************
+void PlotSequ::on_pushButton_11_clicked()
+{
+    double ax1 = ui->doubleSpinBox->value();
+    double ax2 = ui->doubleSpinBox_2->value();
+    double interv=(ax2-ax1)/2;
+    ui->doubleSpinBox->setValue(ax1-interv);
+    ui->doubleSpinBox_2->setValue(ax2-interv);
+    PlotSequ::on_pushButton_2_clicked();
+}
+//******************************************
+// move forward
+//******************************************
+void PlotSequ::on_pushButton_12_clicked()
+{
+    double ax1 = ui->doubleSpinBox->value();
+    double ax2 = ui->doubleSpinBox_2->value();
+    double interv=(ax2-ax1)/2;
+    ui->doubleSpinBox->setValue(ax1+interv);
+    ui->doubleSpinBox_2->setValue(ax2+interv);
+    PlotSequ::on_pushButton_2_clicked();
 }

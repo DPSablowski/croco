@@ -85,6 +85,7 @@ public:
     QHBoxLayout *horizontalLayout_7;
     QPushButton *pushButton_6;
     QLineEdit *lineEdit_8;
+    QFrame *line_2;
     QHBoxLayout *horizontalLayout_18;
     QLabel *label_20;
     QDoubleSpinBox *doubleSpinBox_15;
@@ -93,17 +94,32 @@ public:
     QPushButton *pushButton_7;
     QCheckBox *checkBox_6;
     QCheckBox *checkBox_7;
+    QCheckBox *checkBox_9;
     QHBoxLayout *horizontalLayout_22;
     QCheckBox *checkBox_5;
     QLineEdit *lineEdit_10;
     QLabel *label_21;
     QLineEdit *lineEdit_11;
+    QFrame *line_3;
     QHBoxLayout *horizontalLayout_23;
     QPushButton *pushButton_8;
     QSpinBox *spinBox_3;
     QLabel *label_22;
     QSpinBox *spinBox_4;
     QCheckBox *checkBox_8;
+    QHBoxLayout *horizontalLayout_24;
+    QLabel *label_23;
+    QLineEdit *lineEdit_12;
+    QPushButton *pushButton_10;
+    QFrame *line_4;
+    QHBoxLayout *horizontalLayout_25;
+    QPushButton *pushButton_11;
+    QLineEdit *lineEdit_13;
+    QLabel *label_24;
+    QSpinBox *spinBox_6;
+    QLabel *label_25;
+    QSpinBox *spinBox_7;
+    QLineEdit *lineEdit_14;
     QSpacerItem *verticalSpacer;
     QHBoxLayout *horizontalLayout_12;
     QPushButton *pushButton;
@@ -126,6 +142,7 @@ public:
     QHBoxLayout *horizontalLayout_15;
     QLabel *label_15;
     QSpinBox *spinBox;
+    QSpinBox *spinBox_5;
     QPushButton *pushButton_3;
     QLineEdit *lineEdit_3;
     QCheckBox *checkBox_3;
@@ -140,7 +157,7 @@ public:
     {
         if (RVCalc->objectName().isEmpty())
             RVCalc->setObjectName(QStringLiteral("RVCalc"));
-        RVCalc->resize(1267, 750);
+        RVCalc->resize(1555, 1018);
         QFont font;
         font.setPointSize(9);
         RVCalc->setFont(font);
@@ -469,6 +486,13 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_7);
 
+        line_2 = new QFrame(RVCalc);
+        line_2->setObjectName(QStringLiteral("line_2"));
+        line_2->setFrameShape(QFrame::HLine);
+        line_2->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout->addWidget(line_2);
+
         horizontalLayout_18 = new QHBoxLayout();
         horizontalLayout_18->setObjectName(QStringLiteral("horizontalLayout_18"));
         label_20 = new QLabel(RVCalc);
@@ -514,6 +538,11 @@ public:
 
         horizontalLayout_19->addWidget(checkBox_7);
 
+        checkBox_9 = new QCheckBox(RVCalc);
+        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
+
+        horizontalLayout_19->addWidget(checkBox_9);
+
 
         verticalLayout->addLayout(horizontalLayout_19);
 
@@ -553,6 +582,13 @@ public:
 
 
         verticalLayout->addLayout(horizontalLayout_22);
+
+        line_3 = new QFrame(RVCalc);
+        line_3->setObjectName(QStringLiteral("line_3"));
+        line_3->setFrameShape(QFrame::HLine);
+        line_3->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout->addWidget(line_3);
 
         horizontalLayout_23 = new QHBoxLayout();
         horizontalLayout_23->setObjectName(QStringLiteral("horizontalLayout_23"));
@@ -596,6 +632,80 @@ public:
 
 
         verticalLayout->addLayout(horizontalLayout_23);
+
+        horizontalLayout_24 = new QHBoxLayout();
+        horizontalLayout_24->setObjectName(QStringLiteral("horizontalLayout_24"));
+        label_23 = new QLabel(RVCalc);
+        label_23->setObjectName(QStringLiteral("label_23"));
+
+        horizontalLayout_24->addWidget(label_23);
+
+        lineEdit_12 = new QLineEdit(RVCalc);
+        lineEdit_12->setObjectName(QStringLiteral("lineEdit_12"));
+        sizePolicy.setHeightForWidth(lineEdit_12->sizePolicy().hasHeightForWidth());
+        lineEdit_12->setSizePolicy(sizePolicy);
+
+        horizontalLayout_24->addWidget(lineEdit_12);
+
+        pushButton_10 = new QPushButton(RVCalc);
+        pushButton_10->setObjectName(QStringLiteral("pushButton_10"));
+
+        horizontalLayout_24->addWidget(pushButton_10);
+
+
+        verticalLayout->addLayout(horizontalLayout_24);
+
+        line_4 = new QFrame(RVCalc);
+        line_4->setObjectName(QStringLiteral("line_4"));
+        line_4->setFrameShape(QFrame::HLine);
+        line_4->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout->addWidget(line_4);
+
+        horizontalLayout_25 = new QHBoxLayout();
+        horizontalLayout_25->setObjectName(QStringLiteral("horizontalLayout_25"));
+        pushButton_11 = new QPushButton(RVCalc);
+        pushButton_11->setObjectName(QStringLiteral("pushButton_11"));
+
+        horizontalLayout_25->addWidget(pushButton_11);
+
+        lineEdit_13 = new QLineEdit(RVCalc);
+        lineEdit_13->setObjectName(QStringLiteral("lineEdit_13"));
+
+        horizontalLayout_25->addWidget(lineEdit_13);
+
+        label_24 = new QLabel(RVCalc);
+        label_24->setObjectName(QStringLiteral("label_24"));
+
+        horizontalLayout_25->addWidget(label_24);
+
+        spinBox_6 = new QSpinBox(RVCalc);
+        spinBox_6->setObjectName(QStringLiteral("spinBox_6"));
+        spinBox_6->setMaximum(999);
+
+        horizontalLayout_25->addWidget(spinBox_6);
+
+        label_25 = new QLabel(RVCalc);
+        label_25->setObjectName(QStringLiteral("label_25"));
+
+        horizontalLayout_25->addWidget(label_25);
+
+        spinBox_7 = new QSpinBox(RVCalc);
+        spinBox_7->setObjectName(QStringLiteral("spinBox_7"));
+        spinBox_7->setMaximum(999);
+
+        horizontalLayout_25->addWidget(spinBox_7);
+
+        lineEdit_14 = new QLineEdit(RVCalc);
+        lineEdit_14->setObjectName(QStringLiteral("lineEdit_14"));
+        sizePolicy.setHeightForWidth(lineEdit_14->sizePolicy().hasHeightForWidth());
+        lineEdit_14->setSizePolicy(sizePolicy);
+        lineEdit_14->setMaximumSize(QSize(50, 16777215));
+
+        horizontalLayout_25->addWidget(lineEdit_14);
+
+
+        verticalLayout->addLayout(horizontalLayout_25);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -724,6 +834,13 @@ public:
 
         horizontalLayout_15->addWidget(spinBox);
 
+        spinBox_5 = new QSpinBox(RVCalc);
+        spinBox_5->setObjectName(QStringLiteral("spinBox_5"));
+        spinBox_5->setMinimum(1);
+        spinBox_5->setValue(2);
+
+        horizontalLayout_15->addWidget(spinBox_5);
+
         pushButton_3 = new QPushButton(RVCalc);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
         sizePolicy.setHeightForWidth(pushButton_3->sizePolicy().hasHeightForWidth());
@@ -813,11 +930,17 @@ public:
         pushButton_7->setText(QApplication::translate("RVCalc", "# Independent", Q_NULLPTR));
         checkBox_6->setText(QApplication::translate("RVCalc", "Iterative", Q_NULLPTR));
         checkBox_7->setText(QApplication::translate("RVCalc", "All @ Once", Q_NULLPTR));
+        checkBox_9->setText(QApplication::translate("RVCalc", "single", Q_NULLPTR));
         checkBox_5->setText(QApplication::translate("RVCalc", "Files", Q_NULLPTR));
         label_21->setText(QApplication::translate("RVCalc", "*", Q_NULLPTR));
         pushButton_8->setText(QApplication::translate("RVCalc", "Reject File", Q_NULLPTR));
         label_22->setText(QApplication::translate("RVCalc", "of", Q_NULLPTR));
         checkBox_8->setText(QApplication::translate("RVCalc", "w/ RV", Q_NULLPTR));
+        label_23->setText(QApplication::translate("RVCalc", "Reject from List", Q_NULLPTR));
+        pushButton_10->setText(QApplication::translate("RVCalc", "Do", Q_NULLPTR));
+        pushButton_11->setText(QApplication::translate("RVCalc", "Merge RVs", Q_NULLPTR));
+        label_24->setText(QApplication::translate("RVCalc", "from", Q_NULLPTR));
+        label_25->setText(QApplication::translate("RVCalc", "to", Q_NULLPTR));
         pushButton->setText(QApplication::translate("RVCalc", "Close", Q_NULLPTR));
         pushButton_9->setText(QApplication::translate("RVCalc", "Test", Q_NULLPTR));
         label_12->setText(QApplication::translate("RVCalc", "Range:", Q_NULLPTR));

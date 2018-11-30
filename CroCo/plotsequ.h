@@ -53,6 +53,8 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void CoAverage();
+
     void on_pushButton_7_clicked();
 
     void on_comboBox_2_currentIndexChanged();
@@ -68,6 +70,14 @@ private slots:
     void on_checkBox_15_clicked();
 
     void on_checkBox_16_clicked();
+
+    void on_doubleSpinBox_15_valueChanged();
+
+    void on_doubleSpinBox_16_valueChanged();
+
+    void on_pushButton_11_clicked();
+
+    void on_pushButton_12_clicked();
 
 private:
     Ui::PlotSequ *ui;

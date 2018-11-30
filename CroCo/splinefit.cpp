@@ -202,18 +202,18 @@ void SplineFit::on_pushButton_clicked()
 
                 file1.close();
 
-                nlines=0;
+                int nlines2=0;
 
                 while(std::getline(file2, line))
-                           ++ nlines;
+                           ++ nlines2;
 
                         file2.clear();
                         file2.seekg(0, ios::beg);
 
-                        QVector<double> xspl(nlines), yspl(nlines);
+                        QVector<double> xspl(nlines2), yspl(nlines2);
 
 
-                        for(int i=0; i<nlines; i++){
+                        for(int i=0; i<nlines2; i++){
                             file2 >> eins >> zwei;
                             istringstream ist3(eins);
                             ist3 >> xspl[i];
@@ -226,7 +226,9 @@ void SplineFit::on_pushButton_clicked()
                         ui->customPlot->addGraph();
                         ui->customPlot->graph(0)->setData(xda, yda);
                         if(ui->checkBox_2->isChecked()){
-                        ui->customPlot->graph(0)->rescaleAxes();
+                            ui->customPlot->graph(0)->rescaleAxes();
+                            ui->doubleSpinBox_3->setValue(xda[0]);
+                            ui->doubleSpinBox_4->setValue(xda[nlines-1]);
                         }
                         else{
                             ui->customPlot->xAxis->setRange(ui->doubleSpinBox_3->value(), ui->doubleSpinBox_4->value());
@@ -327,26 +329,37 @@ void SplineFit::on_pushButton_2_clicked()
                     QVector<double> Xc(points), Yc(points);
 
                     for (int i=0; i<points; i++){
-                    sdat >> eins >>zwei;
-                    istringstream ist(eins);
-                    ist >> XC[i];
-                    Xc[i]=XC[i];
-                    if(i>0){
-                        if(XC[i]<XC[i-1]){
-                            QString sIndex = QString::number(i);
-                            QMessageBox::information(this, "Error", "Points for spline fit are not sorted in ascending order. Failed at point "+sIndex+".");
-                            return;
+                        sdat >> eins >>zwei;
+                        istringstream ist(eins);
+                        ist >> XC[i];
+                        Xc[i]=XC[i];
+                        if(i>0){
+                            if(XC[i]<XC[i-1]){
+                                QString sIndex = QString::number(i);
+                                QMessageBox::information(this, "Error", "Points for spline fit are not sorted in ascending order. Failed at point "+sIndex+".");
+                                return;
+                            }
                         }
-                    }
-                    istringstream ist2(zwei);
-                    ist2 >> YC[i];
-                    for(int e = 0; e<nlines-1; e++){
-                        if(XC[i]>=xSpl[e] & XC[i]<=xSpl[e+1]){
-                            YC[i]=ySpl[e];
-                            e=nlines;
+                        istringstream ist2(zwei);
+                        ist2 >> YC[i];
+                        for(int e = 0; e<nlines-1; e++){
+                            if(XC[i]>=xSpl[e] & XC[i]<=xSpl[e+1]){
+                                YC[i]=ySpl[e];
+                                e=nlines;
+                            }
                         }
-                    }
-                    Yc[i]=YC[i];
+
+                        if(ui->checkBox_4->isChecked()){
+                            Yc[i]=2-Yc[i];
+                            YC[i]=2-YC[i];
+                        }
+                        if(ui->checkBox_5->isChecked()){
+                            Yc[i]=1/Yc[i];
+                            YC[i]=1/YC[i];
+                        }
+                        else{
+                            Yc[i]=YC[i];
+                        }
                     }
                     sdat.close();
 
@@ -448,20 +461,20 @@ void SplineFit::on_pushButton_2_clicked()
                 QVector<double> Xc(points), Yc(points);
 
                 for (int i=0; i<points; i++){
-                sdat >> eins >>zwei;
-                istringstream ist(eins);
-                ist >> XC[i];
-                Xc[i]=XC[i];
-                if(i>0){
-                    if(XC[i]<XC[i-1]){
-                        QString sIndex = QString::number(i);
-                        QMessageBox::information(this, "Error", "Points for spline fit are not sorted in ascending order. Failed at point "+sIndex+".");
-                        return;
+                    sdat >> eins >>zwei;
+                    istringstream ist(eins);
+                    ist >> XC[i];
+                    Xc[i]=XC[i];
+                    if(i>0){
+                        if(XC[i]<XC[i-1]){
+                            QString sIndex = QString::number(i);
+                            QMessageBox::information(this, "Error", "Points for spline fit are not sorted in ascending order. Failed at point "+sIndex+".");
+                            return;
+                        }
                     }
-                }
-                istringstream ist2(zwei);
-                ist2 >> YC[i];
-                Yc[i]=YC[i];
+                    istringstream ist2(zwei);
+                    ist2 >> YC[i];
+                    Yc[i]=YC[i];
                 }
                 sdat.close();
 
@@ -489,7 +502,17 @@ void SplineFit::on_pushButton_2_clicked()
                     istringstream ist2(zwei);
                     ist2 >> ySpl[i];
                     mean+=ySpl[i]/nlines;
-                    ySpp[i]=ySpl[i]/s(x);
+                    if(ui->checkBox_4->isChecked()){
+                        ySpp[i]=ySpl[i]-(s(x)-1);
+                    }
+                    else{
+                        if(ui->checkBox_6->isChecked()){
+                            ySpp[i]=ySpl[i]+(s(x)-1);
+                        }
+                        else{
+                            ySpp[i]=ySpl[i]/s(x);
+                        }
+                    }
                     file3<<setprecision(14)<<xSpl[i]<<"\t"<<ySpp[i]<<endl;
                 }
 
@@ -1025,5 +1048,42 @@ void SplineFit::on_pushButton_6_clicked()
             ui->customPlot->rescaleAxes(true);
             ui->customPlot->replot();
 
+    }
+}
+
+
+void SplineFit::on_checkBox_5_clicked()
+{
+    if(ui->checkBox_5->isChecked()){
+        ui->checkBox_4->setChecked(false);
+        ui->checkBox_6->setChecked(false);
+    }
+    else{
+        ui->checkBox_4->setChecked(true);
+        ui->checkBox_6->setChecked(false);
+    }
+}
+
+void SplineFit::on_checkBox_4_clicked()
+{
+    if(ui->checkBox_4->isChecked()){
+        ui->checkBox_5->setChecked(false);
+        ui->checkBox_6->setChecked(false);
+    }
+    else{
+        ui->checkBox_5->setChecked(true);
+        ui->checkBox_6->setChecked(false);
+    }
+}
+
+void SplineFit::on_checkBox_6_clicked()
+{
+    if(ui->checkBox_6->isChecked()){
+        ui->checkBox_4->setChecked(false);
+        ui->checkBox_5->setChecked(false);
+    }
+    else{
+        ui->checkBox_5->setChecked(true);
+        ui->checkBox_4->setChecked(false);
     }
 }

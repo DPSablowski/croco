@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1397</width>
-    <height>802</height>
+    <height>895</height>
    </rect>
   </property>
   <property name="font">
@@ -29,8 +29,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1377</width>
-        <height>782</height>
+        <width>1389</width>
+        <height>846</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_21">
@@ -420,7 +420,7 @@
            <item>
             <widget class="QLabel" name="label_22">
              <property name="text">
-              <string>Phases &amp; Ratios A/B:</string>
+              <string>Phases/Times &amp; Ratios A/B:</string>
              </property>
             </widget>
            </item>
@@ -431,6 +431,13 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_13">
+             <property name="text">
+              <string>Phases</string>
              </property>
             </widget>
            </item>
@@ -1162,6 +1169,13 @@
              </property>
              <property name="value">
               <number>50</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_14">
+             <property name="text">
+              <string>apply to templates</string>
              </property>
             </widget>
            </item>

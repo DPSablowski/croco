@@ -25,6 +25,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void cropSpectra();
+
 private:
     Ui::Crop *ui;
 };
