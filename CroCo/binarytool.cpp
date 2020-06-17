@@ -89,8 +89,8 @@ BinaryTool::BinaryTool(QWidget *parent) :
         ui->doubleSpinBox_4->setValue(LPERIa[0]);
     }
 
-    ui->lineEdit->setText("Li_list.dat");
-    ui->lineEdit_2->setText("Li2_list.dat");
+    ui->lineEdit->setText("CapellaA.dat");
+    ui->lineEdit_2->setText("CapellaB.dat");
 
     ui->doubleSpinBox_10->setValue(0.05);
     ui->doubleSpinBox_14->setValue(20);
@@ -110,6 +110,8 @@ BinaryTool::BinaryTool(QWidget *parent) :
     ui->lineEdit_7->setText("spot_");
     ui->lineEdit_10->setText("ratios.dat");
     ui->lineEdit_11->setText(".dat");
+    ui->lineEdit_12->setText("otimes1.dat");
+    ui->lineEdit_13->setText("spectra");
 
     ui->spinBox_6->setEnabled(false);
     ui->spinBox_7->setEnabled(false);
@@ -510,7 +512,7 @@ void BinaryTool::on_pushButton_3_clicked()
     int num_lines1=0, wsteps;
     int num_lines2=0;
     int num_lines3=0;
-    int place=0;
+    int place=0, phisteps;
     QVector<double> lineswt(num_lines3);
     QVector<double> linesit(num_lines3);
     QVector<double> intenst(num_lines3);
@@ -531,8 +533,53 @@ void BinaryTool::on_pushButton_3_clicked()
     spotA = ui->doubleSpinBox_19->value();
     spotP = ui->doubleSpinBox_20->value();
     spotF = ui->doubleSpinBox_21->value();
-    int phisteps=1/dphi;
-    cout<<phisteps<<endl;
+
+    // load file with times
+    if(ui->checkBox_15->isChecked()){
+        QString qtimes = ui->lineEdit_12->text();
+        string times = qtimes.toUtf8().constData();
+        ostringstream inputNameStream(times);
+        inputNameStream<<BPath<<"/"<<times;
+        string inputName = inputNameStream.str();
+
+        QFile checkfile1(inputName.c_str());
+
+        if(!checkfile1.exists()){
+            qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "Error 1: Line list "+qBPath+"/"+qtimes +" for primary does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        ifstream input(inputName.c_str());
+        string line, eins;
+        int ntimes=0;
+
+        while(std::getline(input, line))
+             ++ntimes;
+
+        input.clear();
+        input.seekg(0, ios::beg);
+
+        V1.resize(ntimes);
+        V2.resize(ntimes);
+        t.resize(ntimes);
+
+        for (int i =0; i < ntimes; i++){
+             input >> eins;
+             istringstream istr(eins);
+             istr >> t[i];
+        }
+        input.close();
+        phisteps=ntimes;
+
+    }
+    // use equidistant spread over orbit
+    else{
+        phisteps=1/dphi;
+        V1.resize(phisteps);
+        V2.resize(phisteps);
+        t.resize(phisteps);
+    }
 
     wsteps = (uw-lw)/dw;
 
@@ -548,10 +595,6 @@ void BinaryTool::on_pushButton_3_clicked()
     std::string file3Name = file3NameStream.str();
     ofstream file3(file3Name.c_str());
 
-    V1.resize(1/dphi);
-    V2.resize(1/dphi);
-    t.resize(1/dphi);
-
     QString output3="times.dat";
     string out3 = output3.toUtf8().constData();
     std::ostringstream dat3NameStream(out3);
@@ -564,45 +607,50 @@ void BinaryTool::on_pushButton_3_clicked()
     ostringstream input11NameStream(input11);
     input11NameStream<<BPath<<"/"<<input11;
     string input1Name = input11NameStream.str();
-    ifstream input1(input1Name.c_str());
 
     QFile checkfile1(input1Name.c_str());
 
-            if(!checkfile1.exists()){
-                qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-                QMessageBox::information(this, "Error", "Error 1: Line list "+qBPath+"/"+list1 +" for primary does not exist!");
-                this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
-            }
-            while(std::getline(input1, line))
-                       ++ num_lines1;
+    if(!checkfile1.exists()){
+        qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error", "Error 1: Line list "+qBPath+"/"+list1 +" for primary does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        return;
+    }
+    ifstream input1(input1Name.c_str());
+    while(std::getline(input1, line))
+         ++num_lines1;
 
-                    input1.clear();
-                    input1.seekg(0, ios::beg);
+    input1.clear();
+    input1.seekg(0, ios::beg);
 
-
+                    int lcount=0;
+                    double lstrength=0.0;
+                    double lwave=0.0;
 
                     double linesw1[num_lines1];	// wavelengths of lines spectrum one
                     double linesw01[num_lines1];	// rest wavelengths of lines
                     double linesi1[num_lines1];	// line intensities
                     double intens1[num_lines1];	// resulting continuum intensity for each line-pair
-                    //double FWHM1[num_lines1];	// FWHM of lines spectrum one
                     double temi1[num_lines1];	// intensity of primary template for each line
-                    double spoti1[num_lines1];
-                    //double intensspot1[num_lines1];
-                    //double spotw1[num_lines1];
-
 
                     for (int i =0; i < num_lines1; i++){
-                         input1 >> eins >> zwei >> drei;
-                         istringstream istr(eins+" "+zwei+" "+drei);
-                         istr >> linesw01[i];
+                         input1 >> eins >> zwei;
+                         istringstream istr(eins);
+                         istr >> lwave;
                          istringstream istr2(zwei);
-                         istr2 >> linesi1[i];
-                         istringstream istr3(drei);
-                         istr3 >> spoti1[i];;
-                            }
+                         istr2 >> lstrength;
+                         if((lstrength>=ui->doubleSpinBox_23->value())&(lwave>=lw)&(lwave<=uw)){
+                             linesw01[lcount]=lwave;
+                             linesi1[lcount]=lstrength*ui->doubleSpinBox_25->value();
+                             ++lcount;
+                         }
+                         else{
 
+                         }
+                         //istringstream istr3(drei);
+                    }
+
+                    input1.close();
 
     list2 = ui->lineEdit_2->text();
     string input22 = list2.toUtf8().constData();
@@ -621,30 +669,35 @@ void BinaryTool::on_pushButton_3_clicked()
             ifstream input2(input2Name.c_str());
 
             while(std::getline(input2, line))
-                       ++ num_lines2;
+                       ++num_lines2;
 
                     input2.clear();
                     input2.seekg(0, ios::beg);
+                    int lcount2=0;
 
                     double linesw2[num_lines2];	// wavelengths of lines spectrum two
                     double linesw02[num_lines2];	// rest wavelengths of lines
                     double linesi2[num_lines2];	// line intensities
                     double intens2[num_lines2];	// resulting continuum intensity for each line-pair
-                    //double FWHM2[num_lines2];	// FWHM of lines spectrum two
                     double temi2[num_lines2];	// intensity of secondary template for each line
-                    double spoti2[num_lines2];
-                    //double intensspot2[num_lines2];
-                    //double spotw2[num_lines2];
 
                     for (int i =0; i < num_lines2; i++){
-                        input2 >> eins >> zwei >> drei;
-                        istringstream istr5(eins+" "+zwei+" "+drei);
-                        istr5 >> linesw02[i];
+                        input2 >> eins >> zwei;
+                        istringstream istr5(eins);
+                        istr5 >> lwave;
                         istringstream istr6(zwei);
-                        istr6 >> linesi2[i];
-                        istringstream istr7(drei);
-                        istr7 >> spoti2[i];
+                        istr6 >> lstrength;
+                        if((lstrength>=ui->doubleSpinBox_24->value())&(lwave>=lw)&(lwave<=uw)){
+                            linesw02[lcount2]=lwave;
+                            linesi2[lcount2]=lstrength*ui->doubleSpinBox_26->value();
+                            ++lcount2;
                         }
+                        else{
+
+                        }
+                        //istringstream istr7(drei);
+                    }
+                    input2.close();
 
                     if(ui->checkBox_2->isChecked()){
                     QString list3;
@@ -696,7 +749,7 @@ void BinaryTool::on_pushButton_3_clicked()
 
                           for (int i =0; i < num_lines3; i++){
                               input3 >> eins >> zwei >> drei;
-                              istringstream istr8(eins+" "+zwei+" "+drei);
+                              istringstream istr8(eins);
                               istr8 >> ltell;
                               if((ltell>=lw)&(ltell<=uw)){
                                 lineswt[place]=ltell;
@@ -708,9 +761,10 @@ void BinaryTool::on_pushButton_3_clicked()
                                 ++place;
                               }
                           }
+                          input3.close();
                     }
 
-                    QVector<double> spotw(num_lines1), spoti(num_lines1);
+                    QVector<double> spotw(lcount), spoti(lcount);
 
                     std::ostringstream rvNameStream("velocities.txt");
                     rvNameStream<<BPath<<"/"<<"velocities.txt";
@@ -720,178 +774,178 @@ void BinaryTool::on_pushButton_3_clicked()
                     double spotd=0;
 
     for(int m=0; m<phisteps; m++){
-    t[m]=BTT0+m*dphi*BTP;
 
-    file4<<setprecision(14)<<t[m]<<endl;
-
-    if(BTe!=0){
-        BTt=t[m];
-        BinaryTool::BTfindroot();
-        E=BTE;
-
-    }
-
-    else{
-        E = M_PI*(t[m]-BTT0)/BTP;
-    }
-
-    theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
-
-    V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
-    V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
-
-    rv<<V1[m]<<"\t"<<V2[m]<<endl;
-
-    // Pulsation primary
-    if(ui->checkBox_3->isChecked()){
-      vsi11=vsi1+pulA*sin(2*M_PI/pulP*(t[m]-BTT0));
-    }
-    else vsi11=vsi1;
-
-    // Pulsation secondary
-    if(ui->checkBox_8->isChecked()){
-        vsi12=vsi2+pulA2*sin(2*M_PI/pulP2*(t[m]-BTT0));
-    }
-    else vsi12 = vsi2;
-
-    for(int n=0; n < num_lines1; n++){
-        linesw1[n]=(V1[m]/c+1)*linesw01[n];
-            if(ui->checkBox_9->isChecked()){    // spot wavelength position
-                spotw[n]=((V1[m]-1.4*vsi11*cos(2*M_PI/spotP*(t[m]-BTT0-spotd)))/c+1)*linesw01[n];
-                cout<<spotw[n]<<"\t"<<((V1[m]-vsi11*cos(2*M_PI/spotP*(t[m]-BTT0-spotd)))/c+1)<<endl;
-                if((t[m]-BTT0-spotd)>=spotP/2){
-                    spotd += spotP/2;
-                }
-            }
-        }
-    for(int n=0; n < num_lines2; n++){
-        linesw2[n]=(V2[m]/c+1)*linesw02[n];
-        }
-
-    if(m==ui->spinBox_5->value()){
-        if(ui->checkBox_10->isChecked()){ // damp line intensities
-            for(int e=0; e<num_lines1; e++){
-                linesi1[e]=linesi1[e]*ui->doubleSpinBox_22->value();
-            }
+        if(ui->checkBox_15->isChecked()){
+            //
         }
         else{
-            if(ui->checkBox_11->isChecked()){ // broaden line
-                vsi11 = vsi11 * ui->doubleSpinBox_22->value();
-            }
-            else{
-
-            }
+            t[m]=BTT0+m*dphi*BTP;
         }
-    }
-    else{
 
-    }
-    if(m==ui->spinBox_5->value()+1){
-        if(ui->checkBox_10->isChecked()){ // damp line intensities
-            for(int e=0; e<num_lines1; e++){
-                linesi1[e]=linesi1[e]/ui->doubleSpinBox_22->value();
-            }
+        file4<<setprecision(14)<<t[m]<<endl;
+
+        if(BTe!=0){
+            BTt=t[m];
+            BinaryTool::BTfindroot();
+            E=BTE;
         }
+
         else{
-            if(ui->checkBox_11->isChecked()){ // broaden line
-                vsi11 = vsi11 / ui->doubleSpinBox_22->value();
-            }
-            else{
-
-            }
+            E = M_PI*(t[m]-BTT0)/BTP;
         }
-    }
-    else{
 
-    }
+        theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
 
-    std::ostringstream file1NameStream("spectra_");
-    file1NameStream<<BPath<<"/"<<"spectra_"<<m<<".txt";
-    std::string file1Name = file1NameStream.str();
-    ofstream file1(file1Name.c_str());
+        V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
+        V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
 
-    std::ostringstream file4NameStream("componentA_");
-    file4NameStream<<BPath<<"/"<<"componentA_"<<m<<".txt";
-    std::string file4Name = file4NameStream.str();
-    ofstream file4(file4Name.c_str());
+        rv<<V1[m]<<"\t"<<V2[m]<<endl;
 
-    std::ostringstream file5NameStream("componentB_");
-    file5NameStream<<BPath<<"/"<<"componentB_"<<m<<".txt";
-    std::string file5Name = file5NameStream.str();
-    ofstream file5(file5Name.c_str());
-
-    for(int e=0; e<wsteps; e++){
-        w=dw*e+lw;
-
-        file1 <<w<< "\t";
-        double Int1=0.0;
-        double Int2=0.0;
-
-        for(int n=0; n < num_lines1; n++){
-        intens1[n]=linesi1[n]*exp(-0.25/(pow((vsi11/c*linesw1[n]),2))*pow((linesw1[n]-w),2));
-        Intensi+=intens1[n];
-        Int1+=intens1[n];
+        // Pulsation primary
+        if(ui->checkBox_3->isChecked()){
+            vsi11=vsi1+pulA*sin(2*M_PI/pulP*(t[m]-BTT0));
         }
-        if(ui->checkBox_9->isChecked()){    // add spot signal
-            for(int n = 0; n< num_lines1; n++){
-                spoti[n] = spotA*exp(-0.25/(pow((spotF/c*spotw[n]),2))*pow((spotw[n]-w),2));
-                Intensi -= spoti[n];
-                Int1-=spoti[n];
-            }
+        else vsi11=vsi1;
+
+        // Pulsation secondary
+        if(ui->checkBox_8->isChecked()){
+            vsi12=vsi2+pulA2*sin(2*M_PI/pulP2*(t[m]-BTT0));
         }
-        file4<<w*(1-V1[m]/c)<<"\t"<<1-Int1+gauss()/SNR+1/SNR<<endl;
+        else vsi12 = vsi2;
 
-        for(int n=0; n < num_lines2; n++){
-        intens2[n]=linesi2[n]*exp(-0.25/(pow((vsi12/c*linesw2[n]),2))*pow((linesw2[n]-w),2));
-        Intensi+=intens2[n];
-        Int2+=intens2[n];
-        }
-        file5<<w<<"\t"<<1-Int2+gauss()/SNR+1/SNR<<endl;
-
-        if(m==1){ // generate template
-            for(int n=0; n < num_lines1; n++){
-                    temi1[n]=(1-linesi1[n]*num_lines1*exp(-0.25/(pow((vsi11/c*linesw01[n]),2))*pow((linesw01[n]-w),2)))/num_lines1;
-                    tempi1+=temi1[n];
-                }
-                for(int n=0; n < num_lines2; n++){
-                    temi2[n]=(1-linesi2[n]*num_lines2*exp(-0.25/(pow((vsi12/c*linesw02[n]),2))*pow((linesw02[n]-w),2)))/num_lines2;
-                    tempi2+=temi2[n];
-                }
-
-                if(ui->checkBox_14->isChecked()){
-                    file2<<w<< "\t"<<tempi1+gauss()/SNR+1/SNR<<"\n";
-                    file3<<w<< "\t"<<tempi2+gauss()/SNR+1/SNR<<"\n";
+        for(int n=0; n < lcount; n++){
+            linesw1[n]=(V1[m]/c+1)*linesw01[n];
+                if(ui->checkBox_9->isChecked()){    // spot wavelength position
+                    spotw[n]=((V1[m]-1.4*vsi11*cos(2*M_PI/spotP*(t[m]-BTT0-spotd)))/c+1)*linesw01[n];
+                    cout<<spotw[n]<<"\t"<<((V1[m]-vsi11*cos(2*M_PI/spotP*(t[m]-BTT0-spotd)))/c+1)<<endl;
+                    if((t[m]-BTT0-spotd)>=spotP/2){
+                        spotd += spotP/2;
+                    }
+                    else{
+                        //
+                    }
                 }
                 else{
-                    file2<<w<< "\t"<<tempi1/2<<"\n";
-                    file3<<w<< "\t"<<tempi2/2<<"\n";
+                    //
                 }
-                tempi1=0;
-                tempi2=0;
-        }
-
-        if(ui->checkBox_2->isChecked()){
-            for(int n=0; n<place; n++){
-                intenst[n]=linesit[n]*exp(-2.77254/(pow(FWHMt[n],2)+pow((2*dw),2))*pow((lineswt[n]-w),2));
-                Intensi+=intenst[n];
             }
-        }
+            for(int n=0; n < lcount2; n++){
+                linesw2[n]=(V2[m]/c+1)*linesw02[n];
+            }
 
-        if(ui->checkBox_2->isChecked()){
-            file1<<1-Intensi/3+gauss()/SNR+1/SNR<<"\n";
-        }
-        else {
-            file1<<1-Intensi/2+gauss()/SNR+1/SNR<<"\n";
-        }
-        Intensi=0;
+            if(m==ui->spinBox_5->value()){
+                if(ui->checkBox_10->isChecked()){ // damp line intensities
+                    for(int e=0; e<lcount; e++){
+                        linesi1[e]=linesi1[e]*ui->doubleSpinBox_22->value();
+                    }
+                }
+                else{
+                    if(ui->checkBox_11->isChecked()){ // broaden line
+                        vsi11 = vsi11 * ui->doubleSpinBox_22->value();
+                    }
+                    else{
+                        //
+                    }
+                }
+            }
+            else{
+                //
+            }
+            if(m==ui->spinBox_5->value()+1){
+                if(ui->checkBox_10->isChecked()){ // damp line intensities
+                    for(int e=0; e<lcount; e++){
+                        linesi1[e]=linesi1[e]/ui->doubleSpinBox_22->value();
+                    }
+                }
+                else{
+                    if(ui->checkBox_11->isChecked()){ // broaden line
+                        vsi11 = vsi11 / ui->doubleSpinBox_22->value();
+                    }
+                    else{
+                        //
+                    }
+                }
+            }
+            else{
+                //
+            }
 
-    }
-        file1.close();
-    }
-    file2.close();
-    file3.close();
+            string outs = QString(ui->lineEdit_13->text()).toUtf8().constData();
+            std::ostringstream file1NameStream(outs);
+            file1NameStream<<BPath<<"/"<<outs<<"_"<<m<<".txt";
+            std::string file1Name = file1NameStream.str();
+            ofstream file1(file1Name.c_str());
 
-    this->setCursor(QCursor(Qt::ArrowCursor));
+            for(int e=0; e<wsteps; e++){
+                w=dw*e+lw;
+
+                file1 <<w<< "\t";
+                double Int1=0.0;
+                double Int2=0.0;
+
+                for(int n=0; n < lcount; n++){
+                    intens1[n]=linesi1[n]*exp(-0.25/(pow((vsi11/c*linesw1[n]),2))*pow((linesw1[n]-w),2));
+                    Intensi+=intens1[n];
+                    Int1+=intens1[n];
+                }
+                if(ui->checkBox_9->isChecked()){    // add spot signal
+                    for(int n = 0; n< lcount; n++){
+                        spoti[n] = spotA*exp(-0.25/(pow((spotF/c*spotw[n]),2))*pow((spotw[n]-w),2));
+                        Intensi -= spoti[n];
+                        Int1-=spoti[n];
+                    }
+                }
+
+                for(int n=0; n < lcount2; n++){
+                    intens2[n]=linesi2[n]*exp(-0.25/(pow((vsi12/c*linesw2[n]),2))*pow((linesw2[n]-w),2));
+                    Intensi+=intens2[n];
+                    Int2+=intens2[n];
+                }
+
+                if(m==1){ // generate template
+                    for(int n=0; n < lcount; n++){
+                        temi1[n]=(1-linesi1[n]*lcount*exp(-0.25/(pow((vsi11/c*linesw01[n]),2))*pow((linesw01[n]-w),2)))/lcount;
+                        tempi1+=temi1[n];
+                    }
+                    for(int n=0; n < lcount2; n++){
+                    temi2[n]=(1-linesi2[n]*lcount2*exp(-0.25/(pow((vsi12/c*linesw02[n]),2))*pow((linesw02[n]-w),2)))/lcount2;
+                    tempi2+=temi2[n];
+                    }
+
+                    if(ui->checkBox_14->isChecked()){
+                        file2<<w<< "\t"<<tempi1+gauss()/SNR+1/SNR<<"\n";
+                        file3<<w<< "\t"<<tempi2+gauss()/SNR+1/SNR<<"\n";
+                    }
+                    else{
+                        file2<<w<< "\t"<<tempi1/2<<"\n";
+                        file3<<w<< "\t"<<tempi2/2<<"\n";
+                    }
+                    tempi1=0;
+                    tempi2=0;
+                }
+
+                if(ui->checkBox_2->isChecked()){
+                    for(int n=0; n<place; n++){
+                        intenst[n]=linesit[n]*exp(-2.77254/(pow(FWHMt[n],2)+pow((2*dw),2))*pow((lineswt[n]-w),2));
+                        Intensi+=intenst[n];
+                    }
+                }
+
+                if(ui->checkBox_2->isChecked()){
+                    file1<<1-Intensi/3+gauss()/SNR+1/SNR<<"\n";
+                }
+                else {
+                    file1<<1-Intensi/2+gauss()/SNR+1/SNR<<"\n";
+                }
+                Intensi=0;
+
+            }
+            file1.close();
+        }
+        file2.close();
+        file3.close();
+
+        this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 //*************************************************
@@ -1341,7 +1395,7 @@ void BinaryTool::on_pushButton_5_clicked()
     list1 = ui->lineEdit->text();
     string input11 = list1.toUtf8().constData();
     ostringstream input11NameStream(input11);
-    input11NameStream<<input11;
+    input11NameStream<<BPath<<"/"<<input11;
     string input1Name = input11NameStream.str();
     cout<<"test"<<endl;
 
@@ -1379,7 +1433,7 @@ void BinaryTool::on_pushButton_5_clicked()
                          istringstream istr2(zwei);
                          istr2 >> linesi1[i];
                          istringstream istr3(drei);
-                         istr3 >> spoti1[i];;
+                         istr3 >> spoti1[i];
                     }
                     cout<<"test"<<endl;
 
@@ -1404,7 +1458,7 @@ void BinaryTool::on_pushButton_5_clicked()
 
                     string input23 = list3.toUtf8().constData();
                     ostringstream input23NameStream(input23);
-                    input23NameStream<<input23;
+                    input23NameStream<<BPath<<"/"<<input23;
                     string input3Name = input23NameStream.str();
                     cout<<"test"<<endl;
 

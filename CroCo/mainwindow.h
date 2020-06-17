@@ -23,6 +23,7 @@
 #include <splinefit.h>
 #include <blazecorr.h>
 #include <moments.h>
+#include <vald3.h>
 
 namespace Ui {
 class MainWindow;
@@ -141,6 +142,8 @@ private slots:
 
     void on_pushButton_12_clicked();
 
+    void WriteKeyWord(int argc,   char *testf[]);
+
     void on_actionBlaze_Correction_triggered();
 
     void on_actionMoments_triggered();
@@ -169,6 +172,8 @@ private slots:
 
     void on_pushButton_16_clicked();
 
+    void on_actionLine_List_Tool_triggered();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;
@@ -188,6 +193,7 @@ private:
     SplineFit *qSpline;
     BlazeCorr *qBCorr;
     Moments *qMom;
+    VALD3 *qvald3;
 
 };
 

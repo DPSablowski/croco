@@ -8,12 +8,14 @@
 #include <QFile>
 #include <iostream>
 #include <iomanip>
+#include <QDebug>
 
 using namespace std;
 
 QString qAPath;
 string aPath;
 double lspeed = 299792.458;
+QVector<double> lwaves(1);
 
 Arithmetic::Arithmetic(QWidget *parent) :
     QDialog(parent),
@@ -36,6 +38,47 @@ Arithmetic::Arithmetic(QWidget *parent) :
     ui->lineEdit_10->setText("rein_vel_times.dat");
     ui->lineEdit_6->setEnabled(false);
     ui->spinBox_2->setEnabled(false);
+
+    ui->lineEdit_20->setText("4943");
+    ui->lineEdit_21->setText("5694");
+    ui->lineEdit_22->setText("1.04782");
+
+    string sbin = "SpectralLines.dat";
+
+    QFile qBin(sbin.c_str());
+
+    if(!qBin.exists()){
+        qDebug()<<"No data base file of spectral lines not present.";
+        QMessageBox::information(this, "Error", "Data base "+qBin.fileName()+" of spectral lines not present.");
+    }
+
+
+    else{
+        ifstream slines(sbin.c_str());
+        int lines=0;
+        string zeile1, eins1, zwei1;
+
+        while(std::getline(slines, zeile1))
+        ++ lines;
+
+        slines.clear();
+        slines.seekg(0, ios::beg);
+
+        QVector<string> names(lines);
+
+        lwaves.resize(lines);
+
+        for(int i=0; i < lines; i++){
+            slines >> eins1 >> zwei1;
+            istringstream str1(eins1);
+            str1 >> names[i];
+            QString qstr = QString::fromStdString(str1.str());
+            ui->comboBox->addItem(qstr);
+            istringstream str2(zwei1);
+            str2 >> lwaves[i];
+        }
+        ui->lineEdit_7->setText(QString::number(lwaves[0]));
+    }
 
 
 }
@@ -116,71 +159,68 @@ void Arithmetic::on_pushButton_2_clicked()
             ofstream outp(outName.c_str());
 
             for(int g=0; g<numpixA; g++){
-            inA >> eins >>zwei;
-            istringstream ist(eins);
-            ist >> a[g];
-            if(ui->checkBox_10->isChecked()){
-                a[g]=a[g]*(1+ui->doubleSpinBox->value()/lspeed);
-            }
-            else{
-
-            }
-            istringstream ist2(zwei);
-            ist2 >> b[g];
-            // Add
-            if(ui->checkBox_5->isChecked()){
-                b[g] = b[g]+value;
-            }
-            else{
-                // Multiply
-                if(ui->checkBox_6->isChecked()){
-                    b[g] = b[g]*value;
+                inA >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> a[g];
+                if(ui->checkBox_10->isChecked()){
+                    a[g]=a[g]*(1+ui->doubleSpinBox->value()/lspeed);
                 }
-                // no nothing
                 else{
-                    b[g] = b[g];
-                }
-            }
 
-            outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
+                }
+                istringstream ist2(zwei);
+                ist2 >> b[g];
+                // Add
+                if(ui->checkBox_5->isChecked()){
+                    b[g] = b[g]+value;
+                }
+                else{
+                    // Multiply
+                    if(ui->checkBox_6->isChecked()){
+                        b[g] = b[g]*value;
+                    }
+                    // no nothing
+                    else{
+                        b[g] = b[g];
+                    }
+                }
+                outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<endl;
             }
             inA.close();
-
         }
-
     }
 
     else{
-    QString inputA=ui->lineEdit->text();
-    string dataA = inputA.toUtf8().constData();
-    std::ostringstream datANameStream(dataA);
-    datANameStream<<aPath<<"/"<<dataA;
-    std::string datAName = datANameStream.str();
+        QString inputA=ui->lineEdit->text();
+        string dataA = inputA.toUtf8().constData();
+        std::ostringstream datANameStream(dataA);
+        datANameStream<<aPath<<"/"<<dataA;
+        std::string datAName = datANameStream.str();
 
-    QFile checkfile1(datAName.c_str());
+        QFile checkfile1(datAName.c_str());
 
-    if(!checkfile1.exists()){
-        QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
-        this->setCursor(QCursor(Qt::ArrowCursor));
-       return;
-    }
-    ifstream inA(datAName.c_str());
-
-    QString inputB=ui->lineEdit_2->text();
-
-    if(inputB.isEmpty()){
-        if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox_3->isChecked()) or (ui->checkBox_4->isChecked())){
-            QMessageBox::information(this, "Error", "There is no file B given.");
+        if(!checkfile1.exists()){
+            QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
             return;
+        }
+        ifstream inA(datAName.c_str());
+
+        QString inputB=ui->lineEdit_2->text();
+
+        if(inputB.isEmpty()){
+            if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox_3->isChecked()) or (ui->checkBox_4->isChecked())){
+                QMessageBox::information(this, "Error", "There is no file B given.");
+                return;
+            }
+            else{
+                //
+            }
+
         }
         else{
             //
         }
-
-    }
-    else{
-        //
-    }
 
     string dataB = inputB.toUtf8().constData();
     std::ostringstream datBNameStream(dataB);
@@ -247,7 +287,7 @@ void Arithmetic::on_pushButton_2_clicked()
         }
         istringstream ist4(zwei);
         ist4 >> d[g];
-        }
+     }
 
     QString output=ui->lineEdit_3->text();
     string out = output.toUtf8().constData();
@@ -256,12 +296,17 @@ void Arithmetic::on_pushButton_2_clicked()
     std::string outName = outNameStream.str();
     ofstream outp(outName.c_str());
 
-if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox_3->isChecked()) or (ui->checkBox_4->isChecked())){
-    double dinter=0;
+if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox_3->isChecked()) or (ui->checkBox_4->isChecked()) or (ui->checkBox_18->isChecked())){
+    double dinter=0.0;
+    double resi=0.0;
+    double residuum=0.0;
+    double wmin = ui->doubleSpinBox_5->value();
+    double wmax = ui->doubleSpinBox_6->value();
+    int wcount=0;
 
         for(int g=0; g<numpixA; g++){
             for(int i=0; i<numpixB; i++){
-                if(c[i]<=a[g] & (c[i+1]>a[g])){
+                if(c[i]<=a[g] & (c[i+1]>=a[g])){
                     dinter=d[i]+(e[g]-c[i])/(c[i+1]-c[i])*(d[i+1]-d[i]);
                     //aa=i-1;
                 }
@@ -279,27 +324,27 @@ if((ui->checkBox->isChecked()) or (ui->checkBox_2->isChecked()) or (ui->checkBox
             if(ui->checkBox_4->isChecked()){
                 f[g]=b[g]/dinter;
             }
-            if(ui->checkBox_5->isChecked()){
-                QString qValue = ui->lineEdit_5->text();
-                bool ok = false;
-                double value = qValue.toDouble(&ok);
-                f[g]=b[g]+value;
+            if(ui->checkBox_18->isChecked()){  // residuum
+                if(a[g]>=wmin & a[g]<=wmax){
+                    resi=(b[g]-dinter);
+                    residuum += pow(resi,2);
+                    cout<<g<<"\t"<<b[g]<<"\t"<<resi<<"\t"<<residuum<<"\t"<<wcount<<endl;
+                    ++wcount;
+                }
+                else{
+
+                }
             }
-            if(ui->checkBox_6->isChecked()){
-                QString qValue = ui->lineEdit_5->text();
-                bool ok = false;
-                double value = qValue.toDouble(&ok);
-                f[g]=b[g]*value;
+            if(ui->checkBox_18->isChecked()){
+                //
             }
-            if(ui->checkBox_8->isChecked()){
-                e[g]=log10(a[g]);
-                f[g] = b[g];
+            else{
+                outp<<scientific<<e[g]<<" "<<f[g]<<endl;
             }
-            if(ui->checkBox_9->isChecked()){
-                e[g]=pow(10,a[g]);
-                f[g] = b[g];
-            }
-            outp<<scientific<<e[g]<<" "<<f[g]<<endl;
+        }
+        if(ui->checkBox_18->isChecked()){
+            residuum = sqrt(residuum/(wcount-1));
+            ui->lineEdit_19->setText(QString::number(residuum));
         }
 }
         else{
@@ -347,6 +392,7 @@ void Arithmetic::on_checkBox_clicked()
     ui->checkBox_6->setChecked(false);
     ui->checkBox_9->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 void Arithmetic::on_checkBox_2_clicked()
@@ -358,6 +404,7 @@ void Arithmetic::on_checkBox_2_clicked()
     ui->checkBox_6->setChecked(false);
     ui->checkBox_9->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 void Arithmetic::on_checkBox_3_clicked()
@@ -369,6 +416,7 @@ void Arithmetic::on_checkBox_3_clicked()
     ui->checkBox_6->setChecked(false);
     ui->checkBox_9->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 void Arithmetic::on_checkBox_4_clicked()
@@ -380,6 +428,7 @@ void Arithmetic::on_checkBox_4_clicked()
     ui->checkBox_6->setChecked(false);
     ui->checkBox_9->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 void Arithmetic::on_checkBox_5_clicked()
@@ -391,6 +440,7 @@ void Arithmetic::on_checkBox_5_clicked()
     ui->checkBox_6->setChecked(false);
     ui->checkBox_9->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 void Arithmetic::on_checkBox_6_clicked()
@@ -402,6 +452,7 @@ void Arithmetic::on_checkBox_6_clicked()
     ui->checkBox_5->setChecked(false);
     ui->checkBox_7->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 
@@ -414,6 +465,7 @@ void Arithmetic::on_checkBox_8_clicked()
     ui->checkBox_5->setChecked(false);
     ui->checkBox_9->setChecked(false);
     ui->checkBox_6->setChecked(false);
+    ui->checkBox_18->setChecked(false);
 }
 
 void Arithmetic::on_checkBox_9_clicked()
@@ -425,6 +477,31 @@ void Arithmetic::on_checkBox_9_clicked()
     ui->checkBox_5->setChecked(false);
     ui->checkBox_6->setChecked(false);
     ui->checkBox_8->setChecked(false);
+    ui->checkBox_18->setChecked(false);
+}
+
+void Arithmetic::on_checkBox_18_clicked()
+{
+    if(ui->checkBox_18->isChecked()){
+        ui->checkBox_2->setChecked(false);
+        ui->checkBox_3->setChecked(false);
+        ui->checkBox->setChecked(false);
+        ui->checkBox_4->setChecked(false);
+        ui->checkBox_5->setChecked(false);
+        ui->checkBox_6->setChecked(false);
+        ui->checkBox_8->setChecked(false);
+        ui->checkBox_9->setChecked(false);
+    }
+    else{
+        ui->checkBox_2->setChecked(false);
+        ui->checkBox_3->setChecked(false);
+        ui->checkBox->setChecked(true);
+        ui->checkBox_4->setChecked(false);
+        ui->checkBox_5->setChecked(false);
+        ui->checkBox_6->setChecked(false);
+        ui->checkBox_8->setChecked(false);
+        ui->checkBox_9->setChecked(false);
+    }
 }
 
 void Arithmetic::on_lineEdit_8_editingFinished()
@@ -964,4 +1041,118 @@ void Arithmetic::on_pushButton_7_clicked()
     }
     outp2.close();
     inA.close();
+}
+
+
+void Arithmetic::on_comboBox_currentIndexChanged()
+{
+    ui->lineEdit_7->setText(QString::number(lwaves[ui->comboBox->currentIndex()]));
+}
+
+//*****************************************
+// correct flux wavelength dependent
+//*****************************************
+void Arithmetic::on_pushButton_8_clicked()
+{
+    double TA = ui->lineEdit_20->text().toDouble();
+    double TB = ui->lineEdit_21->text().toDouble();
+    double scale = ui->lineEdit_22->text().toDouble();
+    double kB = 1.380648e-23;
+    double c0=299792458;
+    double h = 6.626e-34;
+
+    double kAB = ui->doubleSpinBox_3->value();
+    double fA = kAB/(1+kAB);
+    double fB = 1/(1+kAB);
+
+    QString inputA=ui->lineEdit->text();
+    string dataA = inputA.toUtf8().constData();
+    std::ostringstream datANameStream(dataA);
+    datANameStream<<aPath<<"/"<<dataA;
+    std::string datAName = datANameStream.str();
+
+    QFile checkfile1(datAName.c_str());
+
+    if(!checkfile1.exists()){
+        QMessageBox::information(this, "Error", "File"+checkfile1.fileName()+" does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+    ifstream inA(datAName.c_str());
+
+    int numpixA=0;
+    string line, eins, zwei, drei;
+
+    while(std::getline(inA, line))
+       ++numpixA;
+
+    inA.clear();
+    inA.seekg(0, ios::beg);
+
+    QString output=ui->lineEdit_3->text();
+    string out = output.toUtf8().constData();
+    std::ostringstream outNameStream(out);
+    outNameStream<<aPath<<"/"<<out;
+    std::string outName = outNameStream.str();
+    ofstream outp(outName.c_str());
+
+
+    string out2 = "ratioAtoB.dat";
+    std::ostringstream out2NameStream(out2);
+    out2NameStream<<aPath<<"/"<<out2;
+    std::string out2Name = out2NameStream.str();
+    ofstream out2p(out2Name.c_str());
+
+    string out3 = "strengthA.dat";
+    std::ostringstream out3NameStream(out3);
+    out3NameStream<<aPath<<"/"<<out3;
+    std::string out3Name = out3NameStream.str();
+    ofstream out3p(out3Name.c_str());
+
+    string out4 = "strengthB.dat";
+    std::ostringstream out4NameStream(out4);
+    out4NameStream<<aPath<<"/"<<out4;
+    std::string out4Name = out4NameStream.str();
+    ofstream out4p(out4Name.c_str());
+
+    QVector<double> a(numpixA), b(numpixA), c(numpixA);
+
+    for(int g=0; g<numpixA; g++){
+        if(g!=0){
+            inA >> eins >>zwei >> drei;
+            istringstream ist(eins);
+            ist >> a[g];
+            a[g]=a[g]/1000000000;
+            istringstream ist2(zwei);
+            kAB = scale*pow(TB,4)*(exp(h*c0/kB/a[g]/TB)-1)/(pow(TA,4)*exp(h*c0/kB/a[g]/TA)-1);
+            a[g]=a[g]*1000000000;
+            ist2 >> b[g];
+            if(ui->checkBox_19->isChecked()){
+                kAB=kAB/pow(scale,2);
+                fA = kAB/(1+kAB);
+                fB = 1/(1+kAB);
+
+                b[g]=(b[g]-fA)/fB;
+            }
+            else{
+                fA = kAB/(1+kAB);
+                fB = 1/(1+kAB);
+                b[g]=(b[g]-fB)/fA;
+            }
+            outp<<setprecision(14)<<a[g]<<"\t"<<b[g]<<"\t"<<c[g]<<endl;
+            out2p<<setprecision(14)<<a[g]<<"\t"<<kAB<<endl;
+            out3p<<setprecision(14)<<a[g]<<"\t"<<fA<<endl;
+            out4p<<setprecision(14)<<a[g]<<"\t"<<fB<<endl;
+        }
+        else{
+            std::getline(inA, line);
+            outp<<line<<endl;
+        }
+    }
+
+    inA.close();
+    outp.close();
+    out2p.close();
+    out3p.close();
+    out4p.close();
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'template.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.12.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,15 +10,12 @@
 #define UI_TEMPLATE_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
@@ -126,7 +123,7 @@ public:
     void setupUi(QDialog *Template)
     {
         if (Template->objectName().isEmpty())
-            Template->setObjectName(QStringLiteral("Template"));
+            Template->setObjectName(QString::fromUtf8("Template"));
         Template->resize(1074, 499);
         QPalette palette;
         QBrush brush(QColor(0, 0, 0, 255));
@@ -197,20 +194,20 @@ public:
         font.setPointSize(9);
         Template->setFont(font);
         gridLayout = new QGridLayout(Template);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         scrollArea = new QScrollArea(Template);
-        scrollArea->setObjectName(QStringLiteral("scrollArea"));
+        scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
         scrollArea->setFrameShadow(QFrame::Plain);
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
-        scrollAreaWidgetContents->setObjectName(QStringLiteral("scrollAreaWidgetContents"));
+        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
         scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1054, 479));
         horizontalLayout_16 = new QHBoxLayout(scrollAreaWidgetContents);
-        horizontalLayout_16->setObjectName(QStringLiteral("horizontalLayout_16"));
+        horizontalLayout_16->setObjectName(QString::fromUtf8("horizontalLayout_16"));
         verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         qCustomPlot = new QCustomPlot(scrollAreaWidgetContents);
-        qCustomPlot->setObjectName(QStringLiteral("qCustomPlot"));
+        qCustomPlot->setObjectName(QString::fromUtf8("qCustomPlot"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -220,70 +217,70 @@ public:
         verticalLayout_4->addWidget(qCustomPlot);
 
         verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer_4);
 
         label_3 = new QLabel(scrollAreaWidgetContents);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setObjectName(QString::fromUtf8("label_3"));
 
         horizontalLayout->addWidget(label_3);
 
         doubleSpinBox = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
+        doubleSpinBox->setObjectName(QString::fromUtf8("doubleSpinBox"));
         doubleSpinBox->setDecimals(4);
-        doubleSpinBox->setMaximum(9999.99);
+        doubleSpinBox->setMaximum(9999.989999999999782);
 
         horizontalLayout->addWidget(doubleSpinBox);
 
         label_4 = new QLabel(scrollAreaWidgetContents);
-        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setObjectName(QString::fromUtf8("label_4"));
 
         horizontalLayout->addWidget(label_4);
 
         doubleSpinBox_2 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
+        doubleSpinBox_2->setObjectName(QString::fromUtf8("doubleSpinBox_2"));
         doubleSpinBox_2->setDecimals(4);
-        doubleSpinBox_2->setMaximum(9999.99);
+        doubleSpinBox_2->setMaximum(9999.989999999999782);
 
         horizontalLayout->addWidget(doubleSpinBox_2);
 
         label_5 = new QLabel(scrollAreaWidgetContents);
-        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setObjectName(QString::fromUtf8("label_5"));
 
         horizontalLayout->addWidget(label_5);
 
         doubleSpinBox_3 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
+        doubleSpinBox_3->setObjectName(QString::fromUtf8("doubleSpinBox_3"));
         doubleSpinBox_3->setDecimals(4);
-        doubleSpinBox_3->setMinimum(-99);
-        doubleSpinBox_3->setMaximum(9999.99);
+        doubleSpinBox_3->setMinimum(-99.000000000000000);
+        doubleSpinBox_3->setMaximum(9999.989999999999782);
 
         horizontalLayout->addWidget(doubleSpinBox_3);
 
         label_6 = new QLabel(scrollAreaWidgetContents);
-        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setObjectName(QString::fromUtf8("label_6"));
 
         horizontalLayout->addWidget(label_6);
 
         doubleSpinBox_4 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_4->setObjectName(QStringLiteral("doubleSpinBox_4"));
+        doubleSpinBox_4->setObjectName(QString::fromUtf8("doubleSpinBox_4"));
         doubleSpinBox_4->setDecimals(4);
-        doubleSpinBox_4->setMinimum(-99);
-        doubleSpinBox_4->setMaximum(9999.99);
+        doubleSpinBox_4->setMinimum(-99.000000000000000);
+        doubleSpinBox_4->setMaximum(9999.989999999999782);
 
         horizontalLayout->addWidget(doubleSpinBox_4);
 
         pushButton_2 = new QPushButton(scrollAreaWidgetContents);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
 
         horizontalLayout->addWidget(pushButton_2);
 
         pushButton_3 = new QPushButton(scrollAreaWidgetContents);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
 
         horizontalLayout->addWidget(pushButton_3);
 
@@ -291,22 +288,22 @@ public:
         verticalLayout_2->addLayout(horizontalLayout);
 
         horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
         verticalLayout = new QVBoxLayout();
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer_3);
 
         label_2 = new QLabel(scrollAreaWidgetContents);
-        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setObjectName(QString::fromUtf8("label_2"));
 
         horizontalLayout_2->addWidget(label_2);
 
         lineEdit = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
         QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
@@ -316,45 +313,45 @@ public:
         horizontalLayout_2->addWidget(lineEdit);
 
         label_7 = new QLabel(scrollAreaWidgetContents);
-        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setObjectName(QString::fromUtf8("label_7"));
 
         horizontalLayout_2->addWidget(label_7);
 
         lineEdit_2 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
+        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
         sizePolicy1.setHeightForWidth(lineEdit_2->sizePolicy().hasHeightForWidth());
         lineEdit_2->setSizePolicy(sizePolicy1);
 
         horizontalLayout_2->addWidget(lineEdit_2);
 
         label_9 = new QLabel(scrollAreaWidgetContents);
-        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setObjectName(QString::fromUtf8("label_9"));
 
         horizontalLayout_2->addWidget(label_9);
 
         doubleSpinBox_10 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_10->setObjectName(QStringLiteral("doubleSpinBox_10"));
+        doubleSpinBox_10->setObjectName(QString::fromUtf8("doubleSpinBox_10"));
         doubleSpinBox_10->setDecimals(4);
-        doubleSpinBox_10->setMinimum(-999);
-        doubleSpinBox_10->setMaximum(999.99);
+        doubleSpinBox_10->setMinimum(-999.000000000000000);
+        doubleSpinBox_10->setMaximum(999.990000000000009);
 
         horizontalLayout_2->addWidget(doubleSpinBox_10);
 
         checkBox = new QCheckBox(scrollAreaWidgetContents);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
+        checkBox->setObjectName(QString::fromUtf8("checkBox"));
 
         horizontalLayout_2->addWidget(checkBox);
 
         checkBox_4 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+        checkBox_4->setObjectName(QString::fromUtf8("checkBox_4"));
 
         horizontalLayout_2->addWidget(checkBox_4);
 
         doubleSpinBox_14 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_14->setObjectName(QStringLiteral("doubleSpinBox_14"));
+        doubleSpinBox_14->setObjectName(QString::fromUtf8("doubleSpinBox_14"));
         doubleSpinBox_14->setDecimals(4);
-        doubleSpinBox_14->setMinimum(-999);
-        doubleSpinBox_14->setMaximum(999);
+        doubleSpinBox_14->setMinimum(-999.000000000000000);
+        doubleSpinBox_14->setMaximum(999.000000000000000);
 
         horizontalLayout_2->addWidget(doubleSpinBox_14);
 
@@ -362,51 +359,51 @@ public:
         verticalLayout->addLayout(horizontalLayout_2);
 
         horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_2);
 
         label_8 = new QLabel(scrollAreaWidgetContents);
-        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setObjectName(QString::fromUtf8("label_8"));
 
         horizontalLayout_3->addWidget(label_8);
 
         lineEdit_3 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
+        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
         sizePolicy1.setHeightForWidth(lineEdit_3->sizePolicy().hasHeightForWidth());
         lineEdit_3->setSizePolicy(sizePolicy1);
 
         horizontalLayout_3->addWidget(lineEdit_3);
 
         label_10 = new QLabel(scrollAreaWidgetContents);
-        label_10->setObjectName(QStringLiteral("label_10"));
+        label_10->setObjectName(QString::fromUtf8("label_10"));
 
         horizontalLayout_3->addWidget(label_10);
 
         doubleSpinBox_11 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_11->setObjectName(QStringLiteral("doubleSpinBox_11"));
+        doubleSpinBox_11->setObjectName(QString::fromUtf8("doubleSpinBox_11"));
         doubleSpinBox_11->setDecimals(4);
-        doubleSpinBox_11->setMinimum(-999);
-        doubleSpinBox_11->setMaximum(999.99);
+        doubleSpinBox_11->setMinimum(-999.000000000000000);
+        doubleSpinBox_11->setMaximum(999.990000000000009);
 
         horizontalLayout_3->addWidget(doubleSpinBox_11);
 
         checkBox_2 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
 
         horizontalLayout_3->addWidget(checkBox_2);
 
         checkBox_5 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+        checkBox_5->setObjectName(QString::fromUtf8("checkBox_5"));
 
         horizontalLayout_3->addWidget(checkBox_5);
 
         doubleSpinBox_15 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_15->setObjectName(QStringLiteral("doubleSpinBox_15"));
+        doubleSpinBox_15->setObjectName(QString::fromUtf8("doubleSpinBox_15"));
         doubleSpinBox_15->setDecimals(4);
-        doubleSpinBox_15->setMinimum(-999);
-        doubleSpinBox_15->setMaximum(999);
+        doubleSpinBox_15->setMinimum(-999.000000000000000);
+        doubleSpinBox_15->setMaximum(999.000000000000000);
 
         horizontalLayout_3->addWidget(doubleSpinBox_15);
 
@@ -414,9 +411,9 @@ public:
         verticalLayout->addLayout(horizontalLayout_3);
 
         horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         pushButton = new QPushButton(scrollAreaWidgetContents);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
 
         horizontalLayout_4->addWidget(pushButton);
 
@@ -425,42 +422,42 @@ public:
         horizontalLayout_4->addItem(horizontalSpacer);
 
         label_12 = new QLabel(scrollAreaWidgetContents);
-        label_12->setObjectName(QStringLiteral("label_12"));
+        label_12->setObjectName(QString::fromUtf8("label_12"));
 
         horizontalLayout_4->addWidget(label_12);
 
         lineEdit_8 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_8->setObjectName(QStringLiteral("lineEdit_8"));
+        lineEdit_8->setObjectName(QString::fromUtf8("lineEdit_8"));
         sizePolicy1.setHeightForWidth(lineEdit_8->sizePolicy().hasHeightForWidth());
         lineEdit_8->setSizePolicy(sizePolicy1);
 
         horizontalLayout_4->addWidget(lineEdit_8);
 
         label_22 = new QLabel(scrollAreaWidgetContents);
-        label_22->setObjectName(QStringLiteral("label_22"));
+        label_22->setObjectName(QString::fromUtf8("label_22"));
 
         horizontalLayout_4->addWidget(label_22);
 
         doubleSpinBox_13 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_13->setObjectName(QStringLiteral("doubleSpinBox_13"));
+        doubleSpinBox_13->setObjectName(QString::fromUtf8("doubleSpinBox_13"));
 
         horizontalLayout_4->addWidget(doubleSpinBox_13);
 
         checkBox_3 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
 
         horizontalLayout_4->addWidget(checkBox_3);
 
         checkBox_6 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+        checkBox_6->setObjectName(QString::fromUtf8("checkBox_6"));
 
         horizontalLayout_4->addWidget(checkBox_6);
 
         doubleSpinBox_16 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_16->setObjectName(QStringLiteral("doubleSpinBox_16"));
+        doubleSpinBox_16->setObjectName(QString::fromUtf8("doubleSpinBox_16"));
         doubleSpinBox_16->setDecimals(4);
-        doubleSpinBox_16->setMinimum(-999);
-        doubleSpinBox_16->setMaximum(999);
+        doubleSpinBox_16->setMinimum(-999.000000000000000);
+        doubleSpinBox_16->setMaximum(999.000000000000000);
 
         horizontalLayout_4->addWidget(doubleSpinBox_16);
 
@@ -480,11 +477,11 @@ public:
         horizontalLayout_16->addLayout(verticalLayout_4);
 
         verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
         label_13 = new QLabel(scrollAreaWidgetContents);
-        label_13->setObjectName(QStringLiteral("label_13"));
+        label_13->setObjectName(QString::fromUtf8("label_13"));
         QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Preferred);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
@@ -494,7 +491,7 @@ public:
         horizontalLayout_6->addWidget(label_13);
 
         lineEdit_4 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_4->setObjectName(QStringLiteral("lineEdit_4"));
+        lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
         sizePolicy1.setHeightForWidth(lineEdit_4->sizePolicy().hasHeightForWidth());
         lineEdit_4->setSizePolicy(sizePolicy1);
 
@@ -504,16 +501,16 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_6);
 
         horizontalLayout_7 = new QHBoxLayout();
-        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
+        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         label_14 = new QLabel(scrollAreaWidgetContents);
-        label_14->setObjectName(QStringLiteral("label_14"));
+        label_14->setObjectName(QString::fromUtf8("label_14"));
         sizePolicy2.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
         label_14->setSizePolicy(sizePolicy2);
 
         horizontalLayout_7->addWidget(label_14);
 
         lineEdit_5 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
+        lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
         sizePolicy1.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
         lineEdit_5->setSizePolicy(sizePolicy1);
 
@@ -523,20 +520,20 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_7);
 
         horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
         label_17 = new QLabel(scrollAreaWidgetContents);
-        label_17->setObjectName(QStringLiteral("label_17"));
+        label_17->setObjectName(QString::fromUtf8("label_17"));
         sizePolicy2.setHeightForWidth(label_17->sizePolicy().hasHeightForWidth());
         label_17->setSizePolicy(sizePolicy2);
 
         horizontalLayout_8->addWidget(label_17);
 
         doubleSpinBox_8 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_8->setObjectName(QStringLiteral("doubleSpinBox_8"));
+        doubleSpinBox_8->setObjectName(QString::fromUtf8("doubleSpinBox_8"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_8->sizePolicy().hasHeightForWidth());
         doubleSpinBox_8->setSizePolicy(sizePolicy1);
         doubleSpinBox_8->setDecimals(3);
-        doubleSpinBox_8->setMaximum(999.99);
+        doubleSpinBox_8->setMaximum(999.990000000000009);
 
         horizontalLayout_8->addWidget(doubleSpinBox_8);
 
@@ -544,20 +541,20 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_8);
 
         horizontalLayout_9 = new QHBoxLayout();
-        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        horizontalLayout_9->setObjectName(QString::fromUtf8("horizontalLayout_9"));
         label_18 = new QLabel(scrollAreaWidgetContents);
-        label_18->setObjectName(QStringLiteral("label_18"));
+        label_18->setObjectName(QString::fromUtf8("label_18"));
         sizePolicy2.setHeightForWidth(label_18->sizePolicy().hasHeightForWidth());
         label_18->setSizePolicy(sizePolicy2);
 
         horizontalLayout_9->addWidget(label_18);
 
         doubleSpinBox_9 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_9->setObjectName(QStringLiteral("doubleSpinBox_9"));
+        doubleSpinBox_9->setObjectName(QString::fromUtf8("doubleSpinBox_9"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_9->sizePolicy().hasHeightForWidth());
         doubleSpinBox_9->setSizePolicy(sizePolicy1);
         doubleSpinBox_9->setDecimals(3);
-        doubleSpinBox_9->setMaximum(999.99);
+        doubleSpinBox_9->setMaximum(999.990000000000009);
 
         horizontalLayout_9->addWidget(doubleSpinBox_9);
 
@@ -565,36 +562,36 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_9);
 
         horizontalLayout_10 = new QHBoxLayout();
-        horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
+        horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
         label_15 = new QLabel(scrollAreaWidgetContents);
-        label_15->setObjectName(QStringLiteral("label_15"));
+        label_15->setObjectName(QString::fromUtf8("label_15"));
         sizePolicy2.setHeightForWidth(label_15->sizePolicy().hasHeightForWidth());
         label_15->setSizePolicy(sizePolicy2);
 
         horizontalLayout_10->addWidget(label_15);
 
         doubleSpinBox_5 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_5->setObjectName(QStringLiteral("doubleSpinBox_5"));
+        doubleSpinBox_5->setObjectName(QString::fromUtf8("doubleSpinBox_5"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_5->sizePolicy().hasHeightForWidth());
         doubleSpinBox_5->setSizePolicy(sizePolicy1);
         doubleSpinBox_5->setDecimals(3);
-        doubleSpinBox_5->setMaximum(9999.99);
+        doubleSpinBox_5->setMaximum(9999.989999999999782);
 
         horizontalLayout_10->addWidget(doubleSpinBox_5);
 
         label_21 = new QLabel(scrollAreaWidgetContents);
-        label_21->setObjectName(QStringLiteral("label_21"));
+        label_21->setObjectName(QString::fromUtf8("label_21"));
         sizePolicy2.setHeightForWidth(label_21->sizePolicy().hasHeightForWidth());
         label_21->setSizePolicy(sizePolicy2);
 
         horizontalLayout_10->addWidget(label_21);
 
         doubleSpinBox_6 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_6->setObjectName(QStringLiteral("doubleSpinBox_6"));
+        doubleSpinBox_6->setObjectName(QString::fromUtf8("doubleSpinBox_6"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_6->sizePolicy().hasHeightForWidth());
         doubleSpinBox_6->setSizePolicy(sizePolicy1);
         doubleSpinBox_6->setDecimals(3);
-        doubleSpinBox_6->setMaximum(9999.99);
+        doubleSpinBox_6->setMaximum(9999.989999999999782);
 
         horizontalLayout_10->addWidget(doubleSpinBox_6);
 
@@ -602,16 +599,16 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_10);
 
         horizontalLayout_11 = new QHBoxLayout();
-        horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
+        horizontalLayout_11->setObjectName(QString::fromUtf8("horizontalLayout_11"));
         label_16 = new QLabel(scrollAreaWidgetContents);
-        label_16->setObjectName(QStringLiteral("label_16"));
+        label_16->setObjectName(QString::fromUtf8("label_16"));
         sizePolicy2.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
         label_16->setSizePolicy(sizePolicy2);
 
         horizontalLayout_11->addWidget(label_16);
 
         doubleSpinBox_7 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_7->setObjectName(QStringLiteral("doubleSpinBox_7"));
+        doubleSpinBox_7->setObjectName(QString::fromUtf8("doubleSpinBox_7"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_7->sizePolicy().hasHeightForWidth());
         doubleSpinBox_7->setSizePolicy(sizePolicy1);
         doubleSpinBox_7->setDecimals(3);
@@ -622,20 +619,20 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_11);
 
         horizontalLayout_15 = new QHBoxLayout();
-        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
+        horizontalLayout_15->setObjectName(QString::fromUtf8("horizontalLayout_15"));
         label_11 = new QLabel(scrollAreaWidgetContents);
-        label_11->setObjectName(QStringLiteral("label_11"));
+        label_11->setObjectName(QString::fromUtf8("label_11"));
         sizePolicy2.setHeightForWidth(label_11->sizePolicy().hasHeightForWidth());
         label_11->setSizePolicy(sizePolicy2);
 
         horizontalLayout_15->addWidget(label_11);
 
         doubleSpinBox_12 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_12->setObjectName(QStringLiteral("doubleSpinBox_12"));
+        doubleSpinBox_12->setObjectName(QString::fromUtf8("doubleSpinBox_12"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_12->sizePolicy().hasHeightForWidth());
         doubleSpinBox_12->setSizePolicy(sizePolicy1);
         doubleSpinBox_12->setDecimals(3);
-        doubleSpinBox_12->setSingleStep(0.01);
+        doubleSpinBox_12->setSingleStep(0.010000000000000);
 
         horizontalLayout_15->addWidget(doubleSpinBox_12);
 
@@ -643,16 +640,16 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_15);
 
         horizontalLayout_12 = new QHBoxLayout();
-        horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
+        horizontalLayout_12->setObjectName(QString::fromUtf8("horizontalLayout_12"));
         label_19 = new QLabel(scrollAreaWidgetContents);
-        label_19->setObjectName(QStringLiteral("label_19"));
+        label_19->setObjectName(QString::fromUtf8("label_19"));
         sizePolicy2.setHeightForWidth(label_19->sizePolicy().hasHeightForWidth());
         label_19->setSizePolicy(sizePolicy2);
 
         horizontalLayout_12->addWidget(label_19);
 
         lineEdit_6 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_6->setObjectName(QStringLiteral("lineEdit_6"));
+        lineEdit_6->setObjectName(QString::fromUtf8("lineEdit_6"));
         sizePolicy1.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
         lineEdit_6->setSizePolicy(sizePolicy1);
 
@@ -662,16 +659,16 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_12);
 
         horizontalLayout_13 = new QHBoxLayout();
-        horizontalLayout_13->setObjectName(QStringLiteral("horizontalLayout_13"));
+        horizontalLayout_13->setObjectName(QString::fromUtf8("horizontalLayout_13"));
         label_20 = new QLabel(scrollAreaWidgetContents);
-        label_20->setObjectName(QStringLiteral("label_20"));
+        label_20->setObjectName(QString::fromUtf8("label_20"));
         sizePolicy2.setHeightForWidth(label_20->sizePolicy().hasHeightForWidth());
         label_20->setSizePolicy(sizePolicy2);
 
         horizontalLayout_13->addWidget(label_20);
 
         lineEdit_7 = new QLineEdit(scrollAreaWidgetContents);
-        lineEdit_7->setObjectName(QStringLiteral("lineEdit_7"));
+        lineEdit_7->setObjectName(QString::fromUtf8("lineEdit_7"));
         sizePolicy1.setHeightForWidth(lineEdit_7->sizePolicy().hasHeightForWidth());
         lineEdit_7->setSizePolicy(sizePolicy1);
 
@@ -681,13 +678,13 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_13);
 
         horizontalLayout_14 = new QHBoxLayout();
-        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
+        horizontalLayout_14->setObjectName(QString::fromUtf8("horizontalLayout_14"));
         horizontalSpacer_5 = new QSpacerItem(88, 17, QSizePolicy::Preferred, QSizePolicy::Minimum);
 
         horizontalLayout_14->addItem(horizontalSpacer_5);
 
         pushButton_4 = new QPushButton(scrollAreaWidgetContents);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
         sizePolicy1.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
         pushButton_4->setSizePolicy(sizePolicy1);
 
@@ -697,16 +694,16 @@ public:
         verticalLayout_3->addLayout(horizontalLayout_14);
 
         horizontalLayout_17 = new QHBoxLayout();
-        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
+        horizontalLayout_17->setObjectName(QString::fromUtf8("horizontalLayout_17"));
         checkBox_7 = new QCheckBox(scrollAreaWidgetContents);
-        checkBox_7->setObjectName(QStringLiteral("checkBox_7"));
+        checkBox_7->setObjectName(QString::fromUtf8("checkBox_7"));
         sizePolicy1.setHeightForWidth(checkBox_7->sizePolicy().hasHeightForWidth());
         checkBox_7->setSizePolicy(sizePolicy1);
 
         horizontalLayout_17->addWidget(checkBox_7);
 
         doubleSpinBox_17 = new QDoubleSpinBox(scrollAreaWidgetContents);
-        doubleSpinBox_17->setObjectName(QStringLiteral("doubleSpinBox_17"));
+        doubleSpinBox_17->setObjectName(QString::fromUtf8("doubleSpinBox_17"));
         sizePolicy1.setHeightForWidth(doubleSpinBox_17->sizePolicy().hasHeightForWidth());
         doubleSpinBox_17->setSizePolicy(sizePolicy1);
         doubleSpinBox_17->setDecimals(3);
@@ -740,39 +737,39 @@ public:
 
     void retranslateUi(QDialog *Template)
     {
-        Template->setWindowTitle(QApplication::translate("Template", "Dialog", Q_NULLPTR));
-        label_3->setText(QApplication::translate("Template", "x1:", Q_NULLPTR));
-        label_4->setText(QApplication::translate("Template", "x2:", Q_NULLPTR));
-        label_5->setText(QApplication::translate("Template", "y1:", Q_NULLPTR));
-        label_6->setText(QApplication::translate("Template", "y2:", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("Template", "find values", Q_NULLPTR));
-        pushButton_3->setText(QApplication::translate("Template", "Plot", Q_NULLPTR));
-        label_2->setText(QApplication::translate("Template", "work path", Q_NULLPTR));
-        label_7->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#0f22e5;\">File 1:</span></p></body></html>", Q_NULLPTR));
-        label_9->setText(QApplication::translate("Template", "RV:", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("Template", "log(x)", Q_NULLPTR));
-        checkBox_4->setText(QApplication::translate("Template", "y +", Q_NULLPTR));
-        label_8->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#ea1010;\">File 2:</span></p></body></html>", Q_NULLPTR));
-        label_10->setText(QApplication::translate("Template", "RV:", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("Template", "log(x)", Q_NULLPTR));
-        checkBox_5->setText(QApplication::translate("Template", "y +", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("Template", "Close", Q_NULLPTR));
-        label_12->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600;\">File 3:</span></p></body></html>", Q_NULLPTR));
-        label_22->setText(QApplication::translate("Template", "Offset", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("Template", "log(x)", Q_NULLPTR));
-        checkBox_6->setText(QApplication::translate("Template", "y +", Q_NULLPTR));
-        label_13->setText(QApplication::translate("Template", "Line list comp A:", Q_NULLPTR));
-        label_14->setText(QApplication::translate("Template", "Line list comp B:", Q_NULLPTR));
-        label_17->setText(QApplication::translate("Template", "V*sin(i) [km/s] comp A:", Q_NULLPTR));
-        label_18->setText(QApplication::translate("Template", "V*sin(i)[km/s] comp B:", Q_NULLPTR));
-        label_15->setText(QApplication::translate("Template", "Wavelength range [A]:", Q_NULLPTR));
-        label_21->setText(QApplication::translate("Template", "to", Q_NULLPTR));
-        label_16->setText(QApplication::translate("Template", "Sampling [A/pix]:", Q_NULLPTR));
-        label_11->setText(QApplication::translate("Template", "Gaussian noise:", Q_NULLPTR));
-        label_19->setText(QApplication::translate("Template", "Template A:", Q_NULLPTR));
-        label_20->setText(QApplication::translate("Template", "Template B:", Q_NULLPTR));
-        pushButton_4->setText(QApplication::translate("Template", "Do It", Q_NULLPTR));
-        checkBox_7->setText(QApplication::translate("Template", "Sum *", Q_NULLPTR));
+        Template->setWindowTitle(QApplication::translate("Template", "Dialog", nullptr));
+        label_3->setText(QApplication::translate("Template", "x1:", nullptr));
+        label_4->setText(QApplication::translate("Template", "x2:", nullptr));
+        label_5->setText(QApplication::translate("Template", "y1:", nullptr));
+        label_6->setText(QApplication::translate("Template", "y2:", nullptr));
+        pushButton_2->setText(QApplication::translate("Template", "find values", nullptr));
+        pushButton_3->setText(QApplication::translate("Template", "Plot", nullptr));
+        label_2->setText(QApplication::translate("Template", "work path", nullptr));
+        label_7->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#0f22e5;\">File 1:</span></p></body></html>", nullptr));
+        label_9->setText(QApplication::translate("Template", "RV:", nullptr));
+        checkBox->setText(QApplication::translate("Template", "log(x)", nullptr));
+        checkBox_4->setText(QApplication::translate("Template", "y +", nullptr));
+        label_8->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#ea1010;\">File 2:</span></p></body></html>", nullptr));
+        label_10->setText(QApplication::translate("Template", "RV:", nullptr));
+        checkBox_2->setText(QApplication::translate("Template", "log(x)", nullptr));
+        checkBox_5->setText(QApplication::translate("Template", "y +", nullptr));
+        pushButton->setText(QApplication::translate("Template", "Close", nullptr));
+        label_12->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600;\">File 3:</span></p></body></html>", nullptr));
+        label_22->setText(QApplication::translate("Template", "Offset", nullptr));
+        checkBox_3->setText(QApplication::translate("Template", "log(x)", nullptr));
+        checkBox_6->setText(QApplication::translate("Template", "y +", nullptr));
+        label_13->setText(QApplication::translate("Template", "Line list comp A:", nullptr));
+        label_14->setText(QApplication::translate("Template", "Line list comp B:", nullptr));
+        label_17->setText(QApplication::translate("Template", "V*sin(i) [km/s] comp A:", nullptr));
+        label_18->setText(QApplication::translate("Template", "V*sin(i)[km/s] comp B:", nullptr));
+        label_15->setText(QApplication::translate("Template", "Wavelength range [A]:", nullptr));
+        label_21->setText(QApplication::translate("Template", "to", nullptr));
+        label_16->setText(QApplication::translate("Template", "Sampling [A/pix]:", nullptr));
+        label_11->setText(QApplication::translate("Template", "Gaussian noise:", nullptr));
+        label_19->setText(QApplication::translate("Template", "Template A:", nullptr));
+        label_20->setText(QApplication::translate("Template", "Template B:", nullptr));
+        pushButton_4->setText(QApplication::translate("Template", "Do It", nullptr));
+        checkBox_7->setText(QApplication::translate("Template", "Sum *", nullptr));
     } // retranslateUi
 
 };

@@ -44,6 +44,10 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void on_checkBox_2_clicked();
+
+    void on_checkBox_3_clicked();
+
 public slots:
     void seData(QString str, QString str2, QString str3);
 

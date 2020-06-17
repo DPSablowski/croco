@@ -30,6 +30,7 @@
 #include <omp.h>
 #include <algorithm>
 #include <spline.h>
+//tests
 
 //running man icon from: https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/running_man.png
 
@@ -78,6 +79,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_10->setText("tempmA.txt");
     ui->lineEdit_11->setText("tempmB.txt");
     ui->lineEdit_14->setText("ccf_0_");
+    ui->lineEdit_17->setText("ThAr.fit");
+    ui->lineEdit_22->setText("EXPTIME");
+    ui->lineEdit_23->setText("32");
     ui->lineEdit_26->setText("subA_2_");
     increment=ui->doubleSpinBox_12->value();
 
@@ -102,6 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->checkBox_10->setChecked(true);
     ui->checkBox_24->setChecked(true);
     ui->checkBox_27->setChecked(true);
+    ui->checkBox_29->setChecked(true);
 
     ui->plainTextEdit->setStyleSheet("QPlainTextEdit{background: transparent;}");
 
@@ -238,7 +243,9 @@ void MainWindow::on_spinBox_3_valueChanged()
     vshift=ui->spinBox_3->value();
 }
 
+//***************************
 // read data
+//***************************
 void MainWindow::ReadMeasured(int gg){
 
     QString fext = ui->lineEdit_21->text();
@@ -840,11 +847,13 @@ void MainWindow::on_pushButton_clicked()
                     if(measw[e]==resamw[i]){
                         resami[i]=measi[e];
                         aa=e;
+                        e=bini;
                     }
                     else{
                         if((measw[e]<resamw[i])&(measw[e+1]>resamw[i])){
                             resami[i]=measi[e]+(resamw[i]-measw[e])/(measw[e+1]-measw[e])*(measi[e+1]-measi[e]);
                             aa=e;
+                            e=bini;
                         }
                         else{
                             //
@@ -897,6 +906,7 @@ void MainWindow::on_pushButton_clicked()
                              coefa=resamw[i];
                              sp.set_points(Xs,Ys);
                              resami[i]=sp(coefa);
+                             aa=e;
                              e=bini;
                          }
                          else{
@@ -2135,97 +2145,105 @@ void MainWindow::on_pushButton_9_clicked()
     int min=ui->spinBox_4->value();
     int max=ui->spinBox_5->value();
 
-    for (int u=min; u<=max; u++){
+        for (int u=min; u<=max; u++){
+
+        QString input=ui->lineEdit_14->text();
+        string data = input.toUtf8().constData();
+        std::ostringstream datNameStream(data);
+        datNameStream<<path<<"/"<<data<<u<<".txt";
+        std::string datName = datNameStream.str();
+
+        QFile checkfile(datName.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QString fError= QString::number(u);
+            QMessageBox::information(this, "Error 26", "Error 26: File "+qpath+"/"+input+fError+".txt does not exist!");
+            return;
+        }
+        ifstream dat(datName.c_str());
+
+        int number_of_lines =0;
 
 
-    QString input=ui->lineEdit_14->text();
-    string data = input.toUtf8().constData();
-    std::ostringstream datNameStream(data);
-    datNameStream<<path<<"/"<<data<<u<<".txt";
-    std::string datName = datNameStream.str();
-    ifstream dat(datName.c_str());
+        while(std::getline(dat, line))
+            ++number_of_lines;
 
+        dat.clear();
+        dat.seekg(0, ios::beg);
 
-    QFile checkfile(datName.c_str());
+        QVector<double> a(number_of_lines), b(number_of_lines);
 
-    if(!checkfile.exists()){
-        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-        QString fError= QString::number(u);
-        QMessageBox::information(this, "Error 26", "Error 26: File "+qpath+"/"+input+fError+".txt does not exist!");
-       return;
+        for (int i=0; i<number_of_lines; i++){
+            dat >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> a[i];
+            istringstream ist2(zwei);
+            ist2 >> b[i];
+            b[i]=b[i]+oset*(u-min);
+        }
+        dat.close();
+
+        if(u==min){
+            xc1=a[0];
+            xc2=a[number_of_lines-1];
         }
 
-    int number_of_lines =0;
-
-
-    while(std::getline(dat, line))
-       ++ number_of_lines;
-
-    dat.clear();
-    dat.seekg(0, ios::beg);
-
-    QVector<double> a(number_of_lines), b(number_of_lines);
-
-    for (int i=0; i<number_of_lines; i++){
-    dat >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[i];
-    istringstream ist2(zwei);
-    ist2 >> b[i];
-    b[i]=b[i]+oset*(u-min);
-    }
-    dat.close();
-    if(u==min){
-    xc1=a[0];
-    xc2=a[number_of_lines-1];
-    }
-
-    for(int i=0; i<number_of_lines; i++){
-        if(a[i]<xc1){
-            xc1=a[i];
+        for(int i=0; i<number_of_lines; i++){
+            if(a[i]<xc1){
+                xc1=a[i];
+            }
         }
-    }
-    for(int i=0; i<number_of_lines; i++){
-        if(a[i]>xc2){
-            xc2=a[i];
+        for(int i=0; i<number_of_lines; i++){
+            if(a[i]>xc2){
+                xc2=a[i];
+            }
         }
-    }
-    ui->doubleSpinBox_5->setValue(xc1);
-     ui->doubleSpinBox_6->setValue(xc2);
+        ui->doubleSpinBox_5->setValue(xc1);
+        ui->doubleSpinBox_6->setValue(xc2);
 
-     if(u==min){
-     yc1=b[0];
-     yc2=b[number_of_lines-1];
-     }
-    for(int i=0; i<number_of_lines; i++){
-        if(b[i]<yc1){
-            yc1=b[i];
+        if(u==min){
+            yc1=b[0];
+            yc2=b[number_of_lines-1];
         }
-    }
-    for(int i=0; i<number_of_lines; i++){
-        if(b[i]>yc2){
-            yc2=b[i];
+        for(int i=0; i<number_of_lines; i++){
+            if(b[i]<yc1){
+                yc1=b[i];
+            }
         }
-    }
+        for(int i=0; i<number_of_lines; i++){
+            if(b[i]>yc2){
+                yc2=b[i];
+            }
+        }
 
-     ui->doubleSpinBox_7->setValue(yc1);
-     ui->doubleSpinBox_8->setValue(yc2);
+        ui->doubleSpinBox_7->setValue(yc1);
+        ui->doubleSpinBox_8->setValue(yc2);
+    }
 }
-}
 
+//*************************************
+// About
+//*************************************
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::information(this, "About", "This open-source software was developed at Leibniz-Institute for Astrophysics Potsdam, Germany\n\n"
-                                            "by D. P. Sablowski\n\n"
+                                            "by Daniel P. Sablowski\n\n"
+                                            "Version 1.0 2019"
                                             "Licenced under the Apache 2.0 licence. The program is provided AS IS with NO WARRANTY OF ANY KIND.");
 }
 
+//***************************************
+// Bug Report
+//***************************************
 void MainWindow::on_actionBug_Report_triggered()
 {
     QMessageBox::information(this, "Bug Report", "Please contact: dsablowski@aip.de");
 }
 
-
+//**************************************
+// Plot
+//**************************************
 void MainWindow::on_actionPlot_triggered()
 {
 
@@ -2628,9 +2646,40 @@ void MainWindow::on_pushButton_11_clicked()
 
 }
 
-
+//******************************
+// write keyword
+//************************************
 void MainWindow::on_pushButton_12_clicked()
 {
+    QString ffits=qpath+"/"+ui->lineEdit_17->text();
+    QByteArray qfits=ffits.toLatin1();
+    char *c_qfits=qfits.data();
+
+    QString qKey=ui->lineEdit_22->text();
+    QByteArray aKey=qKey.toLatin1();
+    char *key=aKey.data();
+
+    QString qVal=ui->lineEdit_23->text();
+    QByteArray aVal=qVal.toLatin1();
+    char *val=aVal.data();
+
+    char *testf[]={c_qfits,key,val};
+    int exten=2;
+    if(ui->checkBox_29->isChecked()){
+        exten=2;
+    }
+    else{
+        exten=3;
+    }
+    MainWindow::WriteKeyWord(exten, testf);
+}
+
+//*******************************
+// Write Key Words
+//*******************************
+void MainWindow::WriteKeyWord(int argc,   char *testf[])
+{
+
     QString kword = ui->lineEdit_22->text();
 
     QString output12=ui->lineEdit_23->text();
@@ -2640,77 +2689,92 @@ void MainWindow::on_pushButton_12_clicked()
     std::string output2Name = output2NameStream.str();
     ofstream file2(output2Name.c_str());
 
-    QString fext = ui->lineEdit_21->text();
 
-    for(int i = ui->spinBox->value(); i<=ui->spinBox_8->value(); i++){
+    //for(int i = ui->spinBox->value(); i<=ui->spinBox_8->value(); i++){
 
-        QString s = QString::number(i);
-    QString output11=qpath+"/"+ui->lineEdit->text()+s+fext;
-    QByteArray qfits = output11.toLatin1();
-    char *c_qfits=qfits.data();
-
-    char *testf[]={"",c_qfits};
-    int argc=3;
-    cout<<c_qfits<<"\t"<<testf<<endl;
+      //  QString s = QString::number(i);
+      //  QString output11=qpath+"/"+ui->lineEdit->text()+s+fext;
+      //  QByteArray qfits = output11.toLatin1();
+      //  char *c_qfits=qfits.data();
 
 
-    fitsfile *fptr;         /* FITS file pointer, defined in fitsio.h */
-    char card[FLEN_CARD], newcard[FLEN_CARD];
-    char oldvalue[FLEN_VALUE], comment[FLEN_COMMENT];
-    int status = 0;   /*  CFITSIO status value MUST be initialized to zero!  */
-    int iomode=READONLY, keytype;
+        fitsfile *fptr;         // FITS file pointer, defined in fitsio.h
+        char card[FLEN_CARD], newcard[FLEN_CARD];
+        char oldvalue[FLEN_VALUE], comment[FLEN_COMMENT];
+        int status = 0;   //  CFITSIO status value MUST be initialized to zero!
+        int iomode , keytype;
 
-    if (!fits_open_file(&fptr, testf[1], iomode, &status))
-    {
-      if (fits_read_card(fptr,testf[2], card, &status))
-      {
-        printf("Keyword does not exist\n");
-        card[0] = '\0';
-        comment[0] = '\0';
-        status = 0;  /* reset status after error */
-      }
-      else
-        printf("%s\n",card);
+        if(argc==2){
+            iomode = READONLY;
+        }
+        else if(argc==3){
+            iomode = READWRITE;
+        }
+        else{
+            ui->plainTextEdit->clear();
+            ui->plainTextEdit->appendPlainText("Usage: modhead filename[ext] keyword newvalue\n"
+                                                   "\n"
+                                                   "If newvalue is not specified, just printing current value\n"
+                                                   "\n"
+                                                   "Examples: \n"
+                                                   "   modhead file.fits dec   - list the DEC keyword \n"
+                                                   "   modhead file.fits dec   - set DEC to 30 \n");
 
-      if (argc == 4)  /* write or overwrite the keyword */
-      {
-          /* check if this is a protected keyword that must not be changed */
-          if (*card && fits_get_keyclass(card) == TYP_STRUC_KEY)
+           return;
+        }
+        ui->plainTextEdit->clear();
+
+        if(!fits_open_file(&fptr, testf[0], iomode, &status))
+            {
+            if (fits_read_card(fptr,testf[1], card, &status))
+                {
+                ui->plainTextEdit->appendPlainText("Keyword does not exist\n");
+                card[0] = '\0';
+                comment[0] = '\0';
+                status = 0;  // reset status after error
+            }
+            else
+                 ui->plainTextEdit->appendPlainText(QString::fromStdString(string(card))+"\n");
+
+            if (argc == 3)  // write or overwrite the keyword
+            {
+            // check if this is a protected keyword that must not be changed
+            if (*card && fits_get_keyclass(card) == TYP_STRUC_KEY)
+            {
+                ui->plainTextEdit->appendPlainText("Protected keyword cannot be modified.\n");
+                }
+              else
           {
-            printf("Protected keyword cannot be modified.\n");
-          }
-          else
-          {
-            /* get the comment string */
+            // get the comment string
             if (*card)fits_parse_value(card, oldvalue, comment, &status);
 
-            /* construct template for new keyword */
-            strcpy(newcard, testf[2]);     /* copy keyword name */
-            strcat(newcard, " = ");       /* '=' value delimiter */
-            strcat(newcard, testf[3]);     /* new value */
+            // construct template for new keyword
+            strcpy(newcard, testf[1]);     // copy keyword name
+            strcat(newcard, " = ");       // '=' value delimiter
+            strcat(newcard, testf[2]);     // new value
             if (*comment) {
-              strcat(newcard, " / ");  /* comment delimiter */
-              strcat(newcard, comment);     /* append the comment */
+              strcat(newcard, " / ");  // comment delimiter
+              strcat(newcard, comment);     // append the comment
             }
 
-            /* reformat the keyword string to conform to FITS rules */
+            // reformat the keyword string to conform to FITS rules
             fits_parse_template(newcard, card, &keytype, &status);
 
-            /* overwrite the keyword with the new value */
-            fits_update_card(fptr, testf[2], card, &status);
+            // overwrite the keyword with the new value
+            fits_update_card(fptr, testf[1], card, &status);
 
-            printf("Keyword has been changed to:\n");
-            printf("%s\n",card);
+            ui->plainTextEdit->appendPlainText("Keyword has been changed to:\n");
+            ui->plainTextEdit->appendPlainText(QString::fromStdString(string(card))+"\n");
           }
-      }  /* if argc == 4 */
+      }  // if argc == 3
       fits_close_file(fptr, &status);
-    }    /* open_file */
+    }    // open_file
 
-    /* if error occured, print out error message */
+    // if error occured, print out error message
     if (status) fits_report_error(stderr, status);
     return;
 
-    }
+   // }
 }
 
 void MainWindow::on_actionBlaze_Correction_triggered()
@@ -3536,4 +3600,11 @@ void MainWindow::on_pushButton_16_clicked()
         sub1.close();
     }
     this->setCursor(QCursor(Qt::ArrowCursor));
+}
+
+void MainWindow::on_actionLine_List_Tool_triggered()
+{
+    qvald3 =new VALD3(this);
+    qvald3->seData(ui->lineEdit_15->text());
+    qvald3->show();
 }

@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <CCfits/CCfits>
+#include <spline.h>
 
 using namespace std;
 namespace fit=CCfits;
@@ -62,6 +63,9 @@ PlotSequ::PlotSequ(QWidget *parent) :
 
     ui->lineEdit_11->setText("103_1_cor_1.txt");
     ui->lineEdit_12->setText("103_1_cor_2.txt");
+
+    ui->lineEdit_17->setText("250");
+    ui->lineEdit_18->setText("500");
 
     connect(ui->customPlot, SIGNAL(mouseMove(QMouseEvent*)), this ,SLOT(showPointToolTip(QMouseEvent*)));
 
@@ -151,7 +155,7 @@ void PlotSequ::on_pushButton_3_clicked()
     istringstream ist(eins);
     ist >> a[i];
     if(ui->checkBox_15->isChecked()){
-        a[i]=log(a[i]);
+        a[i]=log10(a[i]);
     }
     else{
         if(ui->checkBox_16->isChecked()){
@@ -229,7 +233,7 @@ void PlotSequ::on_pushButton_3_clicked()
                   b[i]=seintens[i]+offset*(u-min);
                   a[i]=sewave[i];
                   if(ui->checkBox_15->isChecked()){
-                      a[i]=log(a[i]);
+                      a[i]=log10(a[i]);
                   }
                   else{
                       if(ui->checkBox_16->isChecked()){
@@ -354,7 +358,7 @@ void PlotSequ::on_pushButton_2_clicked()
                 istringstream ist(eins);
                 ist >> a[i];
                 if(ui->checkBox_15->isChecked()){
-                    a[i]=log(a[i]);
+                    a[i]=log10(a[i]);
                 }
                 else{
                     if(ui->checkBox_16->isChecked()){
@@ -427,7 +431,7 @@ void PlotSequ::on_pushButton_2_clicked()
                   b[i]=seintens[i]+offset*(u-min);
                   a[i]=sewave[i];
                   if(ui->checkBox_15->isChecked()){
-                      a[i]=log(a[i]);
+                      a[i]=log10(a[i]);
                   }
                   else{
                       if(ui->checkBox_16->isChecked()){
@@ -524,7 +528,7 @@ void PlotSequ::on_pushButton_2_clicked()
                 istringstream ist(eins);
                 ist >> a1[i];
                 if(ui->checkBox_17->isChecked()){
-                    a1[i]=log(a1[i]);
+                    a1[i]=log10(a1[i]);
                 }
                 else{
                     if(ui->checkBox_19->isChecked()){
@@ -602,7 +606,7 @@ void PlotSequ::on_pushButton_2_clicked()
             istringstream ist(eins);
             ist >> a2[i];
             if(ui->checkBox_18->isChecked()){
-                a2[i]=log(a2[i]);
+                a2[i]=log10(a2[i]);
             }
             else{
                 if(ui->checkBox_20->isChecked()){
@@ -680,7 +684,7 @@ void PlotSequ::on_pushButton_2_clicked()
         istringstream ist(eins);
         ist >> a1[i];
         if(ui->checkBox_17->isChecked()){
-            a1[i]=log(a1[i]);
+            a1[i]=log10(a1[i]);
         }
         else{
             if(ui->checkBox_19->isChecked()){
@@ -757,7 +761,7 @@ void PlotSequ::on_pushButton_2_clicked()
         istringstream ist(eins);
         ist >> a2[i];
         if(ui->checkBox_18->isChecked()){
-            a2[i]=log(a2[i]);
+            a2[i]=log10(a2[i]);
         }
         else{
             if(ui->checkBox_20->isChecked()){
@@ -836,7 +840,7 @@ void PlotSequ::on_pushButton_2_clicked()
             istringstream ist(eins);
             ist >> a3[i];
             if(ui->checkBox_15->isChecked()){
-                a3[i]=log(a3[i]);
+                a3[i]=log10(a3[i]);
             }
             else{
                 if(ui->checkBox_16->isChecked()){
@@ -926,6 +930,9 @@ void PlotSequ::on_lineEdit_3_editingFinished()
 
 void PlotSequ::on_pushButton_4_clicked()
 {
+    double iwidth = ui->lineEdit_17->text().toDouble();
+    double iheight = ui->lineEdit_18->text().toDouble();
+
     if(ui->checkBox->isChecked()){
         QString sav=ui->lineEdit_4->text();
         QString save=qSeqPath+"/"+sav+".pdf";
@@ -934,12 +941,12 @@ void PlotSequ::on_pushButton_4_clicked()
     if(ui->checkBox_2->isChecked()){
         QString sav=ui->lineEdit_4->text();
         QString save=qSeqPath+"/"+sav+".png";
-        ui->customPlot->savePng(save);
+        ui->customPlot->savePng(save, iwidth, iheight);
     }
     if(ui->checkBox_3->isChecked()){
         QString sav=ui->lineEdit_4->text();
         QString save=qSeqPath+"/"+sav+".jpg";
-        ui->customPlot->saveJpg(save);
+        ui->customPlot->saveJpg(save, iwidth, iheight);
     }
 }
 
@@ -1033,33 +1040,33 @@ void PlotSequ::on_pushButton_5_clicked()
         dat.seekg(0, ios::beg);
 
         if(u==min){
-        aad.resize(number_of_lines);
+            aad.resize(number_of_lines);
         }
         else a2d.resize(number_of_lines);
-        bad.resize(number_of_lines);
-        b2d.resize(number_of_lines);
+            bad.resize(number_of_lines);
+            b2d.resize(number_of_lines);
 
         if(u==min){
-        for (int i=0; i<number_of_lines; i++){
-        dat >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> aad[i];
-        istringstream ist2(zwei);
-        ist2 >> bad[i];
-        }
+            for (int i=0; i<number_of_lines; i++){
+                dat >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> aad[i];
+                istringstream ist2(zwei);
+                ist2 >> bad[i];
+            }
         dat.close();
         }
 
         else {
             for (int i=0; i<number_of_lines; i++){
-            dat >> eins >>zwei;
-            istringstream ist(eins);
-            ist >> a2d[i];
-            istringstream ist2(zwei);
-            ist2 >> b2d[i];
+                dat >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> a2d[i];
+                istringstream ist2(zwei);
+                ist2 >> b2d[i];
             }
             dat.close();
-            }
+        }
         int aa=0;
 
         for(int i = 0; i<number_of_lines-1; i++){
@@ -1075,8 +1082,6 @@ void PlotSequ::on_pushButton_5_clicked()
                     aa=e;
                 }
             }
-
-
         }
 
 
@@ -1262,13 +1267,12 @@ void PlotSequ::CoAverage()
             QString fError= QString::number(u);
             QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
             this->setCursor(QCursor(Qt::ArrowCursor));
-           return;
-            }
+            return;
+        }
 
         ifstream dat(datName.c_str());
 
         number_of_lines =0;
-
 
         while(std::getline(dat, line))
            ++ number_of_lines;
@@ -1284,13 +1288,13 @@ void PlotSequ::CoAverage()
         b2d.resize(number_of_lines);
 
         if(u==min){
-        for (int i=0; i<number_of_lines; i++){
-            dat >> eins >>zwei;
-            istringstream ist(eins);
-            ist >> aad[i];
-            istringstream ist2(zwei);
-            ist2 >> bad[i];
-        }
+            for (int i=0; i<number_of_lines; i++){
+                dat >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> aad[i];
+                istringstream ist2(zwei);
+                ist2 >> bad[i];
+            }
         dat.close();
         }
 
@@ -1308,16 +1312,16 @@ void PlotSequ::CoAverage()
 
             for(int i = 0; i<number_of_lines-1; i++){
 
-                for(int e=aa-5; e<aa+5; e++){
+                for(int e=0; e<number_of_lines; e++){
 
                     if(a2d[e]==aad[i]){
                         bad[i]+=b2d[e];
-                        aa=e;
+                        e=number_of_lines;
                     }
 
-                    if((a2d[e]<aad[i])&(a2d[e+1]>aad[i])){
+                    if((a2d[e]<aad[i])&(a2d[e+1]>=aad[i])){
                         bad[i]+=b2d[e]+(aad[i]-a2d[e])/(a2d[e+1]-a2d[e])*(b2d[e+1]-b2d[e]);
-                        aa=e;
+                        e=number_of_lines;
                     }
                 }
             }
@@ -1362,7 +1366,7 @@ void PlotSequ::CoAverage()
         ofstream out(datName.c_str());
 
         for(int i =0; i <b2d.size(); i++){
-            out<<aad[i]<<" "<<bad[i]/(max-min+1)<<endl;
+                out<<aad[i]<<" "<<bad[i]/(max-min+1)<<endl;
         }
 
         this->setCursor(QCursor(Qt::ArrowCursor));
@@ -2400,12 +2404,16 @@ void PlotSequ::on_pushButton_9_clicked()
 
     double loww = ui->doubleSpinBox->value();
     double hiw = ui->doubleSpinBox_2->value();
+    double plus = ui->doubleSpinBox_13->value();
 
     QString qext=ui->lineEdit_9->text();
     string sext = qext.toUtf8().constData();
 
     QVector<double> aad(1), bad(1);
-
+    vector<pair<double, double>> xy(4);
+    vector<double> xs(4), ys(4);
+    tk::spline s;
+    int splinerror=0;
 
     for (int u=min; u<=max; u++){
 
@@ -2555,26 +2563,168 @@ void PlotSequ::on_pushButton_9_clicked()
 
         double lowI2 = bad[minI];
         double higI2 = bad[minI];
+        double m=0, b=0, xx;
 
-        for(int i=0;i < number_of_lines-1; i++){
-            if(loww2>cmw-ui->doubleSpinBox_14->value()){        // lowI2<=0.45
-            lowI2 = bad[minI-i];
-            loww2 = aad[minI-i];
-            while (higI2<lowI2){
-                ++count;
-                higI2 = bad[minI+count];
 
-            }
-            hiw2=aad[minI+count]+((lowI2-higI2)/(bad[minI+count+1]-higI2))*(aad[minI+count+1]-aad[minI+count]);
-            count = 0;
-            cout<<cmw<<"\t"<<hiw2<<"\t"<<loww2<<endl;
-            out<<(hiw2+loww2)/2-cmw<<"\t"<<lowI2<<endl;
+        for(int i=0; i<number_of_lines; i++){
+            if(aad[minI-i]>=cmw-plus){
+
+                if(i==0){
+                    out<<setprecision(8)<<cmw<<"\t"<<cmw-cmw<<"\t0\t"<<cmw<<"\t"<<cmw-cmw<<"\t0\t"<<lowI2<<endl;
+                }
+                else{
+                    loww2=aad[minI-i];
+                    lowI2=bad[minI-i];
+                    for(int e=0; e<number_of_lines; e++){
+                        if((bad[minI+e]<=lowI2) & (bad[minI+e+1]>lowI2)){
+                            m=(bad[minI+e+1]-bad[minI+e])/(aad[minI+e+1]-aad[minI+e]);
+                            b=bad[minI+e]-m*aad[minI+e];
+                            xx=(lowI2-b)/m;
+                            out<<(xx+aad[minI-i])/2<<"\t"<<(xx+aad[minI-i])/2-cmw<<"\t"<<((xx+aad[minI-i])/2-cmw)/cmw*c0<<"\t";
+                            xy[0].first=bad[minI+e-1];
+                            xy[1].first=bad[minI+e];
+                            xy[2].first=bad[minI+e+1];
+                            xy[3].first=bad[minI+e+2];
+
+                            xy[0].second=aad[minI+e-1];
+                            xy[1].second=aad[minI+e];
+                            xy[2].second=aad[minI+e+1];
+                            xy[3].second=aad[minI+e+2];
+
+                            cout<<xy[0].first<<"\t"<<xy[0].second<<endl;
+                            cout<<xy[1].first<<"\t"<<xy[1].second<<endl;
+                            cout<<xy[2].first<<"\t"<<xy[2].second<<endl;
+                            cout<<xy[3].first<<"\t"<<xy[3].second<<endl;
+
+                            sort(xy.begin(), xy.end());
+                            cout<<endl;
+
+                            cout<<xy[0].first<<"\t"<<xy[0].second<<endl;
+                            cout<<xy[1].first<<"\t"<<xy[1].second<<endl;
+                            cout<<xy[2].first<<"\t"<<xy[2].second<<endl;
+                            cout<<xy[3].first<<"\t"<<xy[3].second<<endl;
+
+                            xs[0]=xy[0].first;
+                            xs[1]=xy[1].first;
+                            xs[2]=xy[2].first;
+                            xs[3]=xy[3].first;
+
+                            ys[0]=xy[0].second;
+                            ys[1]=xy[1].second;
+                            ys[2]=xy[2].second;
+                            ys[3]=xy[3].second;
+
+                            if((xs[0]==xs[1]) or (xs[0]==xs[2]) or (xs[0]==xs[3]) or (xs[1]==xs[2]) or (xs[1]==xs[3]) or (xs[3]==xs[2])){
+                                out<<"Nan\tNan\tNan\t"<<lowI2<<endl;
+                                splinerror=1;
+                            }
+                            else{
+                                s.set_points(xs,ys);
+                                xx=s(lowI2);
+                                out<<(xx+aad[minI-i])/2<<"\t"<<(xx+aad[minI-i])/2-cmw<<"\t"<<((xx+aad[minI-i])/2-cmw)/cmw*c0<<"\t"<<lowI2<<endl;
+                            }
+
+                            e=number_of_lines;
+                        }
+                        else{
+                            //
+                        }
+                    }
+                }
 
             }
             else{
-                i = number_of_lines;
+                if(aad[minI-i]<cmw-plus){
+                    i=number_of_lines;
+                }
+                else{
+                    //
+                }
             }
         }
+
+        out<<endl;
+
+        loww2=cmw;
+        lowI2=bad[minI];
+
+        for(int i=0; i<number_of_lines; i++){
+            if(aad[minI+i]<=cmw+plus){
+
+                if(i==0){
+                    out<<setprecision(8)<<cmw<<"\t"<<cmw-cmw<<"\t0\t"<<cmw<<"\t"<<cmw-cmw<<"\t0\t"<<lowI2<<endl;
+                }
+                else{
+                    loww2=aad[minI+i];
+                    lowI2=bad[minI+i];
+                    for(int e=0; e<number_of_lines; e++){
+                        if((bad[minI-e]>=lowI2) & (bad[minI-e+1]<lowI2)){
+                            m=(bad[minI-e+1]-bad[minI-e])/(aad[minI-e+1]-aad[minI-e]);
+                            b=bad[minI-e]-m*aad[minI-e];
+                            xx=(lowI2-b)/m;
+                            out<<(xx+aad[minI+i])/2<<"\t"<<(xx+aad[minI+i])/2-cmw<<"\t"<<((xx+aad[minI+i])/2-cmw)/cmw*c0<<"\t";
+                            xy[0].first=bad[minI-e-1];
+                            xy[1].first=bad[minI-e];
+                            xy[2].first=bad[minI-e+1];
+                            xy[3].first=bad[minI-e+2];
+
+                            xy[0].second=aad[minI-e-1];
+                            xy[1].second=aad[minI-e];
+                            xy[2].second=aad[minI-e+1];
+                            xy[3].second=aad[minI-e+2];
+
+                            cout<<xy[0].first<<"\t"<<xy[0].second<<endl;
+                            cout<<xy[1].first<<"\t"<<xy[1].second<<endl;
+                            cout<<xy[2].first<<"\t"<<xy[2].second<<endl;
+                            cout<<xy[3].first<<"\t"<<xy[3].second<<endl;
+
+                            sort(xy.begin(), xy.end());
+                            cout<<endl;
+
+                            cout<<xy[0].first<<"\t"<<xy[0].second<<endl;
+                            cout<<xy[1].first<<"\t"<<xy[1].second<<endl;
+                            cout<<xy[2].first<<"\t"<<xy[2].second<<endl;
+                            cout<<xy[3].first<<"\t"<<xy[3].second<<endl;
+
+                            xs[0]=xy[0].first;
+                            xs[1]=xy[1].first;
+                            xs[2]=xy[2].first;
+                            xs[3]=xy[3].first;
+
+                            ys[0]=xy[0].second;
+                            ys[1]=xy[1].second;
+                            ys[2]=xy[2].second;
+                            ys[3]=xy[3].second;
+
+                            if((xs[0]==xs[1]) or (xs[0]==xs[2]) or (xs[0]==xs[3]) or (xs[1]==xs[2]) or (xs[1]==xs[3]) or (xs[3]==xs[2])){
+                                out<<"Nan\tNan\tNan\t"<<lowI2<<endl;
+                                splinerror=1;
+                            }
+                            else{
+                                s.set_points(xs,ys);
+                                xx=s(lowI2);
+                                out<<(xx+aad[minI+i])/2<<"\t"<<(xx+aad[minI+i])/2-cmw<<"\t"<<((xx+aad[minI+i])/2-cmw)/cmw*c0<<"\t"<<lowI2<<endl;
+                            }
+
+                            e=number_of_lines;
+                        }
+                        else{
+                            //
+                        }
+                    }
+                }
+
+            }
+            else{
+                if(aad[minI-i]<cmw-plus){
+                    i=number_of_lines;
+                }
+                else{
+                    //
+                }
+            }
+        }
+
         out.close();
     }
     if(ui->checkBox_4->isChecked() or ui->checkBox_10->isChecked()){
@@ -2811,6 +2961,10 @@ void PlotSequ::on_pushButton_9_clicked()
             }
         }
         out.close();
+    }
+
+    if(splinerror==1){
+        QMessageBox::information(this, "Warnin", "Spline interpolation failed at least at one point. May use the linear interpolated points.");
     }
 
     this->setCursor(QCursor(Qt::ArrowCursor));

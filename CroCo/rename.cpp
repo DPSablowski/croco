@@ -42,6 +42,7 @@ Rename::Rename(QWidget *parent) :
     ui->doubleSpinBox_4->setValue(1.5);
 
     ui->checkBox_2->setChecked(true);
+    ui->checkBox_3->setChecked(true);
 
     ui->customPlot->axisRect()->setupFullAxesBox(true);
 }
@@ -217,11 +218,11 @@ void Rename::on_spinBox_5_valueChanged()
     qtoplot= ui->tableWidget->item(i, 0);
     QString qplot = qtoplot->text();
     ui->lineEdit_8->setText(qplot);
+
     string toplot = qplot.toUtf8().constData();
     ostringstream dat4NameStream(toplot);
     dat4NameStream<<rPath<<"/"<<toplot;
     std::string dat4Name = dat4NameStream.str();
-    ifstream plot(dat4Name.c_str());
 
     QFile checkfile(dat4Name.c_str());
 
@@ -231,6 +232,7 @@ void Rename::on_spinBox_5_valueChanged()
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
+    ifstream plot(dat4Name.c_str());
 
     if(ui->comboBox->currentIndex()==0){
 
@@ -372,4 +374,183 @@ void Rename::on_pushButton_4_clicked()
 
         }
     }
+}
+
+void Rename::on_checkBox_3_clicked()
+{
+    if(ui->checkBox_3->isChecked()){
+        ui->checkBox_4->setChecked(false);
+    }
+    else{
+        ui->checkBox_4->setChecked(true);
+    }
+}
+
+void Rename::on_checkBox_4_clicked()
+{
+    if(ui->checkBox_4->isChecked()){
+        ui->checkBox_3->setChecked(false);
+    }
+    else{
+        ui->checkBox_3->setChecked(true);
+    }
+}
+
+//*************************************
+// combine sequence
+//*************************************
+void Rename::on_pushButton_5_clicked()
+{
+    QString direc=ui->lineEdit->text();
+
+    QString qs1 = ui->lineEdit_11->text();
+    QString qe1 = ui->lineEdit_13->text();
+
+    QString qs2 = ui->lineEdit_12->text();
+    QString qe2 = ui->lineEdit_14->text();
+
+    QString qs = ui->lineEdit_15->text();
+    QString qe = ui->lineEdit_16->text();
+
+    QString snum, qiA, qiB, qo;
+
+    int smin = ui->spinBox_9->value();
+    int smax = ui->spinBox_10->value();
+
+        for(int i =smin; i<smax+1; i++){
+
+            snum = QString::number(i);
+            qiA = direc+"/"+qs1+snum+"."+qe1;
+            string iA = qiA.toUtf8().constData();
+            ostringstream dat1NameStream(iA);
+            dat1NameStream<<iA;
+            std::string dat1Name = dat1NameStream.str();
+
+            QFile checkfile(dat1Name.c_str());
+
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "File "+checkfile.fileName()+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+               return;
+            }
+            ifstream inA(dat1Name.c_str());
+
+            qiB = direc+"/"+qs2+snum+"."+qe2;
+            string iB = qiB.toUtf8().constData();
+            ostringstream dat2NameStream(iB);
+            dat2NameStream<<iB;
+            std::string dat2Name = dat2NameStream.str();
+
+            QFile checkfile2(dat2Name.c_str());
+
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "File "+checkfile2.fileName()+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+               return;
+            }
+            ifstream inB(dat2Name.c_str());
+
+            string one, two, three, zeile;
+
+            int nlinesA=0;
+            int nlinesB=0;
+
+            while(std::getline(inA, zeile))
+               ++ nlinesA;
+
+            inA.clear();
+            inA.seekg(0, ios::beg);
+
+            while(std::getline(inB, zeile))
+               ++ nlinesB;
+
+            inB.clear();
+            inB.seekg(0, ios::beg);
+
+            QVector<double> Aa(nlinesA), Ab(nlinesA), Ac(nlinesA);
+            QVector<double> Ba(nlinesB), Bb(nlinesB), Bc(nlinesB);
+
+
+            // two colmns
+            if(ui->checkBox_3->isChecked()){
+
+                for (int e=0; e<nlinesA; e++){
+                    inA >> one >>two;
+                    istringstream ist(one);
+                    ist >> Aa[e];
+                    istringstream ist2(two);
+                    ist2 >> Ab[e];
+                }
+                inA.close();
+
+                for (int e=0; e<nlinesB; e++){
+                    inB >> one >>two;
+                    istringstream ist3(one);
+                    ist3 >> Ba[e];
+                    istringstream ist4(two);
+                    ist4 >> Bb[e];
+                }
+                inB.close();
+
+                qo = direc+"/"+qs+snum+"."+qe;
+                string out = qo.toUtf8().constData();
+                ostringstream dat3NameStream(out);
+                dat3NameStream<<out;
+                std::string dat3Name = dat3NameStream.str();
+                ofstream file(dat3Name.c_str());
+
+                for(int e=0; e<nlinesA+nlinesB; e++){
+                    if(e<nlinesA){
+                        file<<Aa[e]<<"\t"<<Ab[e]<<endl;
+                    }
+                    else{
+                        file<<Ba[e-nlinesA]<<"\t"<<Bb[e-nlinesA]<<endl;
+                    }
+                }
+                file.close();
+            }
+            // three columns
+            else{
+                for (int e=0; e<nlinesA; e++){
+                    inA >> one >>two>>three;
+                    istringstream ist(one);
+                    ist >> Aa[e];
+                    istringstream ist2(two);
+                    ist2 >> Ab[e];
+                    istringstream ist3(three);
+                    ist3 >> Ac[e];
+                }
+                inA.close();
+
+                for (int e=0; e<nlinesB; e++){
+                    inB >> one >>two>>three;
+                    istringstream ist4(one);
+                    ist4 >> Ba[e];
+                    istringstream ist5(two);
+                    ist5 >> Bb[e];
+                    istringstream ist6(three);
+                    ist6 >> Bc[e];
+                }
+                inB.close();
+
+                qo = direc+"/"+qs+snum+"."+qe;
+                string out = qo.toUtf8().constData();
+                ostringstream dat3NameStream(out);
+                dat3NameStream<<out;
+                std::string dat3Name = dat3NameStream.str();
+                ofstream file(dat3Name.c_str());
+
+                for(int e=0; e<nlinesA+nlinesB; e++){
+                    if(e<nlinesA){
+                        file<<Aa[e]<<"\t"<<Ab[e]<<"\t"<<Ac[e]<<endl;
+                    }
+                    else{
+                        file<<Ba[e-nlinesA]<<"\t"<<Bb[e-nlinesA]<<"\t"<<Bc[e-nlinesA]<<endl;
+                    }
+                }
+                file.close();
+            }
+        }
 }

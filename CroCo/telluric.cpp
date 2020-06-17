@@ -16,10 +16,11 @@ string tellPath;
 QString qTellPath;
 QString qteExtension, qteWavecol, qteIntenscol;
 string teExtension, teWavecol, teIntenscol;
-QVector<double> at(1), bt(1), ct(1), dt(1), et(1), ft(1);
-int number_of_lines, place, cindex;
+QVector<double> at(1), bt(1), ct(1), dt(1), et(1), ft(1), dt2(1), et2(1), ct2(1);
+int number_of_lines, place, cindex, number_of_tellurics, linei;
 std::valarray<double> tewave;
 std::valarray<double> teintens;
+const double c0t = 299792.458;
 
 Telluric::Telluric(QWidget *parent) :
     QDialog(parent),
@@ -27,6 +28,8 @@ Telluric::Telluric(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Telluric Tool");
+
+    ui->checkBox_2->setChecked(true);
 
     ui->doubleSpinBox->setValue(1.0);
     tintens=ui->doubleSpinBox->value();
@@ -85,7 +88,7 @@ void Telluric::seData(QString str1, QString str2, QString str3)
 
 void Telluric::tellRead(){
 
-    string zeile, one, two, three;
+    string zeile, one, two, three, four;
     QString com, com1;
 
     ui->comboBox_3->clear();
@@ -195,23 +198,28 @@ void Telluric::tellRead(){
 
     }
 
-
+    linei=0;
     QString plot2;
 
     if(ui->comboBox_2->currentIndex()==0){
         plot2 = "oxygen.dat";
+        linei=1;
     }
     if(ui->comboBox_2->currentIndex()==1){
         plot2 = "water.dat";
+        linei=2;
     }
     if(ui->comboBox_2->currentIndex()==2){
         plot2 = "telluric.dat";
+        linei=3;
     }
     if(ui->comboBox_2->currentIndex()==3){
         plot2 = "orion.dat";
+        linei=4;
     }
     if(ui->comboBox_2->currentIndex()==4){
         plot2 = "hanuschik.dat";
+        linei=5;
     }
 
     string plot12 = plot2.toUtf8().constData();
@@ -228,22 +236,26 @@ void Telluric::tellRead(){
        return;
     }
 
-    int number_of_lines2 =0;
+   int number_of_lines2 =0;
 
     while(std::getline(toplot2, zeile))
        ++ number_of_lines2;
 
     toplot2.clear();
     toplot2.seekg(0, ios::beg);
+    number_of_tellurics=number_of_lines2;
 
     ct.resize(number_of_lines2);
+    ct2.resize(number_of_lines2);
     dt.resize(number_of_lines2);
+    dt2.resize(number_of_lines2);
     et.resize(number_of_lines2);
-    double telll;
+    et2.resize(number_of_lines2);
+    double telll=0.0, HWHMair=0.0, HWHMself=0.0;
     place=0;
 
     for (int i=0; i<number_of_lines2; i++){
-        toplot2 >> one >> two >> three;
+        toplot2 >> one >> two >> three >> four;
         istringstream ist3(one);
         ist3 >> telll;
         if(ui->comboBox_2->currentIndex()==4){
@@ -252,17 +264,27 @@ void Telluric::tellRead(){
         else{
             telll = 1/telll*100000000;
         }
-        if(telll>=at[0]&telll<=at[number_of_lines-1]){
+        if(telll>=at[0] & telll<=at[number_of_lines-1]){
             ct[place]=telll;
+            ct2[place]=telll;
             istringstream ist4(two);
             ist4 >> dt[place];
             com = QString::number(ct[place]);
             com1 = QString::number(dt[place]);
             ui->comboBox_3->addItem(com+";"+com1);
+            if((linei==1) or (linei==2) or(linei==3)){
+                dt2[place]=dt[place]*pow(10,27);
+            }
+            else{
+                dt2[place]=dt[place];
+            }
             dt[place]=0;
             istringstream ist5(three);
-            ist5 >> et[place];
-            et[place]=0;
+            ist5 >> HWHMair;
+            istringstream ist6(four);
+            ist6 >> HWHMself;
+            et2[place]=sqrt(pow(HWHMair,2)+pow(HWHMself,2))*2;
+            et[place]=0.0;
             ++place;
         }
     }
@@ -274,8 +296,13 @@ void Telluric::tellRead(){
         ft[j]=0;
 
         for(int i=0; i<place; i++){
-        sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
-        ft[j]+=sas;
+            if(ui->checkBox_2->isChecked()){    // Gauss
+                sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
+            }
+            else{   // Lorentz
+                sas = dt[i]*pow(et[i],2)*ct[i]/(pow((pow(at[j],2)-pow(ct[i],2)),2)+pow(et[i],2)*pow(ct[i],2));
+            }
+            ft[j]+=sas;
         }
         ft[j]=tcont-ft[j];
 
@@ -308,13 +335,26 @@ void Telluric::tellPlot(){
 void Telluric::on_doubleSpinBox_valueChanged()
 {
     tintens=ui->doubleSpinBox->value();
-    dt[cindex]=tintens;
+    if(ui->checkBox->isChecked()){
+        for(int i=0; i<number_of_tellurics; i++){
+            dt[i]=dt2[i]*tintens;
+        }
+    }
+    else{
+        dt[cindex]=dt2[cindex]*tintens;
+    }
     for(int j=0; j<number_of_lines; j++){
         ft[j]=0;
 
         for(int i=0; i<place; i++){
-        sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
-        ft[j]+=sas;
+            if(ui->checkBox_2->isChecked()){    // Gauss
+                sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
+            }
+            else{   // Lorentz
+
+                sas = dt[i]*pow(et[i],2)*ct[i]/(pow((pow(at[j],2)-pow(ct[i],2)),2)+pow(et[i],2)*pow(ct[i],2));
+            }
+            ft[j]+=sas;
         }
         ft[j]=tcont-ft[j];
 
@@ -333,13 +373,26 @@ void Telluric::on_lineEdit_6_textChanged()
 void Telluric::on_doubleSpinBox_2_valueChanged()
 {
     twidth=ui->doubleSpinBox_2->value();
-    et[cindex]=twidth;
+    if(ui->checkBox->isChecked()){
+        for(int i=0; i<number_of_tellurics; i++){
+            et[i]=et2[i]*twidth;
+        }
+    }
+    else{
+        et[cindex]=et2[cindex]*twidth;
+    }
+
     for(int j=0; j<number_of_lines; j++){
         ft[j]=0;
 
         for(int i=0; i<place; i++){
-        sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
-        ft[j]+=sas;
+            if(ui->checkBox_2->isChecked()){    // Gauss
+                sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
+            }
+            else{   // Lorentz
+                sas = dt[i]*pow(et[i],2)*ct[i]/(pow((pow(at[j],2)-pow(ct[i],2)),2)+pow(et[i],2)*pow(ct[i],2));
+            }
+            ft[j]+=sas;
         }
         ft[j]=tcont-ft[j];
 
@@ -351,13 +404,25 @@ void Telluric::on_doubleSpinBox_2_valueChanged()
 void Telluric::on_doubleSpinBox_3_valueChanged()
 {
     tshift=ui->doubleSpinBox_3->value();
+    if(ui->checkBox->isChecked()){
+        for(int i=0; i<number_of_tellurics; i++){
+            ct[i]=ct2[i]*tshift;
+        }
+    }
+    else{
+        ct[cindex]=ct2[cindex]*tshift;
+    }
     for(int j=0; j<number_of_lines; j++){
         ft[j]=0;
 
         for(int i=0; i<place; i++){
-
-        sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]*tshift-at[j]),2));
-        ft[j]+=sas;
+            if(ui->checkBox_2->isChecked()){    // Gauss
+                sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
+            }
+            else{
+                sas = dt[i]*pow(et[i],2)*ct[i]/(pow((pow(at[j],2)-pow(ct[i],2)),2)+pow(et[i],2)*pow(ct[i],2));
+            }
+            ft[j]+=sas;
         }
         ft[j]=tcont-ft[j];
 
@@ -377,8 +442,8 @@ void Telluric::on_pushButton_2_clicked()
      ui->customPlot->clearGraphs();
      ui->customPlot->addGraph();
      ui->customPlot->graph(0)->setData(at, bt);
-     ui->customPlot->xAxis->rescale();
-     ui->customPlot->yAxis->rescale();
+     //ui->customPlot->xAxis->rescale();
+     //ui->customPlot->yAxis->rescale();
      ui->customPlot->replot();
 }
 
@@ -394,19 +459,21 @@ void Telluric::on_doubleSpinBox_4_valueChanged()
 //*************************************************************
 void Telluric::on_pushButton_3_clicked()
 {
-    QString output11=ui->lineEdit_7->text();
+    QString output11=ui->lineEdit_6->text()+"/"+ui->lineEdit_7->text();
     string output1 = output11.toUtf8().constData();
     std::ostringstream output1NameStream(output1);
-    output1NameStream<<tellPath<<"/"<<output1;
+    output1NameStream<<output1;
     std::string output1Name = output1NameStream.str();
     ofstream file1(output1Name.c_str());
 
     for(int i=0; i<at.size(); i++){
-    file1<<at[i]<<" "<<bt[i]<<endl;
+        file1<<at[i]<<" "<<bt[i]<<endl;
     }
 }
 
-
+//**************************
+// find values
+//**************************
 void Telluric::on_pushButton_4_clicked()
 {
     Telluric::tellRead();
@@ -442,6 +509,9 @@ void Telluric::on_pushButton_4_clicked()
     ui->doubleSpinBox_8->setValue(ty2);
 }
 
+//******************************
+// Apply
+//******************************
 void Telluric::on_pushButton_5_clicked()
 {
         sas=0;
@@ -450,8 +520,8 @@ void Telluric::on_pushButton_5_clicked()
 
             for(int i=0; i<place; i++){
                 ct[i]=ct[i]*tshift;
-            sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
-            ft[j]+=sas;
+                sas=dt[i]*exp(-2.77254/(pow(et[i],2))*pow((ct[i]-at[j]),2));
+                ft[j]+=sas;
             }
             ft[j]=tcont-ft[j];
         }
@@ -464,6 +534,9 @@ void Telluric::on_pushButton_5_clicked()
     ui->doubleSpinBox_3->setValue(1);
 }
 
+//****************************
+// Read
+//****************************
 void Telluric::on_pushButton_6_clicked()
 {
     Telluric::tellRead();
@@ -486,6 +559,32 @@ void Telluric::on_pushButton_7_clicked()
     ofstream file1(output1Name.c_str());
 
     for(int i=0; i<place; i++){
-    file1<<ct[i]<<" "<<dt[i]<<" "<<et[i]<<endl;
+        file1<<ct[i]<<" "<<dt[i]<<" "<<et[i]<<endl;
+    }
+}
+
+//******************************
+// Gauss
+//******************************
+void Telluric::on_checkBox_2_clicked()
+{
+    if(ui->checkBox_2->isChecked()){
+        ui->checkBox_3->setChecked(false);
+    }
+    else{
+        //
+    }
+}
+
+//**********************************
+// Lorentz
+//**********************************
+void Telluric::on_checkBox_3_clicked()
+{
+    if(ui->checkBox_3->isChecked()){
+        ui->checkBox_2->setChecked(false);
+    }
+    else{
+        //
     }
 }

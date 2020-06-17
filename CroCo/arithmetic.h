@@ -54,6 +54,12 @@ private slots:
 
     void on_pushButton_7_clicked();
 
+    void on_checkBox_18_clicked();
+
+    void on_comboBox_currentIndexChanged();
+
+    void on_pushButton_8_clicked();
+
 public slots:
     void seData(QString str, QString str2, QString str3);
 

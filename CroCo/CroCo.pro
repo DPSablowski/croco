@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT += printsupport
+QT += core
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,6 +16,7 @@ QMAKE_CFLAGS_RELEASE += -fopenmp
 
 TARGET = CroCo
 TEMPLATE = app
+LIBS += -larmadillo
 LIBS += -lcfitsio
 LIBS += -lCCfits
 LIBS += -lm
@@ -40,7 +42,8 @@ SOURCES += main.cpp\
     crop.cpp \
     splinefit.cpp \
     blazecorr.cpp \
-    moments.cpp
+    moments.cpp \
+    vald3.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -59,7 +62,8 @@ HEADERS  += mainwindow.h \
     splinefit.h \
     massega.h \
     blazecorr.h \
-    moments.h
+    moments.h \
+    vald3.h
 
 FORMS    += mainwindow.ui \
     plotspec.ui \
@@ -76,7 +80,8 @@ FORMS    += mainwindow.ui \
     crop.ui \
     splinefit.ui \
     blazecorr.ui \
-    moments.ui
+    moments.ui \
+    vald3.ui
 
 RESOURCES += \
     images.qrc

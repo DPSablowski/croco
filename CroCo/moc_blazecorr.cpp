@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'blazecorr.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'blazecorr.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.8.0. It"
+#error "This file was generated using the moc from 5.12.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -54,7 +54,7 @@ QT_MOC_LITERAL(10, 162, 21) // "on_checkBox_3_clicked"
 static const uint qt_meta_data_BlazeCorr[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        8,   14, // methods
@@ -90,7 +90,7 @@ static const uint qt_meta_data_BlazeCorr[] = {
 void BlazeCorr::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        BlazeCorr *_t = static_cast<BlazeCorr *>(_o);
+        auto *_t = static_cast<BlazeCorr *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->seData((*reinterpret_cast< QString(*)>(_a[1]))); break;
@@ -106,10 +106,14 @@ void BlazeCorr::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     }
 }
 
-const QMetaObject BlazeCorr::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_BlazeCorr.data,
-      qt_meta_data_BlazeCorr,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject BlazeCorr::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_BlazeCorr.data,
+    qt_meta_data_BlazeCorr,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *BlazeCorr::metaObject() const
@@ -119,9 +123,9 @@ const QMetaObject *BlazeCorr::metaObject() const
 
 void *BlazeCorr::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_BlazeCorr.stringdata0))
-        return static_cast<void*>(const_cast< BlazeCorr*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 

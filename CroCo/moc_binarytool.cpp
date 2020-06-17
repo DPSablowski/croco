@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'binarytool.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'binarytool.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.8.0. It"
+#error "This file was generated using the moc from 5.12.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -85,7 +85,7 @@ QT_MOC_LITERAL(28, 598, 3) // "str"
 static const uint qt_meta_data_BinaryTool[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
       24,   14, // methods
@@ -153,7 +153,7 @@ static const uint qt_meta_data_BinaryTool[] = {
 void BinaryTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        BinaryTool *_t = static_cast<BinaryTool *>(_o);
+        auto *_t = static_cast<BinaryTool *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->on_doubleSpinBox_4_valueChanged(); break;
@@ -166,9 +166,9 @@ void BinaryTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 7: _t->on_pushButton_2_clicked(); break;
         case 8: _t->on_pushButton_3_clicked(); break;
         case 9: { double _r = _t->std_rand();
-            if (_a[0]) *reinterpret_cast< double*>(_a[0]) = _r; }  break;
+            if (_a[0]) *reinterpret_cast< double*>(_a[0]) = std::move(_r); }  break;
         case 10: { double _r = _t->gauss();
-            if (_a[0]) *reinterpret_cast< double*>(_a[0]) = _r; }  break;
+            if (_a[0]) *reinterpret_cast< double*>(_a[0]) = std::move(_r); }  break;
         case 11: _t->on_lineEdit_3_textChanged(); break;
         case 12: _t->on_pushButton_4_clicked(); break;
         case 13: _t->on_pushButton_5_clicked(); break;
@@ -187,10 +187,14 @@ void BinaryTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     }
 }
 
-const QMetaObject BinaryTool::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_BinaryTool.data,
-      qt_meta_data_BinaryTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject BinaryTool::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_BinaryTool.data,
+    qt_meta_data_BinaryTool,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *BinaryTool::metaObject() const
@@ -200,9 +204,9 @@ const QMetaObject *BinaryTool::metaObject() const
 
 void *BinaryTool::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_BinaryTool.stringdata0))
-        return static_cast<void*>(const_cast< BinaryTool*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 

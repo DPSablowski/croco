@@ -1704,7 +1704,6 @@ void RVCalc::on_pushButton_9_clicked()
 
 
     for(int i = 1; i<linesA; i++){
-
         in1 >> one >> two >> three;
         istringstream ist1(one);
         ist1 >> timA[i];
@@ -1712,7 +1711,6 @@ void RVCalc::on_pushButton_9_clicked()
         ist2 >>rvA[i];
         istringstream ist3(three);
         ist3 >>rvB[i];
-
     }
     in1.close();
 
