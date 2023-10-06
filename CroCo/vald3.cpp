@@ -226,7 +226,6 @@ void VALD3::on_pushButton_3_clicked()
 
     ifstream temp(dat2Name.c_str());
 
-
     valdw.resize(nlines);
     ion.resize(nlines);
     excite.resize(nlines);
@@ -296,7 +295,7 @@ void VALD3::on_pushButton_3_clicked()
             if(ui->checkBox->isChecked()){
                 if((strength[i]>=lstrength) & (strength[i]<=ustrength)){
                     if(ui->checkBox_2->isChecked()){
-                        if((valdw[i]>=lwave) & valdw[i]<=uwave){
+                        if((valdw[i]>=lwave) & (valdw[i]<=uwave)){
                             //olist<<line<<endl;
                             olist<<ion[i]<<"\t"<<valdw[i]<<"\t"<<excite[i]<<"\t"<<vmic[i]<<"\t"<<loggf[i]<<"\t"<<rad[i]<<"\t"<<stark[i]<<"\t"<<waals[i]<<"\t"<<factor[i]<<"\t"<<strength[i]<<"\t"<<rline[i]<<endl;
                             ++count;
@@ -317,7 +316,7 @@ void VALD3::on_pushButton_3_clicked()
             }
             else{
                 if(ui->checkBox_2->isChecked()){
-                    if((valdw[i]>=lwave) & valdw[i]<=uwave){
+                    if((valdw[i]>=lwave) & (valdw[i]<=uwave)){
                         //olist<<line<<endl;
                         olist<<ion[i]<<"\t"<<valdw[i]<<"\t"<<excite[i]<<"\t"<<vmic[i]<<"\t"<<loggf[i]<<"\t"<<rad[i]<<"\t"<<stark[i]<<"\t"<<waals[i]<<"\t"<<factor[i]<<"\t"<<strength[i]<<"\t"<<rline[i]<<endl;
                         ++count;

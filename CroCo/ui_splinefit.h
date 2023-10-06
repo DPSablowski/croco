@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'splinefit.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -577,39 +577,39 @@ public:
 
     void retranslateUi(QDialog *SplineFit)
     {
-        SplineFit->setWindowTitle(QApplication::translate("SplineFit", "Dialog", nullptr));
-        label_5->setText(QApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#204a87;\">File:</span></p></body></html>", nullptr));
-        label_7->setText(QApplication::translate("SplineFit", "*", nullptr));
-        label_13->setText(QApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#ef2929;\">Result:</span></p></body></html>", nullptr));
-        label_12->setText(QApplication::translate("SplineFit", "Spline File:", nullptr));
-        label_14->setText(QApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#e215da;\">Spline Points:</span></p></body></html>", nullptr));
-        pushButton_8->setText(QApplication::translate("SplineFit", "Show", nullptr));
-        checkBox_5->setText(QApplication::translate("SplineFit", "1/y", nullptr));
-        checkBox_4->setText(QApplication::translate("SplineFit", "-(y-1)", nullptr));
-        checkBox_6->setText(QApplication::translate("SplineFit", "+(y-1)", nullptr));
-        pushButton_9->setText(QApplication::translate("SplineFit", "Sort", nullptr));
-        label_6->setText(QApplication::translate("SplineFit", "Work Path:", nullptr));
-        checkBox->setText(QApplication::translate("SplineFit", "Sequence from", nullptr));
-        label_4->setText(QApplication::translate("SplineFit", "to", nullptr));
-        checkBox_3->setText(QApplication::translate("SplineFit", "adaptive; x values:", nullptr));
-        pushButton_4->setText(QApplication::translate("SplineFit", "Find y values", nullptr));
-        pushButton_5->setText(QApplication::translate("SplineFit", "Reset", nullptr));
-        checkBox_7->setText(QApplication::translate("SplineFit", "Use difference to a template", nullptr));
-        label_15->setText(QApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#4e9a06;\">Template:</span></p></body></html>", nullptr));
-        pushButton_7->setText(QApplication::translate("SplineFit", "Do", nullptr));
-        label_2->setText(QApplication::translate("SplineFit", "Sigma clipping above:", nullptr));
-        label_3->setText(QApplication::translate("SplineFit", "Sigma clipping below:", nullptr));
-        pushButton->setText(QApplication::translate("SplineFit", "Plot", nullptr));
-        pushButton_2->setText(QApplication::translate("SplineFit", "Fit", nullptr));
-        pushButton_3->setText(QApplication::translate("SplineFit", "Reset", nullptr));
-        pushButton_6->setText(QApplication::translate("SplineFit", "Clip-Fit", nullptr));
-        label_8->setText(QApplication::translate("SplineFit", "x1:", nullptr));
-        label_9->setText(QApplication::translate("SplineFit", "x2:", nullptr));
-        label_10->setText(QApplication::translate("SplineFit", "y1:", nullptr));
-        label_11->setText(QApplication::translate("SplineFit", "y2:", nullptr));
-        checkBox_2->setText(QApplication::translate("SplineFit", "Auto Scale", nullptr));
-        label->setText(QApplication::translate("SplineFit", "Cross Size:", nullptr));
-        pushButton_10->setText(QApplication::translate("SplineFit", "Clear", nullptr));
+        SplineFit->setWindowTitle(QCoreApplication::translate("SplineFit", "Dialog", nullptr));
+        label_5->setText(QCoreApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#204a87;\">File:</span></p></body></html>", nullptr));
+        label_7->setText(QCoreApplication::translate("SplineFit", "*", nullptr));
+        label_13->setText(QCoreApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#ef2929;\">Result:</span></p></body></html>", nullptr));
+        label_12->setText(QCoreApplication::translate("SplineFit", "Spline File:", nullptr));
+        label_14->setText(QCoreApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#e215da;\">Spline Points:</span></p></body></html>", nullptr));
+        pushButton_8->setText(QCoreApplication::translate("SplineFit", "Show", nullptr));
+        checkBox_5->setText(QCoreApplication::translate("SplineFit", "1/y", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("SplineFit", "-(y-1)", nullptr));
+        checkBox_6->setText(QCoreApplication::translate("SplineFit", "+(y-1)", nullptr));
+        pushButton_9->setText(QCoreApplication::translate("SplineFit", "Sort", nullptr));
+        label_6->setText(QCoreApplication::translate("SplineFit", "Work Path:", nullptr));
+        checkBox->setText(QCoreApplication::translate("SplineFit", "Sequence from", nullptr));
+        label_4->setText(QCoreApplication::translate("SplineFit", "to", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("SplineFit", "adaptive; x values:", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("SplineFit", "Find y values", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("SplineFit", "Reset", nullptr));
+        checkBox_7->setText(QCoreApplication::translate("SplineFit", "Use difference to a template", nullptr));
+        label_15->setText(QCoreApplication::translate("SplineFit", "<html><head/><body><p><span style=\" font-weight:600; color:#4e9a06;\">Template:</span></p></body></html>", nullptr));
+        pushButton_7->setText(QCoreApplication::translate("SplineFit", "Do", nullptr));
+        label_2->setText(QCoreApplication::translate("SplineFit", "Sigma clipping above:", nullptr));
+        label_3->setText(QCoreApplication::translate("SplineFit", "Sigma clipping below:", nullptr));
+        pushButton->setText(QCoreApplication::translate("SplineFit", "Plot", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("SplineFit", "Fit", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("SplineFit", "Reset", nullptr));
+        pushButton_6->setText(QCoreApplication::translate("SplineFit", "Clip-Fit", nullptr));
+        label_8->setText(QCoreApplication::translate("SplineFit", "x1:", nullptr));
+        label_9->setText(QCoreApplication::translate("SplineFit", "x2:", nullptr));
+        label_10->setText(QCoreApplication::translate("SplineFit", "y1:", nullptr));
+        label_11->setText(QCoreApplication::translate("SplineFit", "y2:", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("SplineFit", "Auto Scale", nullptr));
+        label->setText(QCoreApplication::translate("SplineFit", "Cross Size:", nullptr));
+        pushButton_10->setText(QCoreApplication::translate("SplineFit", "Clear", nullptr));
     } // retranslateUi
 
 };

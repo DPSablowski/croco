@@ -98,7 +98,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->doubleSpinBox_13->setValue(1);
     ui->doubleSpinBox_14->setValue(1);
     ui->doubleSpinBox_16->setValue(1);
-    ui->lineEdit_15->setText(QDir::currentPath());
+    ui->lineEdit_15->setText("/home/daniel/6Tri/6TriA_6300_6500");//setText(QDir::currentPath());
+    ui->lineEdit_29->setText("6TriA_6300_6400");
     qpath=ui->lineEdit_15->text();
     path = qpath.toUtf8().constData();
 
@@ -107,6 +108,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->checkBox_24->setChecked(true);
     ui->checkBox_27->setChecked(true);
     ui->checkBox_29->setChecked(true);
+
+    ui->lineEdit_10->setEnabled(false);
+    ui->lineEdit_11->setEnabled(false);
+    ui->lineEdit_2->setEnabled(false);
+    ui->lineEdit_3->setEnabled(false);
+    ui->doubleSpinBox_14->setEnabled(false);
+    ui->doubleSpinBox_16->setEnabled(false);
+    ui->checkBox_15->setEnabled(false);
+    ui->checkBox_16->setEnabled(false);
+    ui->lineEdit_24->setEnabled(false);
+    ui->lineEdit_25->setEnabled(false);
 
     ui->plainTextEdit->setStyleSheet("QPlainTextEdit{background: transparent;}");
 
@@ -148,7 +160,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_3->setStyleSheet("QLabel{background: transparent;}");
     ui->label_4->setStyleSheet("QLabel{background: transparent;}");
     ui->label_5->setStyleSheet("QLabel{background: transparent;}");
-    ui->label_6->setStyleSheet("QLabel{background: transparent;}");
     ui->label_7->setStyleSheet("QLabel{background: transparent;}");
     ui->label_8->setStyleSheet("QLabel{background: transparent;}");
     ui->label_9->setStyleSheet("QLabel{background: transparent;}");
@@ -162,7 +173,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_17->setStyleSheet("QLabel{background: transparent;}");
     ui->label_18->setStyleSheet("QLabel{background: transparent;}");
     ui->label_19->setStyleSheet("QLabel{background: transparent;}");
-    ui->label_20->setStyleSheet("QLabel{background: transparent;}");
     ui->label_21->setStyleSheet("QLabel{background: transparent;}");
     ui->label_22->setStyleSheet("QLabel{background: transparent;}");
     ui->label_23->setStyleSheet("QLabel{background: transparent;}");
@@ -177,7 +187,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_34->setStyleSheet("QLabel{background: transparent;}");
     ui->label_35->setStyleSheet("QLabel{background: transparent;}");
     ui->label_36->setStyleSheet("QLabel{background: transparent;}");
-    ui->label_37->setStyleSheet("QLabel{background: transparent;}");
     ui->label_38->setStyleSheet("QLabel{background: transparent;}");
     ui->label_39->setStyleSheet("QLabel{background: transparent;}");
     ui->label_40->setStyleSheet("QLabel{background: transparent;}");
@@ -210,10 +219,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #pragma omp parallel
     {
-    omp_set_dynamic(0);
-    ui->spinBox_10->setValue(omp_get_num_threads());
-    ui->spinBox_11->setValue(omp_get_num_threads());
-    ui->spinBox_11->setMaximum(omp_get_num_threads());
+    //omp_set_dynamic(0);
+    //ui->spinBox_10->setValue(omp_get_num_threads());
+    //ui->spinBox_11->setValue(omp_get_num_threads());
+    //ui->spinBox_11->setMaximum(omp_get_num_threads());
     }
 
 }
@@ -299,8 +308,8 @@ void MainWindow::ReadMeasured(int gg){
               measi.resize(bini);
 
               for(int i=0; i<bini; i++){
-              measi[i]=intens[i];
-              measw[i]=wave[i];
+                measi[i]=intens[i];
+                measw[i]=wave[i];
               }
 
 
@@ -421,26 +430,26 @@ void MainWindow::on_pushButton_clicked()
         }
 
 
-    //read measuremens
-    MainWindow::ReadMeasured(gg);
-    cout<<"read spectrum no. "<<gg<<endl;
+        //read measuremens
+        MainWindow::ReadMeasured(gg);
+        cout<<"read spectrum no. "<<gg<<endl;
 
-    if(check==1){
-        check=0;
-        return;
-    }
+        if(check==1){
+            check=0;
+            return;
+        }
 
-    minw[g]=measw[0];
-    maxw[g]=measw[bini-1];
+        minw[g]=measw[0];
+        maxw[g]=measw[bini-1];
 
-    //looking for smallest difference log(lambda)
-    dif[g] = log10(measw[1])-log10(measw[0]);
-    for (int i=0; i<bini-1; i++){
-    if ((abs(log10(measw[i+1])-log10(measw[i])))<abs(dif[g])){
-    dif[g] = (log10(measw[i+1])-log10(measw[i]));
-    }
+        //looking for smallest difference log(lambda)
+        dif[g] = log10(measw[1])-log10(measw[0]);
+        for (int i=0; i<bini-1; i++){
+            if ((abs(log10(measw[i+1])-log10(measw[i])))<abs(dif[g])){
+                dif[g] = (log10(measw[i+1])-log10(measw[i]));
             }
-    cout<<dif[g]<<endl;
+        }
+        cout<<dif[g]<<endl;
     }
 
     absminw=minw[0];
@@ -470,7 +479,7 @@ void MainWindow::on_pushButton_clicked()
             return;
         }
 
-        if(absmaxw<ui->doubleSpinBox_18->value()){
+        else if(absmaxw<ui->doubleSpinBox_18->value()){
             qDebug()<<"Error : At least one spectrum ends at a lower wavelength.";
             QString absma=QString::number(absmaxw);
             QMessageBox::information(this, "Error ", "Error : At least one spectrum ends at a lower value. The common value is "+absma+".");
@@ -482,7 +491,7 @@ void MainWindow::on_pushButton_clicked()
         absmaxw=ui->doubleSpinBox_18->value();
         LogFile<<"Use wavelength range; lower: "<<absminw<<"; upper: "<<absmaxw<<endl;
 
-    }
+        }
     }
 
     //looking for global smallest difference log(lambda)
@@ -497,7 +506,7 @@ void MainWindow::on_pushButton_clicked()
                 //cout<<diff<<endl;
             }
         }
-        LogFile<<"Using global minimum for new step size."<<endl;
+        LogFile<<"Using global minimum for new step size: "<<diff<<endl;
     }
     else{
         // compute average of differences
@@ -515,7 +524,7 @@ void MainWindow::on_pushButton_clicked()
                 }
             }
         diff=diff/ndiff;
-        LogFile<<"Using average for new step size."<<endl;
+        LogFile<<"Using average for new step size: "<<diff<<endl;
         }
         else{
             // compute median of differences
@@ -529,12 +538,9 @@ void MainWindow::on_pushButton_clicked()
             else{
                 diff=dif[med1];
             }
-            LogFile<<"Using median for new step size."<<endl;
+            LogFile<<"Using median for new step size: "<<diff<<endl;
         }
     }
-
-
-    cout<<"global min diff: "<<diff<<endl;
 
     if(ui->checkBox_14->isChecked()){
         //diff = abs(log10(absminw+ui->doubleSpinBox_19->value())-log10(absminw));
@@ -650,7 +656,7 @@ void MainWindow::on_pushButton_clicked()
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
-            if((i==bini-1)& (tempw1[bini-1]<absmaxw)){
+            else if((i==bini-1)& (tempw1[bini-1]<absmaxw)){
                 QMessageBox::information(this, "Error", "Error 5: Template A ends at lower wavelength "+QString::number(tempw1[i])+" than all spectra. "+absmaxw);
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
@@ -709,7 +715,7 @@ void MainWindow::on_pushButton_clicked()
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
-            if((i==bini-1)& (tempw2[bini-1]<absmaxw)){
+            else if((i==bini-1)& (tempw2[bini-1]<absmaxw)){
                 QMessageBox::information(this, "Error", "Error 8: Template B ends at lower wavelength "+QString::number(tempw2[i])+" than all spectra. "+absmaxw);
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
@@ -744,9 +750,7 @@ void MainWindow::on_pushButton_clicked()
 
     for(int g=0; g<num; g++){
 
-    ui->customPlot->clearGraphs();
-
-
+        ui->customPlot->clearGraphs();
 
         if(ui->checkBox_4->isChecked()){
             g=num-1;
@@ -772,9 +776,9 @@ void MainWindow::on_pushButton_clicked()
 
          //read measured spectrum
 
-       QString input="croped1_";
+         QString input="croped1_";
 
-        string data1 = input.toUtf8().constData();
+         string data1 = input.toUtf8().constData();
          std::ostringstream dat1NameStream(data1);
          dat1NameStream<<path<<"/"<<data1<<g<<".txt";
          std::string dat1Name = dat1NameStream.str();
@@ -814,10 +818,10 @@ void MainWindow::on_pushButton_clicked()
          logbin=abs((measw[bini-1]-measw[0])/diff);
 
          if(logbin<0){
-        cout<<diff<<" "<<logbin<<" "<<(measw[bini-1]-measw[0])<<endl;
-         QMessageBox::information(this, "Error 28", "Error 28: Negative number of logarithmic bins. Check file structure (empty last row?).");
-         this->setCursor(QCursor(Qt::ArrowCursor));
-         return;
+            cout<<diff<<" "<<logbin<<" "<<(measw[bini-1]-measw[0])<<endl;
+            QMessageBox::information(this, "Error 28", "Error 28: Negative number of logarithmic bins. Check file structure (empty last row?).");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
          }
 
          //interpolation measured
@@ -835,12 +839,13 @@ void MainWindow::on_pushButton_clicked()
 
          aa=0;
 
+
          for(int i=0; i<logbin; i++){
 
-             resamw[i]=measw[0]+i*diff;
+             resamw[i]=log10(absminw)+i*diff;//measw[0]+i*diff;
              resami[i]=0.0;
 
-             for(int e=0; e<bini; e++){
+             for(int e=0; e<bini-1; e++){
 
                  // linear interpolation
                  if(ui->checkBox_27->isChecked()){
@@ -944,7 +949,7 @@ void MainWindow::on_pushButton_clicked()
                      }
                  }
              }
-             if((resami[i]==0.0)){
+             if(resami[i]==0.0){
                  resami[i]=measi[aa];
              }
              file1<<std::setprecision(14)<<resamw[i]<<"\t"<<resami[i]<<endl;
@@ -1316,18 +1321,18 @@ void MainWindow::on_pushButton_3_clicked()
     QVector<double> a(number_of_lines), b(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[i];
-    if(ui->checkBox->isChecked()){
-        a[i]=log10(a[i]);
-    }
-    istringstream ist2(zwei);
-    ist2 >> b[i];
-    if(ui->checkBox_5->isChecked()){
-        double yadd1=ui->doubleSpinBox_9->value();
-        b[i]=b[i]+yadd1;
-    }
+        toplot1 >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[i];
+        if(ui->checkBox->isChecked()){
+            a[i]=log10(a[i]);
+        }
+        istringstream ist2(zwei);
+        ist2 >> b[i];
+        if(ui->checkBox_5->isChecked()){
+            double yadd1=ui->doubleSpinBox_9->value();
+            b[i]=b[i]+yadd1;
+        }
     }
     toplot1.close();
 
@@ -1341,18 +1346,18 @@ void MainWindow::on_pushButton_3_clicked()
     QVector<double> c(number_of_lines), d(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot2 >> eins >>zwei;
-    istringstream ist3(eins);
-    ist3 >> c[i];
-    if(ui->checkBox_2->isChecked()){
-        c[i]=log10(c[i]);
-    }
-    istringstream ist4(zwei);
-    ist4 >> d[i];
-    if(ui->checkBox_6->isChecked()){
-        double yadd2=ui->doubleSpinBox_10->value();
-        d[i]=d[i]+yadd2;
-    }
+        toplot2 >> eins >>zwei;
+        istringstream ist3(eins);
+        ist3 >> c[i];
+        if(ui->checkBox_2->isChecked()){
+            c[i]=log10(c[i]);
+        }
+        istringstream ist4(zwei);
+        ist4 >> d[i];
+        if(ui->checkBox_6->isChecked()){
+            double yadd2=ui->doubleSpinBox_10->value();
+            d[i]=d[i]+yadd2;
+        }
     }
     toplot2.close();
 
@@ -1366,18 +1371,18 @@ void MainWindow::on_pushButton_3_clicked()
     QVector<double> e(number_of_lines), f(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot3 >> eins >>zwei;
-    istringstream ist5(eins);
-    ist5 >> e[i];
-    if(ui->checkBox_3->isChecked()){
-        e[i]=log10(e[i]);
-    }
-    istringstream ist6(zwei);
-    ist6 >> f[i];
-    if(ui->checkBox_7->isChecked()){
-        double yadd3=ui->doubleSpinBox_11->value();
-        f[i]=f[i]+yadd3;
-    }
+        toplot3 >> eins >>zwei;
+        istringstream ist5(eins);
+        ist5 >> e[i];
+        if(ui->checkBox_3->isChecked()){
+            e[i]=log10(e[i]);
+        }
+        istringstream ist6(zwei);
+        ist6 >> f[i];
+        if(ui->checkBox_7->isChecked()){
+            double yadd3=ui->doubleSpinBox_11->value();
+            f[i]=f[i]+yadd3;
+        }
     }
     toplot3.close();
 
@@ -1440,7 +1445,6 @@ void MainWindow::on_pushButton_4_clicked()
     std::ostringstream dat2NameStream(data2);
     dat2NameStream<<path<<"/"<<data2;
     std::string dat2Name = dat2NameStream.str();
-    ifstream dat2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -1449,6 +1453,7 @@ void MainWindow::on_pushButton_4_clicked()
         QMessageBox::information(this, "Error", "Error 19: File for rebined template A does not exist!");
        return;
     }
+    ifstream dat2(dat2Name.c_str());
 
     for (int i=0; i<logbin; i++){
         dat2 >> eins >>zwei;
@@ -1465,7 +1470,6 @@ void MainWindow::on_pushButton_4_clicked()
     std::ostringstream dat3NameStream(data3);
     dat3NameStream<<path<<"/"<<data3;
     std::string dat3Name = dat3NameStream.str();
-    ifstream dat3(dat3Name.c_str());
 
     QFile checkfile3(dat3Name.c_str());
 
@@ -1474,6 +1478,7 @@ void MainWindow::on_pushButton_4_clicked()
         QMessageBox::information(this, "Error", "Error 20: File for rebined template B does not exist!");
        return;
     }
+    ifstream dat3(dat3Name.c_str());
 
     for (int i=0; i<logbin; i++){
         dat3 >> eins >>zwei;
@@ -1826,7 +1831,6 @@ void MainWindow::on_pushButton_5_clicked()
     std::ostringstream dat1NameStream(plot11);
     dat1NameStream<<path<<"/"<<plot11;
     std::string dat1Name = dat1NameStream.str();
-    ifstream toplot1(dat1Name.c_str());
 
     QFile checkfile(dat1Name.c_str());
 
@@ -1835,6 +1839,7 @@ void MainWindow::on_pushButton_5_clicked()
         QMessageBox::information(this, "Error 22", "Error 22: File 1 does not exist!");
        return;
     }
+    ifstream toplot1(dat1Name.c_str());
 
 
     int number_of_lines=0;
@@ -1848,11 +1853,11 @@ void MainWindow::on_pushButton_5_clicked()
     QVector<double> a(number_of_lines), b(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[i];
-    istringstream ist2(zwei);
-    ist2 >> b[i];
+        toplot1 >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[i];
+        istringstream ist2(zwei);
+        ist2 >> b[i];
     }
     toplot1.close();
 
@@ -1909,7 +1914,6 @@ void MainWindow::on_pushButton_6_clicked()
     std::ostringstream dat1NameStream(plot11);
     dat1NameStream<<path<<"/"<<plot11;
     std::string dat1Name = dat1NameStream.str();
-    ifstream toplot1(dat1Name.c_str());
 
     QFile checkfile(dat1Name.c_str());
 
@@ -1918,6 +1922,7 @@ void MainWindow::on_pushButton_6_clicked()
         QMessageBox::information(this, "Error 23", "Error 23: File 2 does not exist!");
        return;
     }
+    ifstream toplot1(dat1Name.c_str());
 
     int number_of_lines =0;
 
@@ -1930,11 +1935,11 @@ void MainWindow::on_pushButton_6_clicked()
     QVector<double> a(number_of_lines), b(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[i];
-    istringstream ist2(zwei);
-    ist2 >> b[i];
+        toplot1 >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[i];
+        istringstream ist2(zwei);
+        ist2 >> b[i];
     }
     toplot1.close();
 
@@ -1988,7 +1993,6 @@ void MainWindow::on_pushButton_7_clicked()
     std::ostringstream dat1NameStream(plot11);
     dat1NameStream<<path<<"/"<<plot11;
     std::string dat1Name = dat1NameStream.str();
-    ifstream toplot1(dat1Name.c_str());
 
     QFile checkfile(dat1Name.c_str());
 
@@ -1997,6 +2001,7 @@ void MainWindow::on_pushButton_7_clicked()
         QMessageBox::information(this, "Error 24", "Error 24: File 3 does not exist!");
        return;
     }
+    ifstream toplot1(dat1Name.c_str());
 
     int number_of_lines =0;
 
@@ -2010,11 +2015,11 @@ void MainWindow::on_pushButton_7_clicked()
     QVector<double> a(number_of_lines), b(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[i];
-    istringstream ist2(zwei);
-    ist2 >> b[i];
+        toplot1 >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> a[i];
+        istringstream ist2(zwei);
+        ist2 >> b[i];
     }
     toplot1.close();
 
@@ -2095,7 +2100,6 @@ void MainWindow::on_pushButton_8_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<path<<"/"<<data<<u<<".txt";
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile(datName.c_str());
 
@@ -2103,8 +2107,9 @@ void MainWindow::on_pushButton_8_clicked()
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QString fError= QString::number(u);
             QMessageBox::information(this, "Error 25", "Error 25: File "+qpath+"/"+input+fError+".txt does not exist!");
-           return;
-            }
+            return;
+         }
+        ifstream dat(datName.c_str());
 
         int number_of_lines =0;
 
@@ -2117,12 +2122,12 @@ void MainWindow::on_pushButton_8_clicked()
         QVector<double> a(number_of_lines), b(number_of_lines);
 
         for (int i=0; i<number_of_lines; i++){
-        dat >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> a[i];
-        istringstream ist2(zwei);
-        ist2 >> b[i];
-        b[i]=b[i]+oset*(u-min);
+            dat >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> a[i];
+            istringstream ist2(zwei);
+            ist2 >> b[i];
+            b[i]=b[i]+oset*(u-min);
         }
         dat.close();
 
@@ -2229,7 +2234,7 @@ void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::information(this, "About", "This open-source software was developed at Leibniz-Institute for Astrophysics Potsdam, Germany\n\n"
                                             "by Daniel P. Sablowski\n\n"
-                                            "Version 1.0 2019"
+                                            "Version 1.1 2023"
                                             "Licenced under the Apache 2.0 licence. The program is provided AS IS with NO WARRANTY OF ANY KIND.");
 }
 
@@ -2303,7 +2308,7 @@ void MainWindow::on_actionRV_Curve_triggered()
 void MainWindow::on_checkBox_8_pressed()
 {
     if(ui->checkBox_8->isChecked()){
-    ui->spinBox_7->setEnabled(true);
+        ui->spinBox_7->setEnabled(true);
     }
     else{
         ui->spinBox_7->setEnabled(false);
@@ -2441,7 +2446,14 @@ void MainWindow::on_actionCPD_triggered()
 void MainWindow::on_actionArithmetic_triggered()
 {
     qArith = new Arithmetic(this);
-    qArith->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), ui->lineEdit_21->text());
+    QString aext;
+    if(ui->comboBox->currentIndex()==1){
+        aext="txt";
+    }
+    else{
+        aext="fits";
+    }
+    qArith->seData(ui->lineEdit_15->text(), ui->lineEdit->text(), aext);
     qArith->show();
 }
 
@@ -3607,4 +3619,577 @@ void MainWindow::on_actionLine_List_Tool_triggered()
     qvald3 =new VALD3(this);
     qvald3->seData(ui->lineEdit_15->text());
     qvald3->show();
+}
+
+void MainWindow::on_checkBox_9_clicked()
+{
+    if(ui->checkBox_9->isChecked()){
+        ui->lineEdit_10->setEnabled(true);
+        ui->lineEdit_11->setEnabled(true);
+        ui->lineEdit_2->setEnabled(true);
+        ui->lineEdit_3->setEnabled(true);
+        ui->doubleSpinBox_14->setEnabled(true);
+        ui->doubleSpinBox_16->setEnabled(true);
+        ui->checkBox_15->setEnabled(true);
+        ui->checkBox_16->setEnabled(true);
+        ui->lineEdit_24->setEnabled(true);
+        ui->lineEdit_25->setEnabled(true);
+    }
+    else{
+        ui->lineEdit_10->setEnabled(false);
+        ui->lineEdit_11->setEnabled(false);
+        ui->lineEdit_2->setEnabled(false);
+        ui->lineEdit_3->setEnabled(false);
+        ui->doubleSpinBox_14->setEnabled(false);
+        ui->doubleSpinBox_16->setEnabled(false);
+        ui->checkBox_15->setEnabled(false);
+        ui->checkBox_16->setEnabled(false);
+        ui->lineEdit_24->setEnabled(false);
+        ui->lineEdit_25->setEnabled(false);
+    }
+}
+
+//************************
+// Save as
+//************************
+void MainWindow::on_pushButton_17_clicked()
+{
+    string ssave = (ui->lineEdit_29->text()+".croco").toUtf8().constData();
+    std::ostringstream dataNameStream(ssave);
+    dataNameStream<<path<<"/"<<ssave;
+    std::string dataName = dataNameStream.str();
+
+    QFile checkfile(dataName.c_str());
+
+    if(checkfile.exists()){
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Warning!", "The file already exists. \n\n Do you want to overwrite it?",
+                                  QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            qDebug() << "Yes was clicked";
+        }
+
+        else {
+            qDebug() << "Yes was *not* clicked";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+    }
+    MainWindow::SaveAs(QString::fromStdString(dataName));
+}
+void MainWindow::SaveAs(QString strfile)
+{
+
+    ofstream save(strfile.toUtf8().constData());
+
+    save<<ui->lineEdit->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_2->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_3->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_4->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_5->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_6->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_7->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_8->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_9->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_10->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_11->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_12->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_13->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_14->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_15->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_16->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_17->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_18->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_19->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_20->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_21->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_22->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_23->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_24->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_25->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_26->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_27->text().toUtf8().constData()<<endl;
+    save<<ui->lineEdit_28->text().toUtf8().constData()<<endl;
+
+    save<<ui->spinBox->value()<<endl;
+    save<<ui->spinBox_2->value()<<endl;
+    save<<ui->spinBox_3->value()<<endl;
+    save<<ui->spinBox_4->value()<<endl;
+    save<<ui->spinBox_5->value()<<endl;
+    save<<ui->spinBox_6->value()<<endl;
+    save<<ui->spinBox_7->value()<<endl;
+    save<<ui->spinBox_8->value()<<endl;
+    save<<ui->spinBox_9->value()<<endl;
+    save<<ui->spinBox_10->value()<<endl;
+    save<<ui->spinBox_11->value()<<endl;
+
+    save<<ui->doubleSpinBox->value()<<endl;
+    save<<ui->doubleSpinBox_2->value()<<endl;
+    save<<ui->doubleSpinBox_3->value()<<endl;
+    save<<ui->doubleSpinBox_4->value()<<endl;
+    save<<ui->doubleSpinBox_5->value()<<endl;
+    save<<ui->doubleSpinBox_6->value()<<endl;
+    save<<ui->doubleSpinBox_7->value()<<endl;
+    save<<ui->doubleSpinBox_8->value()<<endl;
+    save<<ui->doubleSpinBox_9->value()<<endl;
+    save<<ui->doubleSpinBox_10->value()<<endl;
+    save<<ui->doubleSpinBox_11->value()<<endl;
+    save<<ui->doubleSpinBox_12->value()<<endl;
+    save<<ui->doubleSpinBox_13->value()<<endl;
+    save<<ui->doubleSpinBox_14->value()<<endl;
+    save<<ui->doubleSpinBox_15->value()<<endl;
+    save<<ui->doubleSpinBox_16->value()<<endl;
+    save<<ui->doubleSpinBox_17->value()<<endl;
+    save<<ui->doubleSpinBox_18->value()<<endl;
+    //save<<ui->doubleSpinBox_19->value()<<endl;
+    save<<ui->doubleSpinBox_20->value()<<endl;
+    save<<ui->doubleSpinBox_21->value()<<endl;
+
+    if(ui->checkBox->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_2->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_3->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_4->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_5->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_6->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_7->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_8->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_9->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_10->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_11->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_12->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_13->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_14->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_15->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_16->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_17->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_18->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_19->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_20->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_21->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_22->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_23->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_24->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_25->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_26->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_27->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_28->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+    if(ui->checkBox_29->isChecked()){
+        save<<"1"<<endl;
+    }
+    else{
+        save<<"0"<<endl;
+    }
+
+    save<<ui->comboBox->currentIndex()<<endl;
+
+    save.close();
+
+}
+
+//*******************************
+// load function
+//*******************************
+void MainWindow::Load(QString loadfile){
+
+    ifstream load(loadfile.toUtf8().constData());
+
+    int nload=89, ntext=28, nints=11, ndoubles=20, nindex=29, ncomb=1;
+    string eins;
+    QVector<string> text(ntext);
+    QVector<int> ints(nints);
+    QVector<double> doubles(ndoubles);
+    QVector<int> index(nindex);
+    QVector<int> comb(ncomb);
+
+    for(int i=0; i<nload; i++){
+
+        getline(load, eins);
+        istringstream str(eins);
+
+        if(i<ntext){
+            if(eins.empty()) text[i]="";
+            else str >> text[i];
+        }
+        else if ((i>=ntext) & (i<ntext+nints)){
+            str >> ints[i-ntext];
+        }
+        else if((i>=ntext+nints) & (i<ntext+nints+ndoubles)){
+            str >> doubles[i-ntext-nints];
+        }
+        else if((i>=ntext+nints+ndoubles) & (i<ntext+nints+ndoubles+nindex)){
+            str >> index[i-ntext-nints-ndoubles];
+        }
+        else str >> comb[i-ntext-nints-ndoubles-nindex];
+
+    }
+    cout<<comb[0]<<endl;
+
+    ui->lineEdit->setText(QString::fromStdString(text[0]));
+    ui->lineEdit_2->setText(QString::fromStdString(text[1]));
+    ui->lineEdit_3->setText(QString::fromStdString(text[2]));
+    ui->lineEdit_4->setText(QString::fromStdString(text[3]));
+    ui->lineEdit_5->setText(QString::fromStdString(text[4]));
+    ui->lineEdit_6->setText(QString::fromStdString(text[5]));
+    ui->lineEdit_7->setText(QString::fromStdString(text[6]));
+    ui->lineEdit_8->setText(QString::fromStdString(text[7]));
+    ui->lineEdit_9->setText(QString::fromStdString(text[8]));
+    ui->lineEdit_10->setText(QString::fromStdString(text[9]));
+    ui->lineEdit_11->setText(QString::fromStdString(text[10]));
+    ui->lineEdit_12->setText(QString::fromStdString(text[11]));
+    ui->lineEdit_13->setText(QString::fromStdString(text[12]));
+    ui->lineEdit_14->setText(QString::fromStdString(text[13]));
+    ui->lineEdit_15->setText(QString::fromStdString(text[14]));
+    ui->lineEdit_16->setText(QString::fromStdString(text[15]));
+    ui->lineEdit_17->setText(QString::fromStdString(text[16]));
+    ui->lineEdit_18->setText(QString::fromStdString(text[17]));
+    ui->lineEdit_19->setText(QString::fromStdString(text[18]));
+    ui->lineEdit_20->setText(QString::fromStdString(text[19]));
+    ui->lineEdit_21->setText(QString::fromStdString(text[20]));
+    ui->lineEdit_22->setText(QString::fromStdString(text[21]));
+    ui->lineEdit_23->setText(QString::fromStdString(text[22]));
+    ui->lineEdit_24->setText(QString::fromStdString(text[23]));
+    ui->lineEdit_25->setText(QString::fromStdString(text[24]));
+    ui->lineEdit_26->setText(QString::fromStdString(text[25]));
+    ui->lineEdit_27->setText(QString::fromStdString(text[26]));
+    ui->lineEdit_28->setText(QString::fromStdString(text[27]));
+
+    ui->spinBox->setValue(ints[0]);
+    ui->spinBox_2->setValue(ints[1]);
+    ui->spinBox_3->setValue(ints[2]);
+    ui->spinBox_4->setValue(ints[3]);
+    ui->spinBox_5->setValue(ints[4]);
+    ui->spinBox_6->setValue(ints[5]);
+    ui->spinBox_7->setValue(ints[6]);
+    ui->spinBox_8->setValue(ints[7]);
+    ui->spinBox_9->setValue(ints[8]);
+    ui->spinBox_10->setValue(ints[9]);
+    ui->spinBox_11->setValue(ints[10]);
+
+    ui->doubleSpinBox->setValue(doubles[0]);
+    ui->doubleSpinBox_2->setValue(doubles[1]);
+    ui->doubleSpinBox_3->setValue(doubles[2]);
+    ui->doubleSpinBox_4->setValue(doubles[3]);
+    ui->doubleSpinBox_5->setValue(doubles[4]);
+    ui->doubleSpinBox_6->setValue(doubles[5]);
+    ui->doubleSpinBox_7->setValue(doubles[6]);
+    ui->doubleSpinBox_8->setValue(doubles[7]);
+    ui->doubleSpinBox_9->setValue(doubles[8]);
+    ui->doubleSpinBox_10->setValue(doubles[9]);
+    ui->doubleSpinBox_11->setValue(doubles[10]);
+    ui->doubleSpinBox_12->setValue(doubles[11]);
+    ui->doubleSpinBox_13->setValue(doubles[12]);
+    ui->doubleSpinBox_14->setValue(doubles[13]);
+    ui->doubleSpinBox_15->setValue(doubles[14]);
+    ui->doubleSpinBox_16->setValue(doubles[15]);
+    ui->doubleSpinBox_17->setValue(doubles[16]);
+    ui->doubleSpinBox_18->setValue(doubles[17]);
+    ui->doubleSpinBox_20->setValue(doubles[18]);
+    ui->doubleSpinBox_21->setValue(doubles[19]);
+
+    if(index[0]==0){
+        ui->checkBox->setChecked(false);
+    }
+    else ui->checkBox->setChecked(true);
+
+    if(index[1]==0){
+        ui->checkBox_2->setChecked(false);
+    }
+    else ui->checkBox_2->setChecked(true);
+
+    if(index[2]==0){
+        ui->checkBox_3->setChecked(false);
+    }
+    else ui->checkBox_3->setChecked(true);
+
+    if(index[3]==0){
+        ui->checkBox_4->setChecked(false);
+    }
+    else ui->checkBox_4->setChecked(true);
+
+    if(index[4]==0){
+        ui->checkBox_5->setChecked(false);
+    }
+    else ui->checkBox_5->setChecked(true);
+
+    if(index[5]==0){
+        ui->checkBox_6->setChecked(false);
+    }
+    else ui->checkBox_6->setChecked(true);
+
+    if(index[6]==0){
+        ui->checkBox_7->setChecked(false);
+    }
+    else ui->checkBox_7->setChecked(true);
+
+    if(index[7]==0){
+        ui->checkBox_8->setChecked(false);
+    }
+    else ui->checkBox_8->setChecked(true);
+
+    if(index[8]==0){
+        ui->checkBox_9->setChecked(false);
+    }
+    else ui->checkBox_9->setChecked(true);
+
+    if(index[9]==0){
+        ui->checkBox_10->setChecked(false);
+    }
+    else ui->checkBox_10->setChecked(true);
+
+    if(index[10]==0){
+        ui->checkBox_11->setChecked(false);
+    }
+    else ui->checkBox_11->setChecked(true);
+
+    if(index[11]==0){
+        ui->checkBox_12->setChecked(false);
+    }
+    else ui->checkBox_12->setChecked(true);
+
+    if(index[12]==0){
+        ui->checkBox_13->setChecked(false);
+    }
+    else ui->checkBox_13->setChecked(true);
+
+    if(index[13]==0){
+        ui->checkBox_14->setChecked(false);
+    }
+    else ui->checkBox_14->setChecked(true);
+
+    if(index[14]==0){
+        ui->checkBox_15->setChecked(false);
+    }
+    else ui->checkBox_15->setChecked(true);
+
+    if(index[15]==0){
+        ui->checkBox_16->setChecked(false);
+    }
+    else ui->checkBox_16->setChecked(true);
+
+    if(index[16]==0){
+        ui->checkBox_17->setChecked(false);
+    }
+    else ui->checkBox_17->setChecked(true);
+
+    if(index[17]==0){
+        ui->checkBox_18->setChecked(false);
+    }
+    else ui->checkBox_18->setChecked(true);
+
+    if(index[18]==0){
+        ui->checkBox_19->setChecked(false);
+    }
+    else ui->checkBox_19->setChecked(true);
+
+    if(index[19]==0){
+        ui->checkBox_20->setChecked(false);
+    }
+    else ui->checkBox_20->setChecked(true);
+
+    if(index[20]==0){
+        ui->checkBox_21->setChecked(false);
+    }
+    else ui->checkBox_21->setChecked(true);
+
+    if(index[21]==0){
+        ui->checkBox_22->setChecked(false);
+    }
+    else ui->checkBox_22->setChecked(true);
+
+    if(index[22]==0){
+        ui->checkBox_23->setChecked(false);
+    }
+    else ui->checkBox_23->setChecked(true);
+
+    if(index[23]==0){
+        ui->checkBox_24->setChecked(false);
+    }
+    else ui->checkBox_24->setChecked(true);
+
+    if(index[24]==0){
+        ui->checkBox_25->setChecked(false);
+    }
+    else ui->checkBox_25->setChecked(true);
+
+    if(index[25]==0){
+        ui->checkBox_26->setChecked(false);
+    }
+    else ui->checkBox_26->setChecked(true);
+
+    if(index[26]==0){
+        ui->checkBox_27->setChecked(false);
+    }
+    else ui->checkBox_27->setChecked(true);
+
+    if(index[27]==0){
+        ui->checkBox_28->setChecked(false);
+    }
+    else ui->checkBox_28->setChecked(true);
+
+    if(index[28]==0){
+        ui->checkBox_29->setChecked(false);
+    }
+    else ui->checkBox_29->setChecked(true);
+
+    ui->comboBox->setCurrentIndex(comb[0]);
+}
+
+//************************************
+// load button
+//************************************
+void MainWindow::on_pushButton_18_clicked()
+{
+    string ssave = (ui->lineEdit_29->text()+".croco").toUtf8().constData();
+    std::ostringstream dataNameStream(ssave);
+    dataNameStream<<path<<"/"<<ssave;
+    std::string dataName = dataNameStream.str();
+
+    QFile checkfile(dataName.c_str());
+
+    if(!checkfile.exists()){
+        QMessageBox::information(this, "Error", "The file "+checkfile.fileName()+" does not exist.");
+        return;
+    }
+
+    else MainWindow::Load(QString::fromStdString(dataName));
 }

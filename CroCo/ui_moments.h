@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'moments.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -73,7 +73,7 @@ public:
     {
         if (Moments->objectName().isEmpty())
             Moments->setObjectName(QString::fromUtf8("Moments"));
-        Moments->resize(917, 516);
+        Moments->resize(783, 516);
         horizontalLayout_9 = new QHBoxLayout(Moments);
         horizontalLayout_9->setObjectName(QString::fromUtf8("horizontalLayout_9"));
         verticalLayout = new QVBoxLayout();
@@ -92,6 +92,8 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
         lineEdit->setSizePolicy(sizePolicy);
+        lineEdit->setMinimumSize(QSize(150, 0));
+        lineEdit->setMaximumSize(QSize(150, 16777215));
 
         horizontalLayout->addWidget(lineEdit);
 
@@ -109,6 +111,8 @@ public:
         lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
         sizePolicy.setHeightForWidth(lineEdit_2->sizePolicy().hasHeightForWidth());
         lineEdit_2->setSizePolicy(sizePolicy);
+        lineEdit_2->setMinimumSize(QSize(150, 0));
+        lineEdit_2->setMaximumSize(QSize(150, 16777215));
 
         horizontalLayout_2->addWidget(lineEdit_2);
 
@@ -131,6 +135,8 @@ public:
         lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
         sizePolicy.setHeightForWidth(lineEdit_4->sizePolicy().hasHeightForWidth());
         lineEdit_4->setSizePolicy(sizePolicy);
+        lineEdit_4->setMinimumSize(QSize(150, 0));
+        lineEdit_4->setMaximumSize(QSize(150, 16777215));
 
         horizontalLayout_6->addWidget(lineEdit_4);
 
@@ -148,6 +154,8 @@ public:
         lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
         sizePolicy.setHeightForWidth(lineEdit_3->sizePolicy().hasHeightForWidth());
         lineEdit_3->setSizePolicy(sizePolicy);
+        lineEdit_3->setMinimumSize(QSize(150, 0));
+        lineEdit_3->setMaximumSize(QSize(150, 16777215));
 
         horizontalLayout_3->addWidget(lineEdit_3);
 
@@ -163,6 +171,8 @@ public:
 
         spinBox = new QSpinBox(Moments);
         spinBox->setObjectName(QString::fromUtf8("spinBox"));
+        sizePolicy.setHeightForWidth(spinBox->sizePolicy().hasHeightForWidth());
+        spinBox->setSizePolicy(sizePolicy);
 
         horizontalLayout_4->addWidget(spinBox);
 
@@ -196,6 +206,8 @@ public:
         lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
         sizePolicy.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
         lineEdit_5->setSizePolicy(sizePolicy);
+        lineEdit_5->setMinimumSize(QSize(125, 0));
+        lineEdit_5->setMaximumSize(QSize(125, 16777215));
 
         horizontalLayout_7->addWidget(lineEdit_5);
 
@@ -206,6 +218,8 @@ public:
 
         spinBox_4 = new QSpinBox(Moments);
         spinBox_4->setObjectName(QString::fromUtf8("spinBox_4"));
+        sizePolicy.setHeightForWidth(spinBox_4->sizePolicy().hasHeightForWidth());
+        spinBox_4->setSizePolicy(sizePolicy);
 
         horizontalLayout_7->addWidget(spinBox_4);
 
@@ -228,6 +242,8 @@ public:
         lineEdit_6->setObjectName(QString::fromUtf8("lineEdit_6"));
         sizePolicy.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
         lineEdit_6->setSizePolicy(sizePolicy);
+        lineEdit_6->setMinimumSize(QSize(125, 0));
+        lineEdit_6->setMaximumSize(QSize(125, 16777215));
 
         horizontalLayout_8->addWidget(lineEdit_6);
 
@@ -260,7 +276,8 @@ public:
         lineEdit_7->setObjectName(QString::fromUtf8("lineEdit_7"));
         sizePolicy.setHeightForWidth(lineEdit_7->sizePolicy().hasHeightForWidth());
         lineEdit_7->setSizePolicy(sizePolicy);
-        lineEdit_7->setMaximumSize(QSize(16777215, 16777215));
+        lineEdit_7->setMinimumSize(QSize(50, 0));
+        lineEdit_7->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout_8->addWidget(lineEdit_7);
 
@@ -304,21 +321,21 @@ public:
 
     void retranslateUi(QDialog *Moments)
     {
-        Moments->setWindowTitle(QApplication::translate("Moments", "Dialog", nullptr));
-        label->setText(QApplication::translate("Moments", "Work Path:", nullptr));
-        label_2->setText(QApplication::translate("Moments", "Moments In:", nullptr));
-        label_5->setText(QApplication::translate("Moments", "Moments 2 In:", nullptr));
-        label_3->setText(QApplication::translate("Moments", "Moments Out:", nullptr));
-        label_4->setText(QApplication::translate("Moments", "# Sets:", nullptr));
-        pushButton_2->setText(QApplication::translate("Moments", "Correct", nullptr));
-        pushButton_3->setText(QApplication::translate("Moments", "Merge to", nullptr));
-        checkBox->setText(QApplication::translate("Moments", "ignore first", nullptr));
-        label_9->setText(QApplication::translate("Moments", "lines", nullptr));
-        pushButton_4->setText(QApplication::translate("Moments", "Combine", nullptr));
-        label_6->setText(QApplication::translate("Moments", "from", nullptr));
-        label_7->setText(QApplication::translate("Moments", "to", nullptr));
-        label_8->setText(QApplication::translate("Moments", "*", nullptr));
-        pushButton->setText(QApplication::translate("Moments", "Close", nullptr));
+        Moments->setWindowTitle(QCoreApplication::translate("Moments", "Dialog", nullptr));
+        label->setText(QCoreApplication::translate("Moments", "Work Path:", nullptr));
+        label_2->setText(QCoreApplication::translate("Moments", "Moments In:", nullptr));
+        label_5->setText(QCoreApplication::translate("Moments", "Moments 2 In:", nullptr));
+        label_3->setText(QCoreApplication::translate("Moments", "Moments Out:", nullptr));
+        label_4->setText(QCoreApplication::translate("Moments", "# Sets:", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Moments", "Correct", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Moments", "Merge to", nullptr));
+        checkBox->setText(QCoreApplication::translate("Moments", "ignore first", nullptr));
+        label_9->setText(QCoreApplication::translate("Moments", "lines", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Moments", "Combine", nullptr));
+        label_6->setText(QCoreApplication::translate("Moments", "from", nullptr));
+        label_7->setText(QCoreApplication::translate("Moments", "to", nullptr));
+        label_8->setText(QCoreApplication::translate("Moments", "*", nullptr));
+        pushButton->setText(QCoreApplication::translate("Moments", "Close", nullptr));
     } // retranslateUi
 
 };

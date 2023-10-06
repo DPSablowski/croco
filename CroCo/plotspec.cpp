@@ -140,7 +140,6 @@ void PlotSpec::on_pushButton_2_clicked()
     std::ostringstream datNameStream(plot11);
     datNameStream<<spPath<<"/"<<plot11;
     std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
 
     QFile checkfile(datName.c_str());
 
@@ -150,6 +149,7 @@ void PlotSpec::on_pushButton_2_clicked()
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
+    ifstream toplot1(datName.c_str());
 
     while(std::getline(toplot1, zeile))
        ++ number_of_lines;
@@ -225,19 +225,15 @@ void PlotSpec::on_pushButton_2_clicked()
               b.resize(bini);
 
               for(int i=0; i<bini; i++){
-              b[i]=spintens[i];
-              a[i]=spwave[i];
+                b[i]=spintens[i];
+                a[i]=spwave[i];
               }
-
-
         }
             catch (CCfits::FitsException&)
 
              {
               std::cerr << " Fits Exception Thrown by test function \n";
               }
-
-
            // return;
 
     }
@@ -289,13 +285,13 @@ void PlotSpec::on_pushButton_2_clicked()
 
     ui->customPlot_3->addGraph();
     if(ui->checkBox_4->isChecked()){
-    ui->customPlot_3->legend->setVisible(true);
-    QFont legendFont = font();
-    legendFont.setPointSize(ui->spinBox->value());
-    ui->customPlot_3->legend->setFont(legendFont);
-    ui->customPlot_3->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
-    QString label=ui->lineEdit_6->text();
-    ui->customPlot_3->graph(0)->setName(label);
+        ui->customPlot_3->legend->setVisible(true);
+        QFont legendFont = font();
+        legendFont.setPointSize(ui->spinBox->value());
+        ui->customPlot_3->legend->setFont(legendFont);
+        ui->customPlot_3->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
+        QString label=ui->lineEdit_6->text();
+        ui->customPlot_3->graph(0)->setName(label);
     }
     ui->customPlot_3->graph(0)->setData(a, b);
     ui->customPlot_3->graph()->setPen(pen);
@@ -339,39 +335,39 @@ void PlotSpec::on_pushButton_3_clicked()
     int number_of_lines=0;
 
     if(ui->comboBox->currentIndex()==0){
-    QString plot1=ui->lineEdit->text();
-    string plot11 = plot1.toUtf8().constData();
-    std::ostringstream datNameStream(plot11);
-    datNameStream<<spPath<<"/"<<plot11;
-    std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
+        QString plot1=ui->lineEdit->text();
+        string plot11 = plot1.toUtf8().constData();
+        std::ostringstream datNameStream(plot11);
+        datNameStream<<spPath<<"/"<<plot11;
+        std::string datName = datNameStream.str();
 
-    QFile checkfile(datName.c_str());
+        QFile checkfile(datName.c_str());
 
-    if(!checkfile.exists()){
-        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-        QMessageBox::information(this, "Error", "File "+qSpPath+"/"+plot1+" does not exist!");
-        this->setCursor(QCursor(Qt::ArrowCursor));
-       return;
-    }
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qSpPath+"/"+plot1+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+           return;
+        }
+        ifstream toplot1(datName.c_str());
 
-    while(std::getline(toplot1, zeile))
-       ++ number_of_lines;
+        while(std::getline(toplot1, zeile))
+           ++ number_of_lines;
 
-    toplot1.clear();
-    toplot1.seekg(0, ios::beg);
+        toplot1.clear();
+        toplot1.seekg(0, ios::beg);
 
-    a.resize(number_of_lines);
-    b.resize(number_of_lines);
+        a.resize(number_of_lines);
+        b.resize(number_of_lines);
 
-    for (int i=0; i<number_of_lines; i++){
-        toplot1 >> one >>two;
-        istringstream ist(one);
-        ist >> a[i];
-        istringstream ist2(two);
-        ist2 >> b[i];
-    }
-    toplot1.close();
+        for (int i=0; i<number_of_lines; i++){
+            toplot1 >> one >>two;
+            istringstream ist(one);
+            ist >> a[i];
+            istringstream ist2(two);
+            ist2 >> b[i];
+        }
+        toplot1.close();
     }
 
     if(ui->comboBox->currentIndex()==1){
@@ -380,7 +376,6 @@ void PlotSpec::on_pushButton_3_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<spPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile1(datName.c_str());
 
@@ -391,6 +386,7 @@ void PlotSpec::on_pushButton_3_clicked()
             //check=1;
            return;
         }
+        //ifstream dat(datName.c_str());
 
         CCfits::FITS::setVerboseMode(true);
 
@@ -424,19 +420,15 @@ void PlotSpec::on_pushButton_3_clicked()
               b.resize(number_of_lines);
 
               for(int i=0; i<number_of_lines; i++){
-              b[i]=spintens[i];
-              a[i]=spwave[i];
+                b[i]=spintens[i];
+                a[i]=spwave[i];
               }
-
-
         }
             catch (CCfits::FitsException&)
 
              {
               std::cerr << " Fits Exception Thrown by test function \n";
               }
-
-
            // return;
 
     }

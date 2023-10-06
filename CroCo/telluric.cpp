@@ -86,6 +86,9 @@ void Telluric::seData(QString str1, QString str2, QString str3)
 
 }
 
+//***********************************
+// Read
+//***********************************
 void Telluric::tellRead(){
 
     string zeile, one, two, three, four;
@@ -94,41 +97,41 @@ void Telluric::tellRead(){
     ui->comboBox_3->clear();
 
     if(ui->comboBox->currentIndex()==0){
-    QString plot1=ui->lineEdit->text();
-    string plot11 = plot1.toUtf8().constData();
-    std::ostringstream datNameStream(plot11);
-    datNameStream<<tellPath<<"/"<<plot11;
-    std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
+        QString plot1=ui->lineEdit->text();
+        string plot11 = plot1.toUtf8().constData();
+        std::ostringstream datNameStream(plot11);
+        datNameStream<<tellPath<<"/"<<plot11;
+        std::string datName = datNameStream.str();
 
-    QFile checkfile(datName.c_str());
+        QFile checkfile(datName.c_str());
 
-    if(!checkfile.exists()){
-        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-        QMessageBox::information(this, "Error", "File "+qTellPath+"/"+plot1+" does not exist!");
-       return;
-    }
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qTellPath+"/"+plot1+" does not exist!");
+            return;
+        }
+        ifstream toplot1(datName.c_str());
 
-    number_of_lines =0;
+        number_of_lines =0;
 
-    while(std::getline(toplot1, zeile))
-       ++ number_of_lines;
+        while(std::getline(toplot1, zeile))
+           ++ number_of_lines;
 
-    toplot1.clear();
-    toplot1.seekg(0, ios::beg);
+        toplot1.clear();
+        toplot1.seekg(0, ios::beg);
 
-    at.resize(number_of_lines);
-    bt.resize(number_of_lines);
-    ft.resize(number_of_lines);
+        at.resize(number_of_lines);
+        bt.resize(number_of_lines);
+        ft.resize(number_of_lines);
 
-    for (int i=0; i<number_of_lines; i++){
-    toplot1 >> one >>two;
-    istringstream ist(one);
-    ist >> at[i];
-    istringstream ist2(two);
-    ist2 >> bt[i];
-    }
-    toplot1.close();
+        for (int i=0; i<number_of_lines; i++){
+            toplot1 >> one >>two;
+            istringstream ist(one);
+            ist >> at[i];
+            istringstream ist2(two);
+            ist2 >> bt[i];
+        }
+        toplot1.close();
     }
 
     if(ui->comboBox->currentIndex()==1){
@@ -138,7 +141,6 @@ void Telluric::tellRead(){
         std::ostringstream datNameStream(data);
         datNameStream<<tellPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile1(datName.c_str());
 
@@ -226,7 +228,6 @@ void Telluric::tellRead(){
     std::ostringstream dat2NameStream(plot12);
     dat2NameStream<<tellPath<<"/"<<plot12;
     std::string dat2Name = dat2NameStream.str();
-    ifstream toplot2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -235,6 +236,7 @@ void Telluric::tellRead(){
         QMessageBox::information(this, "Error", "File "+qTellPath+"/"+plot2+" does not exist!");
        return;
     }
+    ifstream toplot2(dat2Name.c_str());
 
    int number_of_lines2 =0;
 
@@ -259,12 +261,12 @@ void Telluric::tellRead(){
         istringstream ist3(one);
         ist3 >> telll;
         if(ui->comboBox_2->currentIndex()==4){
-            telll=telll;
+            //telll=telll;
         }
         else{
             telll = 1/telll*100000000;
         }
-        if(telll>=at[0] & telll<=at[number_of_lines-1]){
+        if((telll>=at[0]) & (telll<=at[number_of_lines-1])){
             ct[place]=telll;
             ct2[place]=telll;
             istringstream ist4(two);
@@ -311,7 +313,9 @@ void Telluric::tellRead(){
 
 }
 
+//***********************************
 //plot data
+//***********************************
 void Telluric::tellPlot(){
 
     tx1=ui->doubleSpinBox_5->value();
@@ -331,7 +335,9 @@ void Telluric::tellPlot(){
     ui->customPlot->replot();
 }
 
+//***********************************
 //line intensity
+//***********************************
 void Telluric::on_doubleSpinBox_valueChanged()
 {
     tintens=ui->doubleSpinBox->value();
@@ -369,7 +375,9 @@ void Telluric::on_lineEdit_6_textChanged()
     tellPath = qTellPath.toUtf8().constData();
 }
 
+//***********************************
 //line width
+//***********************************
 void Telluric::on_doubleSpinBox_2_valueChanged()
 {
     twidth=ui->doubleSpinBox_2->value();
@@ -400,7 +408,9 @@ void Telluric::on_doubleSpinBox_2_valueChanged()
     Telluric::tellPlot();
 }
 
+//***********************************
 //line shift
+//***********************************
 void Telluric::on_doubleSpinBox_3_valueChanged()
 {
     tshift=ui->doubleSpinBox_3->value();
@@ -525,7 +535,6 @@ void Telluric::on_pushButton_5_clicked()
             }
             ft[j]=tcont-ft[j];
         }
-
 
     Telluric::tellPlot();
 

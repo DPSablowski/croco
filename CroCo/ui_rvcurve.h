@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'rvcurve.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -791,51 +791,51 @@ public:
 
     void retranslateUi(QDialog *RvCurve)
     {
-        RvCurve->setWindowTitle(QApplication::translate("RvCurve", "Dialog", nullptr));
-        label_6->setText(QApplication::translate("RvCurve", "<html><head/><body><p>File  <span style=\" font-weight:600; color:#0b54f9;\">RV1    </span><span style=\" font-weight:600; color:#f90e0e;\">RV2    </span><span style=\" font-weight:600; color:#39f90e;\">RV1+RV2</span></p></body></html>", nullptr));
-        label_5->setText(QApplication::translate("RvCurve", "file time", nullptr));
-        label->setText(QApplication::translate("RvCurve", "RV files", nullptr));
-        label_2->setText(QApplication::translate("RvCurve", ".txt from", nullptr));
-        label_3->setText(QApplication::translate("RvCurve", "to", nullptr));
-        checkBox_7->setText(QApplication::translate("RvCurve", "flip", nullptr));
-        pushButton_2->setText(QApplication::translate("RvCurve", "get values", nullptr));
-        label_7->setText(QApplication::translate("RvCurve", "Time data", nullptr));
-        radioButton->setText(QApplication::translate("RvCurve", "phase", nullptr));
-        radioButton_2->setText(QApplication::translate("RvCurve", "time", nullptr));
-        pushButton_3->setText(QApplication::translate("RvCurve", "get values", nullptr));
-        label_16->setText(QApplication::translate("RvCurve", "Statistic File", nullptr));
-        checkBox_8->setText(QApplication::translate("RvCurve", "Col 1", nullptr));
-        checkBox_9->setText(QApplication::translate("RvCurve", "Col 2", nullptr));
-        checkBox_10->setText(QApplication::translate("RvCurve", "w/ f(x)", nullptr));
-        checkBox_11->setText(QApplication::translate("RvCurve", "w/ g(x)", nullptr));
-        checkBox_12->setText(QApplication::translate("RvCurve", "w/ f(x)+g(x)", nullptr));
-        pushButton_7->setText(QApplication::translate("RvCurve", "plot", nullptr));
-        pushButton->setText(QApplication::translate("RvCurve", "Close", nullptr));
-        label_4->setText(QApplication::translate("RvCurve", "Work path", nullptr));
-        label_8->setText(QApplication::translate("RvCurve", "x1:", nullptr));
-        label_9->setText(QApplication::translate("RvCurve", "x2:", nullptr));
-        label_10->setText(QApplication::translate("RvCurve", "y1:", nullptr));
-        label_11->setText(QApplication::translate("RvCurve", "y2:", nullptr));
-        pushButton_5->setText(QApplication::translate("RvCurve", "find values", nullptr));
-        pushButton_4->setText(QApplication::translate("RvCurve", "Plot", nullptr));
-        label_13->setText(QApplication::translate("RvCurve", "<html><head/><body><p>f(x)=a+b*sin(6.28c*t+d), a:</p></body></html>", nullptr));
-        label_14->setText(QApplication::translate("RvCurve", "b:", nullptr));
-        label_15->setText(QApplication::translate("RvCurve", "c:", nullptr));
-        label_17->setText(QApplication::translate("RvCurve", "d:", nullptr));
-        checkBox_3->setText(QApplication::translate("RvCurve", "plot", nullptr));
-        checkBox->setText(QApplication::translate("RvCurve", "- RV1", nullptr));
-        checkBox_2->setText(QApplication::translate("RvCurve", "- RV2", nullptr));
-        label_20->setText(QApplication::translate("RvCurve", "g(X)=e+h*sin(6.28i*t+j), e:", nullptr));
-        label_21->setText(QApplication::translate("RvCurve", "h:", nullptr));
-        label_22->setText(QApplication::translate("RvCurve", "i:", nullptr));
-        label_23->setText(QApplication::translate("RvCurve", "j:", nullptr));
-        label_18->setText(QApplication::translate("RvCurve", "x label", nullptr));
-        label_19->setText(QApplication::translate("RvCurve", "y label", nullptr));
-        pushButton_6->setText(QApplication::translate("RvCurve", "Save", nullptr));
-        checkBox_4->setText(QApplication::translate("RvCurve", "pdf", nullptr));
-        checkBox_5->setText(QApplication::translate("RvCurve", "png", nullptr));
-        checkBox_6->setText(QApplication::translate("RvCurve", "jpg", nullptr));
-        label_12->setText(QApplication::translate("RvCurve", "Font Size:", nullptr));
+        RvCurve->setWindowTitle(QCoreApplication::translate("RvCurve", "Dialog", nullptr));
+        label_6->setText(QCoreApplication::translate("RvCurve", "<html><head/><body><p>File  <span style=\" font-weight:600; color:#0b54f9;\">RV1    </span><span style=\" font-weight:600; color:#f90e0e;\">RV2    </span><span style=\" font-weight:600; color:#39f90e;\">RV1+RV2</span></p></body></html>", nullptr));
+        label_5->setText(QCoreApplication::translate("RvCurve", "file time", nullptr));
+        label->setText(QCoreApplication::translate("RvCurve", "RV files", nullptr));
+        label_2->setText(QCoreApplication::translate("RvCurve", ".txt from", nullptr));
+        label_3->setText(QCoreApplication::translate("RvCurve", "to", nullptr));
+        checkBox_7->setText(QCoreApplication::translate("RvCurve", "flip", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("RvCurve", "get values", nullptr));
+        label_7->setText(QCoreApplication::translate("RvCurve", "Time data", nullptr));
+        radioButton->setText(QCoreApplication::translate("RvCurve", "phase", nullptr));
+        radioButton_2->setText(QCoreApplication::translate("RvCurve", "time", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("RvCurve", "get values", nullptr));
+        label_16->setText(QCoreApplication::translate("RvCurve", "Statistic File", nullptr));
+        checkBox_8->setText(QCoreApplication::translate("RvCurve", "Col 1", nullptr));
+        checkBox_9->setText(QCoreApplication::translate("RvCurve", "Col 2", nullptr));
+        checkBox_10->setText(QCoreApplication::translate("RvCurve", "w/ f(x)", nullptr));
+        checkBox_11->setText(QCoreApplication::translate("RvCurve", "w/ g(x)", nullptr));
+        checkBox_12->setText(QCoreApplication::translate("RvCurve", "w/ f(x)+g(x)", nullptr));
+        pushButton_7->setText(QCoreApplication::translate("RvCurve", "plot", nullptr));
+        pushButton->setText(QCoreApplication::translate("RvCurve", "Close", nullptr));
+        label_4->setText(QCoreApplication::translate("RvCurve", "Work path", nullptr));
+        label_8->setText(QCoreApplication::translate("RvCurve", "x1:", nullptr));
+        label_9->setText(QCoreApplication::translate("RvCurve", "x2:", nullptr));
+        label_10->setText(QCoreApplication::translate("RvCurve", "y1:", nullptr));
+        label_11->setText(QCoreApplication::translate("RvCurve", "y2:", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("RvCurve", "find values", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("RvCurve", "Plot", nullptr));
+        label_13->setText(QCoreApplication::translate("RvCurve", "<html><head/><body><p>f(x)=a+b*sin(6.28c*t+d), a:</p></body></html>", nullptr));
+        label_14->setText(QCoreApplication::translate("RvCurve", "b:", nullptr));
+        label_15->setText(QCoreApplication::translate("RvCurve", "c:", nullptr));
+        label_17->setText(QCoreApplication::translate("RvCurve", "d:", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("RvCurve", "plot", nullptr));
+        checkBox->setText(QCoreApplication::translate("RvCurve", "- RV1", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("RvCurve", "- RV2", nullptr));
+        label_20->setText(QCoreApplication::translate("RvCurve", "g(X)=e+h*sin(6.28i*t+j), e:", nullptr));
+        label_21->setText(QCoreApplication::translate("RvCurve", "h:", nullptr));
+        label_22->setText(QCoreApplication::translate("RvCurve", "i:", nullptr));
+        label_23->setText(QCoreApplication::translate("RvCurve", "j:", nullptr));
+        label_18->setText(QCoreApplication::translate("RvCurve", "x label", nullptr));
+        label_19->setText(QCoreApplication::translate("RvCurve", "y label", nullptr));
+        pushButton_6->setText(QCoreApplication::translate("RvCurve", "Save", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("RvCurve", "pdf", nullptr));
+        checkBox_5->setText(QCoreApplication::translate("RvCurve", "png", nullptr));
+        checkBox_6->setText(QCoreApplication::translate("RvCurve", "jpg", nullptr));
+        label_12->setText(QCoreApplication::translate("RvCurve", "Font Size:", nullptr));
     } // retranslateUi
 
 };

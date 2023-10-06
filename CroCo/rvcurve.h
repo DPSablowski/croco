@@ -44,19 +44,19 @@ private slots:
 
     void on_pushButton_7_clicked();
 
-    void on_doubleSpinBox_8_valueChanged(double arg1);
+    void on_doubleSpinBox_8_valueChanged();
 
     void on_lineEdit_6_editingFinished();
 
     void on_lineEdit_7_editingFinished();
 
-    void on_doubleSpinBox_9_valueChanged(double arg1);
+    void on_doubleSpinBox_9_valueChanged();
 
-    void on_doubleSpinBox_10_valueChanged(double arg1);
+    void on_doubleSpinBox_10_valueChanged();
 
-    void on_doubleSpinBox_11_valueChanged(double arg1);
+    void on_doubleSpinBox_11_valueChanged();
 
-    void on_doubleSpinBox_12_valueChanged(double arg1);
+    void on_doubleSpinBox_12_valueChanged();
 
     void on_checkBox_10_clicked();
 

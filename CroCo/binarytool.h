@@ -59,9 +59,11 @@ private slots:
 
     void CalcRVs();
 
-    void on_pushButton_7_clicked();
-
     void on_checkBox_12_clicked();
+
+    void on_comboBox_2_currentIndexChanged();
+
+    void on_pushButton_7_clicked();
 
 public slots:
     void seData(QString str);

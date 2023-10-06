@@ -101,6 +101,8 @@ void Crop::on_pushButton_2_clicked()
         Crop::cropSpectra();
     }
 }
+
+
 void Crop::cropSpectra()
 {
     this->setCursor(QCursor(Qt::WaitCursor));
@@ -260,7 +262,7 @@ void Crop::cropSpectra()
               ofstream outp(outName.c_str());
 
               for(int i=0; i<numpix; i++){
-                  if(cwave[i]>=wlow & (cwave[i]<=wupp)){
+                  if((cwave[i]>=wlow) & (cwave[i]<=wupp)){
                         outp<<setprecision(14)<<cwave[i]<<"\t"<<cintens[i]<<endl;
                   }
               }

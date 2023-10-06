@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'telluric.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -524,33 +524,33 @@ public:
 
     void retranslateUi(QDialog *Telluric)
     {
-        Telluric->setWindowTitle(QApplication::translate("Telluric", "Dialog", nullptr));
-        label->setText(QApplication::translate("Telluric", "Spectrum:", nullptr));
-        label_6->setText(QApplication::translate("Telluric", "Extension", nullptr));
-        label_7->setText(QApplication::translate("Telluric", "W. Col", nullptr));
-        label_8->setText(QApplication::translate("Telluric", "I. Col", nullptr));
-        label_2->setText(QApplication::translate("Telluric", "Telluric File:", nullptr));
-        pushButton_6->setText(QApplication::translate("Telluric", "Read", nullptr));
-        checkBox->setText(QApplication::translate("Telluric", "all lines", nullptr));
-        label_3->setText(QApplication::translate("Telluric", "Intensity:", nullptr));
-        pushButton_5->setText(QApplication::translate("Telluric", "Apply", nullptr));
-        label_4->setText(QApplication::translate("Telluric", "Width:", nullptr));
-        checkBox_2->setText(QApplication::translate("Telluric", "Gau\303\237", nullptr));
-        checkBox_3->setText(QApplication::translate("Telluric", "Lorentz", nullptr));
-        label_5->setText(QApplication::translate("Telluric", "Shift:", nullptr));
-        label_10->setText(QApplication::translate("Telluric", "Continuum:", nullptr));
-        label_11->setText(QApplication::translate("Telluric", "Save to:", nullptr));
-        pushButton_7->setText(QApplication::translate("Telluric", "Save", nullptr));
-        label_16->setText(QApplication::translate("Telluric", "Line Data to:", nullptr));
-        label_9->setText(QApplication::translate("Telluric", "Work Folder:", nullptr));
-        pushButton->setText(QApplication::translate("Telluric", "Close", nullptr));
-        pushButton_4->setText(QApplication::translate("Telluric", "find values", nullptr));
-        pushButton_2->setText(QApplication::translate("Telluric", "Subtract", nullptr));
-        pushButton_3->setText(QApplication::translate("Telluric", "Save", nullptr));
-        label_12->setText(QApplication::translate("Telluric", "x1:", nullptr));
-        label_13->setText(QApplication::translate("Telluric", "x2:", nullptr));
-        label_14->setText(QApplication::translate("Telluric", "y1:", nullptr));
-        label_15->setText(QApplication::translate("Telluric", "y2:", nullptr));
+        Telluric->setWindowTitle(QCoreApplication::translate("Telluric", "Dialog", nullptr));
+        label->setText(QCoreApplication::translate("Telluric", "Spectrum:", nullptr));
+        label_6->setText(QCoreApplication::translate("Telluric", "Extension", nullptr));
+        label_7->setText(QCoreApplication::translate("Telluric", "W. Col", nullptr));
+        label_8->setText(QCoreApplication::translate("Telluric", "I. Col", nullptr));
+        label_2->setText(QCoreApplication::translate("Telluric", "Telluric File:", nullptr));
+        pushButton_6->setText(QCoreApplication::translate("Telluric", "Read", nullptr));
+        checkBox->setText(QCoreApplication::translate("Telluric", "all lines", nullptr));
+        label_3->setText(QCoreApplication::translate("Telluric", "Intensity:", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("Telluric", "Apply", nullptr));
+        label_4->setText(QCoreApplication::translate("Telluric", "Width:", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("Telluric", "Gau\303\237", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("Telluric", "Lorentz", nullptr));
+        label_5->setText(QCoreApplication::translate("Telluric", "Shift:", nullptr));
+        label_10->setText(QCoreApplication::translate("Telluric", "Continuum:", nullptr));
+        label_11->setText(QCoreApplication::translate("Telluric", "Save to:", nullptr));
+        pushButton_7->setText(QCoreApplication::translate("Telluric", "Save", nullptr));
+        label_16->setText(QCoreApplication::translate("Telluric", "Line Data to:", nullptr));
+        label_9->setText(QCoreApplication::translate("Telluric", "Work Folder:", nullptr));
+        pushButton->setText(QCoreApplication::translate("Telluric", "Close", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Telluric", "find values", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Telluric", "Subtract", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Telluric", "Save", nullptr));
+        label_12->setText(QCoreApplication::translate("Telluric", "x1:", nullptr));
+        label_13->setText(QCoreApplication::translate("Telluric", "x2:", nullptr));
+        label_14->setText(QCoreApplication::translate("Telluric", "y1:", nullptr));
+        label_15->setText(QCoreApplication::translate("Telluric", "y2:", nullptr));
     } // retranslateUi
 
 };

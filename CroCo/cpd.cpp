@@ -65,7 +65,7 @@ void CPD::on_pushButton_2_clicked()
 
     int Nspec = max - min + 1;
 
-    int Nwin=0, num_lines;
+    int Nwin=0, num_lines=0;
 
     double wp1l, wp1r, wp2l, wp2r, wp3l, wp3r, ws1l, ws1r, ws2l, ws2r, ws3l, ws3r, vp1, vp2, vp3, vs1, vs2, vs3, wp1l0, wp1r0, wp2l0, wp2r0, wp3l0, wp3r0, ws1l0, ws1r0, ws2l0, ws2r0, ws3l0, ws3r0;
     QVector<double> RVp(Nspec), RVs(Nspec);
@@ -119,6 +119,15 @@ void CPD::on_pushButton_2_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<CPDPath<<"/"<<data;
         std::string datName = datNameStream.str();
+
+        QFile checkfile(datName.c_str());
+
+        if(!checkfile.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfile.fileName()+" does note exist.");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
         ifstream dat(datName.c_str());
 
         int bini=0;
@@ -168,11 +177,20 @@ void CPD::on_pushButton_2_clicked()
             std::ostringstream dat2NameStream(data2);
             dat2NameStream<<CPDPath<<"/"<<data2<<min+i<<CPDExt;
             std::string dat2Name = dat2NameStream.str();
+
+            QFile checkfile2(dat2Name.c_str());
+
+            if(!checkfile2.exists()){
+                QMessageBox::information(this, "Error", "The file "+checkfile2.fileName()+" does note exist.");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+
             ifstream dat2(dat2Name.c_str());
 
 
             while(std::getline(dat2, cline))
-               ++ num_lines;
+               ++num_lines;
 
             dat2.clear();
             dat2.seekg(0, ios::beg);
@@ -185,21 +203,14 @@ void CPD::on_pushButton_2_clicked()
                 str2 >> Wavel[i];
                 istringstream str3(zwei);
                 str3 >> Intensi[i];
-
                 if((Wavel[i]>wp1l) & (Wavel[i]<wp1r)){
                     Intensi[i]=vp1;
                 }
-
                 if((Wavel[i]>ws1l) & (Wavel[i]<ws1r)){
                     Intensi[i]=vs1;
                 }
-
-
                 dat3<<Wavel[i]<<" "<<Intensi[i]<<endl;
-
             }
-
-
         }
         //Two Windows
         if(Nwin==2){
@@ -218,6 +229,15 @@ void CPD::on_pushButton_2_clicked()
             std::ostringstream dat2NameStream(data2);
             dat2NameStream<<CPDPath<<"/"<<data2<<min+i<<CPDExt;
             std::string dat2Name = dat2NameStream.str();
+
+            QFile checkfile(dat2Name.c_str());
+
+            if(!checkfile.exists()){
+                QMessageBox::information(this, "Error", "The file "+checkfile.fileName()+" does note exist.");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+
             ifstream dat2(dat2Name.c_str());
 
 
@@ -288,6 +308,15 @@ void CPD::on_pushButton_2_clicked()
             std::ostringstream dat2NameStream(data2);
             dat2NameStream<<CPDPath<<"/"<<data2<<min+i<<CPDExt;
             std::string dat2Name = dat2NameStream.str();
+
+            QFile checkfile(dat2Name.c_str());
+
+            if(!checkfile.exists()){
+                QMessageBox::information(this, "Error", "The file "+checkfile.fileName()+" does note exist.");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+
             ifstream dat2(dat2Name.c_str());
 
 

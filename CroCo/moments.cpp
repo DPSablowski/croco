@@ -359,11 +359,12 @@ void Moments::on_pushButton_3_clicked()
           qDebug() << "Yes was clicked";
         }
 
-    else {
-      qDebug() << "Yes was *not* clicked";
-      this->setCursor(QCursor(Qt::ArrowCursor));
-      return;
-    }}
+        else {
+            qDebug() << "Yes was *not* clicked";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+    }
 
     ofstream output(outputName.c_str());
 
@@ -385,7 +386,7 @@ void Moments::on_pushButton_3_clicked()
     input2.seekg(0, ios::beg);
 
     if(nlines1!=nlines2){
-        QMessageBox::information(this, "Warning", "Number of rows different in both input files.");
+        QMessageBox::information(this, "Error", "Number of rows different in both input files.");
         return;
     }
     else{
@@ -465,12 +466,12 @@ void Moments::on_pushButton_4_clicked()
         if (reply == QMessageBox::Yes) {
           qDebug() << "Yes was clicked";
         }
-
-    else {
-      qDebug() << "Yes was *not* clicked";
-      this->setCursor(QCursor(Qt::ArrowCursor));
-      return;
-    }}
+        else {
+            qDebug() << "Yes was *not* clicked";
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+    }
 
     ofstream output(outputName.c_str());
 

@@ -44,7 +44,7 @@ private slots:
 
     void on_pushButton_4_clicked();
 
-    void on_doubleSpinBox_3_valueChanged(const QString &arg1);
+    void on_doubleSpinBox_3_valueChanged();
 
     void on_pushButton_5_clicked();
 
@@ -59,6 +59,16 @@ private slots:
     void on_comboBox_currentIndexChanged();
 
     void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
+
+    void on_pushButton_10_clicked();
+
+    void cropSpectra();
+
+    void on_pushButton_11_clicked();
+
+    void on_comboBox_2_currentIndexChanged(int index);
 
 public slots:
     void seData(QString str, QString str2, QString str3);

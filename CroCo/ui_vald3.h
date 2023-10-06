@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vald3.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.0
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -974,61 +974,61 @@ public:
 
     void retranslateUi(QDialog *VALD3)
     {
-        VALD3->setWindowTitle(QApplication::translate("VALD3", "Dialog", nullptr));
-        label_5->setText(QApplication::translate("VALD3", "Line List:", nullptr));
-        label_3->setText(QApplication::translate("VALD3", "New List:", nullptr));
-        label->setText(QApplication::translate("VALD3", "Work Path:", nullptr));
-        pushButton->setText(QApplication::translate("VALD3", "Close", nullptr));
-        checkBox->setText(QApplication::translate("VALD3", "Depth from ", nullptr));
-        label_2->setText(QApplication::translate("VALD3", "to", nullptr));
-        checkBox_2->setText(QApplication::translate("VALD3", "Wavelength from", nullptr));
-        label_4->setText(QApplication::translate("VALD3", "to", nullptr));
-        pushButton_3->setText(QApplication::translate("VALD3", "Create", nullptr));
-        pushButton_2->setText(QApplication::translate("VALD3", "Help", nullptr));
-        checkBox_3->setText(QApplication::translate("VALD3", "Multiply log(gf) values of element", nullptr));
-        label_7->setText(QApplication::translate("VALD3", "by", nullptr));
-        label_8->setText(QApplication::translate("VALD3", "if equal to wavelength in file", nullptr));
-        checkBox_4->setText(QApplication::translate("VALD3", "+/-", nullptr));
-        pushButton_4->setText(QApplication::translate("VALD3", "To Waves", nullptr));
-        label_6->setText(QApplication::translate("VALD3", "CN List Sneden 2014", nullptr));
-        label_10->setText(QApplication::translate("VALD3", "# Variables", nullptr));
-        checkBox_5->setText(QApplication::translate("VALD3", "Binary", nullptr));
-        checkBox_6->setText(QApplication::translate("VALD3", "Coupled", nullptr));
-        label_9->setText(QApplication::translate("VALD3", "Path/Inlist Project", nullptr));
-        label_27->setText(QApplication::translate("VALD3", "/", nullptr));
-        label_14->setText(QApplication::translate("VALD3", "Comp. A", nullptr));
-        label_11->setText(QApplication::translate("VALD3", "Path History File:", nullptr));
-        label_15->setText(QApplication::translate("VALD3", "Comp. A; Weight:", nullptr));
-        label_12->setText(QApplication::translate("VALD3", "<html><head/><body><p>Log(L/L<span style=\" vertical-align:sub;\">S</span>)</p></body></html>", nullptr));
-        label_13->setText(QApplication::translate("VALD3", "<html><head/><body><p>logT<span style=\" vertical-align:sub;\">eff</span></p></body></html>", nullptr));
-        label_16->setText(QApplication::translate("VALD3", "Comp. A", nullptr));
-        label_17->setText(QApplication::translate("VALD3", "Path/Inlist Project", nullptr));
-        label_28->setText(QApplication::translate("VALD3", "/", nullptr));
-        label_18->setText(QApplication::translate("VALD3", "Comp. B", nullptr));
-        label_19->setText(QApplication::translate("VALD3", "Path History File:", nullptr));
-        label_20->setText(QApplication::translate("VALD3", "Comp. B; Weight:", nullptr));
-        label_21->setText(QApplication::translate("VALD3", "<html><head/><body><p>Log(L/L<span style=\" vertical-align:sub;\">S</span>)</p></body></html>", nullptr));
-        label_22->setText(QApplication::translate("VALD3", "<html><head/><body><p>logT<span style=\" vertical-align:sub;\">eff</span></p></body></html>", nullptr));
-        label_23->setText(QApplication::translate("VALD3", "Comp. B", nullptr));
-        checkBox_10->setText(QApplication::translate("VALD3", "Start from, values", nullptr));
-        label_32->setText(QApplication::translate("VALD3", "mat", nullptr));
-        label_26->setText(QApplication::translate("VALD3", "Iterations:", nullptr));
-        label_29->setText(QApplication::translate("VALD3", "Current Iteration", nullptr));
-        pushButton_5->setText(QApplication::translate("VALD3", "Go MESA", nullptr));
-        pushButton_6->setText(QApplication::translate("VALD3", "Help", nullptr));
-        checkBox_7->setText(QApplication::translate("VALD3", "Keep history.data", nullptr));
-        checkBox_11->setText(QApplication::translate("VALD3", "Ignore Box", nullptr));
-        pushButton_7->setText(QApplication::translate("VALD3", "Stop", nullptr));
-        label_24->setText(QApplication::translate("VALD3", "<html><head/><body><p>Box A: log(L/L<span style=\" vertical-align:sub;\">S</span>): +</p></body></html>", nullptr));
-        label_33->setText(QApplication::translate("VALD3", "-", nullptr));
-        label_30->setText(QApplication::translate("VALD3", "<html><head/><body><p>log(T<span style=\" vertical-align:sub;\">eff</span>): +</p></body></html>", nullptr));
-        label_37->setText(QApplication::translate("VALD3", "-", nullptr));
-        checkBox_8->setText(QApplication::translate("VALD3", "stop if not hit", nullptr));
-        label_25->setText(QApplication::translate("VALD3", "<html><head/><body><p>Box B: log(L/L<span style=\" vertical-align:sub;\">S</span>): +</p></body></html>", nullptr));
-        label_34->setText(QApplication::translate("VALD3", "-", nullptr));
-        label_31->setText(QApplication::translate("VALD3", "<html><head/><body><p>log(T<span style=\" vertical-align:sub;\">eff</span>): +</p></body></html>", nullptr));
-        label_36->setText(QApplication::translate("VALD3", "-", nullptr));
-        checkBox_9->setText(QApplication::translate("VALD3", "stop if not hit", nullptr));
+        VALD3->setWindowTitle(QCoreApplication::translate("VALD3", "Dialog", nullptr));
+        label_5->setText(QCoreApplication::translate("VALD3", "Line List:", nullptr));
+        label_3->setText(QCoreApplication::translate("VALD3", "New List:", nullptr));
+        label->setText(QCoreApplication::translate("VALD3", "Work Path:", nullptr));
+        pushButton->setText(QCoreApplication::translate("VALD3", "Close", nullptr));
+        checkBox->setText(QCoreApplication::translate("VALD3", "Depth from ", nullptr));
+        label_2->setText(QCoreApplication::translate("VALD3", "to", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("VALD3", "Wavelength from", nullptr));
+        label_4->setText(QCoreApplication::translate("VALD3", "to", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("VALD3", "Create", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("VALD3", "Help", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("VALD3", "Multiply log(gf) values of element", nullptr));
+        label_7->setText(QCoreApplication::translate("VALD3", "by", nullptr));
+        label_8->setText(QCoreApplication::translate("VALD3", "if equal to wavelength in file", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("VALD3", "+/-", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("VALD3", "To Waves", nullptr));
+        label_6->setText(QCoreApplication::translate("VALD3", "CN List Sneden 2014", nullptr));
+        label_10->setText(QCoreApplication::translate("VALD3", "# Variables", nullptr));
+        checkBox_5->setText(QCoreApplication::translate("VALD3", "Binary", nullptr));
+        checkBox_6->setText(QCoreApplication::translate("VALD3", "Coupled", nullptr));
+        label_9->setText(QCoreApplication::translate("VALD3", "Path/Inlist Project", nullptr));
+        label_27->setText(QCoreApplication::translate("VALD3", "/", nullptr));
+        label_14->setText(QCoreApplication::translate("VALD3", "Comp. A", nullptr));
+        label_11->setText(QCoreApplication::translate("VALD3", "Path History File:", nullptr));
+        label_15->setText(QCoreApplication::translate("VALD3", "Comp. A; Weight:", nullptr));
+        label_12->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>Log(L/L<span style=\" vertical-align:sub;\">S</span>)</p></body></html>", nullptr));
+        label_13->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>logT<span style=\" vertical-align:sub;\">eff</span></p></body></html>", nullptr));
+        label_16->setText(QCoreApplication::translate("VALD3", "Comp. A", nullptr));
+        label_17->setText(QCoreApplication::translate("VALD3", "Path/Inlist Project", nullptr));
+        label_28->setText(QCoreApplication::translate("VALD3", "/", nullptr));
+        label_18->setText(QCoreApplication::translate("VALD3", "Comp. B", nullptr));
+        label_19->setText(QCoreApplication::translate("VALD3", "Path History File:", nullptr));
+        label_20->setText(QCoreApplication::translate("VALD3", "Comp. B; Weight:", nullptr));
+        label_21->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>Log(L/L<span style=\" vertical-align:sub;\">S</span>)</p></body></html>", nullptr));
+        label_22->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>logT<span style=\" vertical-align:sub;\">eff</span></p></body></html>", nullptr));
+        label_23->setText(QCoreApplication::translate("VALD3", "Comp. B", nullptr));
+        checkBox_10->setText(QCoreApplication::translate("VALD3", "Start from, values", nullptr));
+        label_32->setText(QCoreApplication::translate("VALD3", "mat", nullptr));
+        label_26->setText(QCoreApplication::translate("VALD3", "Iterations:", nullptr));
+        label_29->setText(QCoreApplication::translate("VALD3", "Current Iteration", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("VALD3", "Go MESA", nullptr));
+        pushButton_6->setText(QCoreApplication::translate("VALD3", "Help", nullptr));
+        checkBox_7->setText(QCoreApplication::translate("VALD3", "Keep history.data", nullptr));
+        checkBox_11->setText(QCoreApplication::translate("VALD3", "Ignore Box", nullptr));
+        pushButton_7->setText(QCoreApplication::translate("VALD3", "Stop", nullptr));
+        label_24->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>Box A: log(L/L<span style=\" vertical-align:sub;\">S</span>): +</p></body></html>", nullptr));
+        label_33->setText(QCoreApplication::translate("VALD3", "-", nullptr));
+        label_30->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>log(T<span style=\" vertical-align:sub;\">eff</span>): +</p></body></html>", nullptr));
+        label_37->setText(QCoreApplication::translate("VALD3", "-", nullptr));
+        checkBox_8->setText(QCoreApplication::translate("VALD3", "stop if not hit", nullptr));
+        label_25->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>Box B: log(L/L<span style=\" vertical-align:sub;\">S</span>): +</p></body></html>", nullptr));
+        label_34->setText(QCoreApplication::translate("VALD3", "-", nullptr));
+        label_31->setText(QCoreApplication::translate("VALD3", "<html><head/><body><p>log(T<span style=\" vertical-align:sub;\">eff</span>): +</p></body></html>", nullptr));
+        label_36->setText(QCoreApplication::translate("VALD3", "-", nullptr));
+        checkBox_9->setText(QCoreApplication::translate("VALD3", "stop if not hit", nullptr));
     } // retranslateUi
 
 };

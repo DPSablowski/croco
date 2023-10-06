@@ -187,7 +187,6 @@ void SplineFit::on_pushButton_clicked()
         std::ostringstream dat1NameStream(spFile);
         dat1NameStream<<splPath<<"/"<<spFile<<g<<spExt;
         std::string dat1Name = dat1NameStream.str();
-        ifstream file1(dat1Name.c_str());
 
         QFile checkfile1(dat1Name.c_str());
 
@@ -198,9 +197,21 @@ void SplineFit::on_pushButton_clicked()
            return;
         }
 
+        ifstream file1(dat1Name.c_str());
+
         std::ostringstream dat2NameStream(sdFile);
         dat2NameStream<<splPath<<"/"<<sdFile<<g<<".dat";
         std::string dat2Name = dat2NameStream.str();
+
+        QFile checkfile2(dat2Name.c_str());
+
+        if(!checkfile2.exists()){
+            qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+            QString gnum = QString::number(g);
+            QMessageBox::information(this, "Error", "File "+checkfile2.fileName()+" does not exist!");
+           return;
+        }
+
         ifstream file2(dat2Name.c_str());
 
         /*
@@ -237,83 +248,80 @@ void SplineFit::on_pushButton_clicked()
                 int nlines2=0;
 
                 while(std::getline(file2, line))
-                           ++ nlines2;
+                        ++ nlines2;
 
-                        file2.clear();
-                        file2.seekg(0, ios::beg);
+                file2.clear();
+                file2.seekg(0, ios::beg);
 
-                        QVector<double> xspl(nlines2), yspl(nlines2);
+                QVector<double> xspl(nlines2), yspl(nlines2);
 
+                for(int i=0; i<nlines2; i++){
+                     file2 >> eins >> zwei;
+                     istringstream ist3(eins);
+                     ist3 >> xspl[i];
+                     istringstream ist4(zwei);
+                     ist4 >> yspl[i];
+                }
 
-                        for(int i=0; i<nlines2; i++){
-                            file2 >> eins >> zwei;
-                            istringstream ist3(eins);
-                            ist3 >> xspl[i];
-                            istringstream ist4(zwei);
-                            ist4 >> yspl[i];
-                        }
+                file2.close();
 
-                        file2.close();
+                ui->customPlot->addGraph();
+                ui->customPlot->graph(0)->setData(xda, yda);
+                if(ui->checkBox_2->isChecked()){
+                    ui->customPlot->graph(0)->rescaleAxes();
+                    ui->doubleSpinBox_3->setValue(xda[0]);
+                    ui->doubleSpinBox_4->setValue(xda[nlines-1]);
+                }
+                else{
+                     ui->customPlot->xAxis->setRange(ui->doubleSpinBox_3->value(), ui->doubleSpinBox_4->value());
+                     ui->customPlot->yAxis->setRange(ui->doubleSpinBox_5->value(), ui->doubleSpinBox_6->value());
+                }
+                ui->customPlot->addGraph();
+                ui->customPlot->graph(1)->setData(xspl, yspl);
+                ui->customPlot->graph(1)->setPen(QPen(Qt::red));
+                ui->customPlot->replot();
 
-                        ui->customPlot->addGraph();
-                        ui->customPlot->graph(0)->setData(xda, yda);
-                        if(ui->checkBox_2->isChecked()){
-                            ui->customPlot->graph(0)->rescaleAxes();
-                            ui->doubleSpinBox_3->setValue(xda[0]);
-                            ui->doubleSpinBox_4->setValue(xda[nlines-1]);
-                        }
-                        else{
-                            ui->customPlot->xAxis->setRange(ui->doubleSpinBox_3->value(), ui->doubleSpinBox_4->value());
-                            ui->customPlot->yAxis->setRange(ui->doubleSpinBox_5->value(), ui->doubleSpinBox_6->value());
-                        }
-                        ui->customPlot->addGraph();
-                        ui->customPlot->graph(1)->setData(xspl, yspl);
-                        ui->customPlot->graph(1)->setPen(QPen(Qt::red));
-                        ui->customPlot->replot();
+                if(ui->checkBox_7->isChecked()){
+                      string stemp = ui->lineEdit_8->text().toUtf8().constData();
 
-                        if(ui->checkBox_7->isChecked()){
-                            string stemp = ui->lineEdit_8->text().toUtf8().constData();
+                      std::ostringstream tempNameStream(stemp);
+                      tempNameStream<<splPath<<"/"<<stemp;
+                      std::string tempName = tempNameStream.str();
+                      QFile checktemp(tempName.c_str());
 
-                            std::ostringstream tempNameStream(stemp);
-                            tempNameStream<<splPath<<"/"<<stemp;
-                            std::string tempName = tempNameStream.str();
+                      if(!checktemp.exists()){
+                           qDebug()<<"The file "<<checktemp.fileName()<<" does not exist.";
+                           QMessageBox::information(this, "Error", "File "+checktemp.fileName()+" does not exist!");
+                           return;
+                      }
 
-                            QFile checktemp(tempName.c_str());
+                      ifstream temp(tempName.c_str());
 
-                            if(!checktemp.exists()){
-                                qDebug()<<"The file "<<checktemp.fileName()<<" does not exist.";
-                                QMessageBox::information(this, "Error", "File "+checktemp.fileName()+" does not exist!");
-                                return;
-                            }
+                      int ntemp=0;
 
-                            ifstream temp(tempName.c_str());
+                      while(std::getline(temp, line))
+                            ++ ntemp;
 
-                            int ntemp=0;
+                      temp.clear();
+                      temp.seekg(0, ios::beg);
 
-                            while(std::getline(temp, line))
-                                       ++ ntemp;
+                      QVector<double> xte(ntemp), yte(ntemp);
 
-                                    temp.clear();
-                                    temp.seekg(0, ios::beg);
+                      for(int i=0; i<ntemp; i++){
+                           temp >> eins >> zwei;
+                           istringstream ist(eins);
+                           ist >> xte[i];
+                           istringstream ist2(zwei);
+                           ist2 >> yte[i];
+                      }
 
-                                    QVector<double> xte(ntemp), yte(ntemp);
-
-                                    for(int i=0; i<ntemp; i++){
-                                        temp >> eins >> zwei;
-                                        istringstream ist(eins);
-                                        ist >> xte[i];
-                                        istringstream ist2(zwei);
-                                        ist2 >> yte[i];
-                                    }
-
-                                    temp.close();
-
-                                    ui->customPlot->addGraph();
-                                    ui->customPlot->graph(2)->setData(xte, yte);
-                                    ui->customPlot->graph(2)->setPen(QPen(Qt::green));
-                                    ui->customPlot->rescaleAxes(true);
-                                    ui->customPlot->replot();
-                        }
+                      temp.close();
+                      ui->customPlot->addGraph();
+                      ui->customPlot->graph(2)->setData(xte, yte);
+                      ui->customPlot->graph(2)->setPen(QPen(Qt::green));
+                      ui->customPlot->rescaleAxes(true);
+                      ui->customPlot->replot();
+                  }
 
     }
 }
@@ -355,7 +363,6 @@ void SplineFit::on_pushButton_2_clicked()
             std::ostringstream dat1NameStream(spFile);
             dat1NameStream<<splPath<<"/"<<spFile<<g<<spExt;
             std::string dat1Name = dat1NameStream.str();
-            ifstream file1(dat1Name.c_str());
 
             QFile checkfile1(dat1Name.c_str());
 
@@ -363,8 +370,9 @@ void SplineFit::on_pushButton_2_clicked()
                 qDebug()<<"The file "<<checkfile1.fileName()<<" does not exist.";
                 QString gnum = QString::number(g);
                 QMessageBox::information(this, "Error", "File "+qspPath+"/"+qspFile+gnum+qspExt+" does not exist!");
-               return;
+                return;
             }
+            ifstream file1(dat1Name.c_str());
 
             while(std::getline(file1, line))
                        ++ nlines;
@@ -388,6 +396,16 @@ void SplineFit::on_pushButton_2_clicked()
                     std::ostringstream spNameStream(sp2File);
                     spNameStream<<splPath<<"/"<<sp2File;
                     std::string spName = spNameStream.str();
+
+                    QFile checkfile2(spName.c_str());
+
+                    if(!checkfile2.exists()){
+                        qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
+                        QString gnum = QString::number(g);
+                        QMessageBox::information(this, "Error", "File "+checkfile2.fileName()+" does not exist!");
+                        return;
+                    }
+
                     ifstream sdat(spName.c_str());
 
                     while(std::getline(sdat, line))
@@ -419,7 +437,7 @@ void SplineFit::on_pushButton_2_clicked()
                         istringstream ist2(zwei);
                         ist2 >> YC[i];
                         for(int e = 0; e<nlines-1; e++){
-                            if(XC[i]>=xSpl[e] & XC[i]<=xSpl[e+1]){
+                            if((XC[i]>=xSpl[e]) & (XC[i]<=xSpl[e+1])){
                                 YC[i]=ySpl[e];
                                 e=nlines;
                             }
@@ -549,7 +567,7 @@ void SplineFit::on_pushButton_2_clicked()
             qDebug()<<"The file "<<checkfile1.fileName()<<" does not exist.";
             QString gnum = QString::number(g);
             QMessageBox::information(this, "Error", "File "+qspPath+"/"+qspFile+gnum+qspExt+" does not exist!");
-           return;
+            return;
         }
         ifstream file1(dat1Name.c_str());
 
@@ -675,30 +693,28 @@ void SplineFit::on_pushButton_2_clicked()
                     int ntemp=0;
 
                     while(std::getline(temp, line))
-                               ++ ntemp;
+                           ++ ntemp;
 
-                            temp.clear();
-                            temp.seekg(0, ios::beg);
+                    temp.clear();
+                    temp.seekg(0, ios::beg);
 
-                            QVector<double> xte(ntemp), yte(ntemp);
+                    QVector<double> xte(ntemp), yte(ntemp);
 
-                            for(int i=0; i<ntemp; i++){
-                                temp >> eins >> zwei;
-                                istringstream ist(eins);
-                                ist >> xte[i];
-                                istringstream ist2(zwei);
-                                ist2 >> yte[i];
-                            }
+                    for(int i=0; i<ntemp; i++){
+                         temp >> eins >> zwei;
+                         istringstream ist(eins);
+                         ist >> xte[i];
+                         istringstream ist2(zwei);
+                         ist2 >> yte[i];
+                    }
+                    temp.close();
 
-                            temp.close();
-
-                            ui->customPlot->addGraph();
-                            int ngraph = ui->customPlot->graphCount()-1;
-                            ui->customPlot->graph(ngraph)->setData(xte, yte);
-                            ui->customPlot->graph(ngraph)->setPen(QPen(Qt::green));
-                            ui->customPlot->rescaleAxes(true);
+                    ui->customPlot->addGraph();
+                    int ngraph = ui->customPlot->graphCount()-1;
+                    ui->customPlot->graph(ngraph)->setData(xte, yte);
+                    ui->customPlot->graph(ngraph)->setPen(QPen(Qt::green));
+                    ui->customPlot->rescaleAxes(true);
                 }
-
 
                 ui->customPlot->replot();
 
@@ -835,7 +851,7 @@ void SplineFit::on_pushButton_4_clicked()
     if(!checkfile1.exists()){
         qDebug()<<"The file "<<checkfile1.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+qspPath+"/"+qspFile+" does not exist!");
-       return;
+        return;
     }
     ifstream file1(dat1Name.c_str());
 
@@ -889,49 +905,47 @@ void SplineFit::on_pushButton_4_clicked()
             string eins, zwei, line;
 
             while(std::getline(file1, line))
-                       ++ lines;
+                 ++ lines;
 
-                    file1.clear();
-                    file1.seekg(0, ios::beg);
+            file1.clear();
+            file1.seekg(0, ios::beg);
 
-                    QVector<double> xVal(lines);
+            QVector<double> xVal(lines);
 
-                    for(int i=0; i<lines; i++){
-                        file1 >> eins;
-                        istringstream ist(eins);
-                        ist >> xVal[i];
+            for(int i=0; i<lines; i++){
+                file1 >> eins;
+                istringstream ist(eins);
+                ist >> xVal[i];
+            }
 
-                    }
+            file1.close();
 
-                    file1.close();
+            lines =0;
 
-                    lines =0;
+            while(std::getline(file3, line))
+                   ++ lines;
+            file3.clear();
+            file3.seekg(0, ios::beg);
 
-                    while(std::getline(file3, line))
-                               ++ lines;
+            QVector<double> ySpec(lines), xSpec(lines);
 
-                            file3.clear();
-                            file3.seekg(0, ios::beg);
-
-                            QVector<double> ySpec(lines), xSpec(lines);
-
-                            for(int i=0; i<lines; i++){
-                                file3 >> eins >> zwei;
-                                istringstream ist2(eins);
-                                ist2 >> xSpec[i];
-                                istringstream ist3(zwei);
-                                ist3 >> ySpec[i];
-                                if(i>0 & (xSpec[i-1]<xVal[count]) & (xSpec[i]>=xVal[count])){
-                                    ++count;
-                                    file2<<xSpec[i]<<"\t"<<ySpec[i]<<endl;
-                                }
-                                else{
-                                    // do nothing
-                                }
-
-                            }
-
-                            file3.close();
+            for(int i=0; i<lines; i++){
+                 file3 >> eins >> zwei;
+                 istringstream ist2(eins);
+                 ist2 >> xSpec[i];
+                 istringstream ist3(zwei);
+                 ist3 >> ySpec[i];
+                 if(i>0){
+                     if((xSpec[i-1]<xVal[count]) & (xSpec[i]>=xVal[count])){
+                        ++count;
+                        file2<<xSpec[i]<<"\t"<<ySpec[i]<<endl;
+                     }
+                 }
+                 else{
+                     // do nothing
+                 }
+             }
+            file3.close();
 }
 
 
@@ -988,37 +1002,36 @@ void SplineFit::on_pushButton_6_clicked()
             }
 
             while(std::getline(file1, line))
-                       ++ nlines;
+                 ++ nlines;
 
-                    file1.clear();
-                    file1.seekg(0, ios::beg);
+            file1.clear();
+            file1.seekg(0, ios::beg);
 
-                    QVector<double> xSpl(nlines), ySpl(nlines), ySpd(nlines), xSpd(nlines);
+            QVector<double> xSpl(nlines), ySpl(nlines), ySpd(nlines), xSpd(nlines);
 
-                    for(int i=0; i<nlines; i++){
-                        file1 >> eins >> zwei;
-                        istringstream ist(eins);
-                        ist >> xSpl[i];
-                        istringstream ist2(zwei);
-                        ist2 >> ySpl[i];
-                        mean+=ySpl[i];
+            for(int i=0; i<nlines; i++){
+                file1 >> eins >> zwei;
+                istringstream ist(eins);
+                ist >> xSpl[i];
+                istringstream ist2(zwei);
+                ist2 >> ySpl[i];
+                mean+=ySpl[i];
+             }
+             file1.close();
+             mean=mean/nlines;
+             for(int i=0; i<nlines; i++){
+                 stabw+=pow((ySpl[i]-mean),2);
+             }
+             stabw=sqrt(stabw/nlines);
+             meanu = mean-clipu*stabw;
+             meana = mean+clipa*stabw;
 
-                    }
-                    file1.close();
-                    mean=mean/nlines;
-                    for(int i=0; i<nlines; i++){
-                        stabw+=pow((ySpl[i]-mean),2);
-                    }
-                    stabw=sqrt(stabw/nlines);
-                    meanu = mean-clipu*stabw;
-                    meana = mean+clipa*stabw;
+             for(int n=0; n<itera; n++){
 
-                for(int n=0; n<itera; n++){
+                 int count=0;
 
-                    int count=0;
-
-                    for(int i=0; i<nlines; i++){
-                        if(ySpl[i]>meanu & (ySpl[i]<meana)){
+                 for(int i=0; i<nlines; i++){
+                      if((ySpl[i]>meanu) & (ySpl[i]<meana)){
                             ySpd[count]=ySpl[i];
                             xSpd[count]=xSpl[i];
                             ++count;
@@ -1149,7 +1162,7 @@ void SplineFit::on_pushButton_6_clicked()
                 mean2=mean;
 
                 for(int i=0; i<nlines; i++){
-                    if(ySpl[i]>meanu & (ySpl[i]<meana)){
+                    if((ySpl[i]>meanu) & (ySpl[i]<meana)){
                         ySpd[count]=ySpl[i];
                         xSpd[count]=xSpl[i];
                         ++count;
@@ -1288,12 +1301,12 @@ void SplineFit::on_pushButton_7_clicked()
         QMessageBox::information(this, "Error", "File "+checkfile1.fileName()+" does not exist!");
         return;
     }
-    if(!checkfile2.exists()){
+    else if(!checkfile2.exists()){
         qDebug()<<"The file "<<checkfile2.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+checkfile2.fileName()+" does not exist!");
         return;
     }
-    if(!checkfile3.exists()){
+    else if(!checkfile3.exists()){
         qDebug()<<"The file "<<checkfile3.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+checkfile3.fileName()+" does not exist!");
         return;
@@ -1304,17 +1317,17 @@ void SplineFit::on_pushButton_7_clicked()
     string line, one, two;
 
     while(std::getline(file1, line))
-               ++ nspoints;
+         ++ nspoints;
 
-            file1.clear();
-            file1.seekg(0, ios::beg);
+    file1.clear();
+    file1.seekg(0, ios::beg);
 
     eonum = nspoints % 2;
     if(eonum == 0){
 
     }
     else{
-        QMessageBox::information(this, "Error", "Uneven number of points in file "+checkfile1.fileName());
+        QMessageBox::information(this, "Error", "Odd number of points in file "+checkfile1.fileName());
         return;
     }
 
@@ -1395,10 +1408,10 @@ void SplineFit::on_pushButton_7_clicked()
             int ntemp=0;
 
             while(std::getline(file3, line))
-                       ++ ntemp;
+                 ++ ntemp;
 
-                    file3.clear();
-                    file3.seekg(0, ios::beg);
+            file3.clear();
+            file3.seekg(0, ios::beg);
 
             QVector<double> ty(ntemp), tx(ntemp);
 
@@ -1464,30 +1477,30 @@ void SplineFit::on_pushButton_8_clicked()
     string line, one, two;
 
     while(std::getline(file1, line))
-               ++ nspoints;
+        ++ nspoints;
 
-            file1.clear();
-            file1.seekg(0, ios::beg);
+    file1.clear();
+    file1.seekg(0, ios::beg);
 
-            QVector<double> sPoints(nspoints), sWave(nspoints);
+    QVector<double> sPoints(nspoints), sWave(nspoints);
 
-            for(int i=0; i<nspoints; i++){
-                file1 >> one >> two;
-                istringstream ist(one);
-                ist >> sWave[i];
-                istringstream is(two);
-                is >> sPoints[i];
-            }
-            file1.close();
+    for(int i=0; i<nspoints; i++){
+        file1 >> one >> two;
+        istringstream ist(one);
+        ist >> sWave[i];
+        istringstream is(two);
+        is >> sPoints[i];
+    }
+    file1.close();
 
-            ui->customPlot->addGraph();
-            int ngraph=ui->customPlot->graphCount();
+    ui->customPlot->addGraph();
+    int ngraph=ui->customPlot->graphCount();
 
-            ui->customPlot->graph(ngraph-1)->addData(sWave, sPoints);
-            ui->customPlot->graph(ngraph-1)->setLineStyle(QCPGraph::lsNone);
-            ui->customPlot->graph(ngraph-1)->setPen(QPen(Qt::magenta));
-            ui->customPlot->graph(ngraph-1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssPlus, ui->spinBox->value()));
-            ui->customPlot->replot();
+    ui->customPlot->graph(ngraph-1)->addData(sWave, sPoints);
+    ui->customPlot->graph(ngraph-1)->setLineStyle(QCPGraph::lsNone);
+    ui->customPlot->graph(ngraph-1)->setPen(QPen(Qt::magenta));
+    ui->customPlot->graph(ngraph-1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssPlus, ui->spinBox->value()));
+    ui->customPlot->replot();
 }
 
 //*************************
@@ -1517,7 +1530,7 @@ void SplineFit::on_pushButton_9_clicked()
     string line, one, two;
 
     while(std::getline(file1, line))
-               ++ nspoints;
+           ++ nspoints;
 
             file1.clear();
             file1.seekg(0, ios::beg);

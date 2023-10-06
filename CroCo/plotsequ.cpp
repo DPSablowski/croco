@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <CCfits/CCfits>
 #include <spline.h>
+#include <algorithm>
 
 using namespace std;
 namespace fit=CCfits;
@@ -120,59 +121,59 @@ void PlotSequ::on_pushButton_3_clicked()
     for (int u=min; u<=max; u++){
 
         if(ui->comboBox->currentIndex()==0){
-    QString input=ui->lineEdit->text();
-    string data = input.toUtf8().constData();
-    std::ostringstream datNameStream(data);
-    datNameStream<<seqPath<<"/"<<data<<u<<sext;
-    std::string datName = datNameStream.str();
+            QString input=ui->lineEdit->text();
+            string data = input.toUtf8().constData();
+            std::ostringstream datNameStream(data);
+            datNameStream<<seqPath<<"/"<<data<<u<<sext;
+            std::string datName = datNameStream.str();
 
-    QFile checkfile(datName.c_str());
+            QFile checkfile(datName.c_str());
 
-    if(!checkfile.exists()){
-        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-        QString fError= QString::number(u);
-        QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
-        this->setCursor(QCursor(Qt::ArrowCursor));
-        return;
-    }
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+                QString fError= QString::number(u);
+                QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
 
-    ifstream dat(datName.c_str());
+            ifstream dat(datName.c_str());
 
-    number_of_lines =0;
+            number_of_lines =0;
 
 
-    while(std::getline(dat, line))
-       ++ number_of_lines;
+            while(std::getline(dat, line))
+               ++ number_of_lines;
 
-    dat.clear();
-    dat.seekg(0, ios::beg);
+            dat.clear();
+            dat.seekg(0, ios::beg);
 
-    a.resize(number_of_lines);
-    b.resize(number_of_lines);
+            a.resize(number_of_lines);
+            b.resize(number_of_lines);
 
-    for (int i=0; i<number_of_lines; i++){
-    dat >> eins >>zwei;
-    istringstream ist(eins);
-    ist >> a[i];
-    if(ui->checkBox_15->isChecked()){
-        a[i]=log10(a[i]);
-    }
-    else{
-        if(ui->checkBox_16->isChecked()){
-            a[i]=pow(10,a[i]);
-        }
-        else{
+            for (int i=0; i<number_of_lines; i++){
+                dat >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> a[i];
+                if(ui->checkBox_15->isChecked()){
+                    a[i]=log10(a[i]);
+                }
+                else{
+                    if(ui->checkBox_16->isChecked()){
+                        a[i]=pow(10,a[i]);
+                    }
+                    else{
 
-        }
-    }
-    if(ui->checkBox_13->isChecked()){
-        a[i]=(a[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
-    }
-    istringstream ist2(zwei);
-    ist2 >> b[i];
-    b[i]=b[i]+offset*(u-min);
-    }
-    dat.close();
+                    }
+                }
+                if(ui->checkBox_13->isChecked()){
+                    a[i]=(a[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
+                }
+                istringstream ist2(zwei);
+                ist2 >> b[i];
+                b[i]=b[i]+offset*(u-min);
+            }
+            dat.close();
         }
 
         if(ui->comboBox->currentIndex()==1){
@@ -181,7 +182,6 @@ void PlotSequ::on_pushButton_3_clicked()
             std::ostringstream datNameStream(data);
             datNameStream<<seqPath<<"/"<<data<<u<<sext;
             std::string datName = datNameStream.str();
-            ifstream dat(datName.c_str());
 
             QFile checkfile1(datName.c_str());
 
@@ -192,6 +192,7 @@ void PlotSequ::on_pushButton_3_clicked()
                 //check=1;
                return;
             }
+            //ifstream dat(datName.c_str());
 
             CCfits::FITS::setVerboseMode(true);
 
@@ -329,8 +330,6 @@ void PlotSequ::on_pushButton_2_clicked()
             std::ostringstream datNameStream(data);
             datNameStream<<seqPath<<"/"<<data<<u<<sext;
             std::string datName = datNameStream.str();
-            ifstream dat(datName.c_str());
-
 
             QFile checkfile(datName.c_str());
 
@@ -341,6 +340,7 @@ void PlotSequ::on_pushButton_2_clicked()
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
+            ifstream dat(datName.c_str());
 
             number_of_lines =0;
 
@@ -384,7 +384,6 @@ void PlotSequ::on_pushButton_2_clicked()
             std::ostringstream datNameStream(data);
             datNameStream<<seqPath<<"/"<<data<<u<<sext;
             std::string datName = datNameStream.str();
-            ifstream dat(datName.c_str());
 
             QFile checkfile1(datName.c_str());
 
@@ -513,7 +512,6 @@ void PlotSequ::on_pushButton_2_clicked()
 
             number_of_lines =0;
 
-
             while(std::getline(dat1, line))
                ++ number_of_lines;
 
@@ -539,15 +537,15 @@ void PlotSequ::on_pushButton_2_clicked()
                     }
                 }
 
-            if(ui->checkBox_13->isChecked()){
-                a1[i]=(a1[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
-                if(ui->checkBox_6->isChecked()){
-                    a1[i]=a1[i]+ui->doubleSpinBox_8->value();
+                if(ui->checkBox_13->isChecked()){
+                    a1[i]=(a1[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
+                    if(ui->checkBox_6->isChecked()){
+                        a1[i]=a1[i]+ui->doubleSpinBox_8->value();
+                    }
+                    else{
+                        //
+                    }
                 }
-                else{
-                    //
-                }
-            }
 
                 if(ui->checkBox_6->isChecked()){
                     a1[i]=a1[i]*(1+ui->doubleSpinBox_8->value()/c0);
@@ -557,9 +555,9 @@ void PlotSequ::on_pushButton_2_clicked()
                 }
 
 
-            istringstream ist2(zwei);
-            ist2 >> b1[i];
-            b1[i]=b1[i]+ui->doubleSpinBox_6->value()+offset*(u-min);
+                istringstream ist2(zwei);
+                ist2 >> b1[i];
+                b1[i]=b1[i]+ui->doubleSpinBox_6->value()+offset*(u-min);
             }
             dat1.close();
 
@@ -577,8 +575,6 @@ void PlotSequ::on_pushButton_2_clicked()
             std::ostringstream dat2NameStream(data2);
             dat2NameStream<<seqPath<<"/"<<data2;
             std::string dat2Name = dat2NameStream.str();
-            ifstream dat2(dat2Name.c_str());
-
 
             QFile checkfile(dat2Name.c_str());
 
@@ -586,11 +582,11 @@ void PlotSequ::on_pushButton_2_clicked()
                 qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input2+" does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
-                }
+                return;
+            }
+            ifstream dat2(dat2Name.c_str());
 
             number_of_lines =0;
-
 
             while(std::getline(dat2, line))
                ++ number_of_lines;
@@ -602,6 +598,158 @@ void PlotSequ::on_pushButton_2_clicked()
             QVector<double> b2(number_of_lines);
 
             for (int i=0; i<number_of_lines; i++){
+                dat2 >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> a2[i];
+                if(ui->checkBox_18->isChecked()){
+                    a2[i]=log10(a2[i]);
+                }
+                else{
+                    if(ui->checkBox_20->isChecked()){
+                        a2[i]=pow(10,a2[i]);
+                    }
+                    else{
+
+                    }
+                }
+
+                if(ui->checkBox_13->isChecked()){
+                    a2[i]=(a2[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
+                    if(ui->checkBox_7->isChecked()){
+                        a2[i]=a2[i]+ui->doubleSpinBox_9->value();
+                    }
+                    else{
+                        //
+                    }
+                }
+                else{
+                    if(ui->checkBox_7->isChecked()){
+                        a2[i]=a2[i]*(1+ui->doubleSpinBox_9->value()/c0);
+                    }
+                    else{
+                        //
+                    }
+                }
+
+                istringstream ist2(zwei);
+                ist2 >> b2[i];
+                b2[i]=b2[i]+ui->doubleSpinBox_7->value()+offset*(u-min);
+            }
+            dat2.close();
+
+            ui->customPlot->addGraph();
+            pen2.setColor(Qt::blue);
+            pen2.setWidth(ui->spinBox_4->value());
+            ui->customPlot->graph()->setPen(pen2);
+            ui->customPlot->graph()->setData(a2, b2);
+        }
+    }
+
+    // plot 1 above
+    if(ui->checkBox_10->isChecked()){
+        QString input1=ui->lineEdit_11->text();
+        string data1 = input1.toUtf8().constData();
+        std::ostringstream dat1NameStream(data1);
+        dat1NameStream<<seqPath<<"/"<<data1;
+        std::string dat1Name = dat1NameStream.str();
+
+        QFile checkfile(dat1Name.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input1+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        ifstream dat1(dat1Name.c_str());
+
+        number_of_lines =0;
+
+        while(std::getline(dat1, line))
+           ++ number_of_lines;
+
+        dat1.clear();
+        dat1.seekg(0, ios::beg);
+
+        QVector<double> a1(number_of_lines);
+        QVector<double> b1(number_of_lines);
+
+        for (int i=0; i<number_of_lines; i++){
+            dat1 >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> a1[i];
+            if(ui->checkBox_17->isChecked()){
+                a1[i]=log10(a1[i]);
+            }
+            else{
+                if(ui->checkBox_19->isChecked()){
+                    a1[i]=pow(10,a1[i]);
+                }
+                else{
+
+                }
+            }
+            if(ui->checkBox_13->isChecked()){
+                a1[i]=(a1[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
+                if(ui->checkBox_6->isChecked()){
+                    a1[i]=a1[i]+ui->doubleSpinBox_8->value();
+                }
+                else{
+                    //
+                }
+            }
+            else{
+                if(ui->checkBox_6->isChecked()){
+                    a1[i]=a1[i]*(1+ui->doubleSpinBox_8->value()/c0);
+                }
+                else{
+                    //
+                }
+            }
+
+            istringstream ist2(zwei);
+            ist2 >> b1[i];
+            b1[i]=b1[i]+ui->doubleSpinBox_6->value()+offset*(max-min+1);
+        }
+        dat1.close();
+
+        ui->customPlot->addGraph();
+        pen2.setColor(Qt::magenta);
+        pen2.setWidth(ui->spinBox_4->value());
+        ui->customPlot->graph()->setPen(pen2);
+        ui->customPlot->graph()->setData(a1, b1);
+    }
+
+    // plot 2 above
+    if(ui->checkBox_11->isChecked()){
+        QString input2=ui->lineEdit_12->text();
+        string data2 = input2.toUtf8().constData();
+        std::ostringstream dat2NameStream(data2);
+        dat2NameStream<<seqPath<<"/"<<data2;
+        std::string dat2Name = dat2NameStream.str();
+
+        QFile checkfile(dat2Name.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input2+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        ifstream dat2(dat2Name.c_str());
+
+        number_of_lines =0;
+
+        while(std::getline(dat2, line))
+           ++ number_of_lines;
+
+        dat2.clear();
+        dat2.seekg(0, ios::beg);
+
+        QVector<double> a2(number_of_lines);
+        QVector<double> b2(number_of_lines);
+
+        for (int i=0; i<number_of_lines; i++){
             dat2 >> eins >>zwei;
             istringstream ist(eins);
             ist >> a2[i];
@@ -637,162 +785,7 @@ void PlotSequ::on_pushButton_2_clicked()
 
             istringstream ist2(zwei);
             ist2 >> b2[i];
-            b2[i]=b2[i]+ui->doubleSpinBox_7->value()+offset*(u-min);
-            }
-            dat2.close();
-
-            ui->customPlot->addGraph();
-            pen2.setColor(Qt::blue);
-            pen2.setWidth(ui->spinBox_4->value());
-            ui->customPlot->graph()->setPen(pen2);
-            ui->customPlot->graph()->setData(a2, b2);
-        }}
-
-    // plot 1 above
-    if(ui->checkBox_10->isChecked()){
-        QString input1=ui->lineEdit_11->text();
-        string data1 = input1.toUtf8().constData();
-        std::ostringstream dat1NameStream(data1);
-        dat1NameStream<<seqPath<<"/"<<data1;
-        std::string dat1Name = dat1NameStream.str();
-        ifstream dat1(dat1Name.c_str());
-
-
-        QFile checkfile(dat1Name.c_str());
-
-        if(!checkfile.exists()){
-            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input1+" does not exist!");
-            this->setCursor(QCursor(Qt::ArrowCursor));
-           return;
-            }
-
-        number_of_lines =0;
-
-
-        while(std::getline(dat1, line))
-           ++ number_of_lines;
-
-        dat1.clear();
-        dat1.seekg(0, ios::beg);
-
-        QVector<double> a1(number_of_lines);
-        QVector<double> b1(number_of_lines);
-
-        for (int i=0; i<number_of_lines; i++){
-        dat1 >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> a1[i];
-        if(ui->checkBox_17->isChecked()){
-            a1[i]=log10(a1[i]);
-        }
-        else{
-            if(ui->checkBox_19->isChecked()){
-                a1[i]=pow(10,a1[i]);
-            }
-            else{
-
-            }
-        }
-        if(ui->checkBox_13->isChecked()){
-            a1[i]=(a1[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
-            if(ui->checkBox_6->isChecked()){
-                a1[i]=a1[i]+ui->doubleSpinBox_8->value();
-            }
-            else{
-                //
-            }
-        }
-        else{
-            if(ui->checkBox_6->isChecked()){
-                a1[i]=a1[i]*(1+ui->doubleSpinBox_8->value()/c0);
-            }
-            else{
-                //
-            }
-        }
-
-        istringstream ist2(zwei);
-        ist2 >> b1[i];
-        b1[i]=b1[i]+ui->doubleSpinBox_6->value()+offset*(max-min+1);
-        }
-        dat1.close();
-
-        ui->customPlot->addGraph();
-        pen2.setColor(Qt::magenta);
-        pen2.setWidth(ui->spinBox_4->value());
-        ui->customPlot->graph()->setPen(pen2);
-        ui->customPlot->graph()->setData(a1, b1);
-    }
-
-    // plot 2 above
-    if(ui->checkBox_11->isChecked()){
-        QString input2=ui->lineEdit_12->text();
-        string data2 = input2.toUtf8().constData();
-        std::ostringstream dat2NameStream(data2);
-        dat2NameStream<<seqPath<<"/"<<data2;
-        std::string dat2Name = dat2NameStream.str();
-        ifstream dat2(dat2Name.c_str());
-
-
-        QFile checkfile(dat2Name.c_str());
-
-        if(!checkfile.exists()){
-            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input2+" does not exist!");
-            this->setCursor(QCursor(Qt::ArrowCursor));
-           return;
-            }
-
-        number_of_lines =0;
-
-
-        while(std::getline(dat2, line))
-           ++ number_of_lines;
-
-        dat2.clear();
-        dat2.seekg(0, ios::beg);
-
-        QVector<double> a2(number_of_lines);
-        QVector<double> b2(number_of_lines);
-
-        for (int i=0; i<number_of_lines; i++){
-        dat2 >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> a2[i];
-        if(ui->checkBox_18->isChecked()){
-            a2[i]=log10(a2[i]);
-        }
-        else{
-            if(ui->checkBox_20->isChecked()){
-                a2[i]=pow(10,a2[i]);
-            }
-            else{
-
-            }
-        }
-
-        if(ui->checkBox_13->isChecked()){
-            a2[i]=(a2[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
-            if(ui->checkBox_7->isChecked()){
-                a2[i]=a2[i]+ui->doubleSpinBox_9->value();
-            }
-            else{
-                //
-            }
-        }
-        else{
-            if(ui->checkBox_7->isChecked()){
-                a2[i]=a2[i]*(1+ui->doubleSpinBox_9->value()/c0);
-            }
-            else{
-                //
-            }
-        }
-
-        istringstream ist2(zwei);
-        ist2 >> b2[i];
-        b2[i]=b2[i]+ui->doubleSpinBox_7->value()+offset*(max-min+1);
+            b2[i]=b2[i]+ui->doubleSpinBox_7->value()+offset*(max-min+1);
         }
         dat2.close();
 
@@ -810,8 +803,6 @@ void PlotSequ::on_pushButton_2_clicked()
             std::ostringstream dat3NameStream(data3);
             dat3NameStream<<seqPath<<"/"<<data3;
             std::string dat3Name = dat3NameStream.str();
-            ifstream dat3(dat3Name.c_str());
-
 
             QFile checkfile(dat3Name.c_str());
 
@@ -819,12 +810,12 @@ void PlotSequ::on_pushButton_2_clicked()
                 qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input3+" does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
-               return;
-                }
+                return;
+            }
+            ifstream dat3(dat3Name.c_str());
 
             number_of_lines =0;
             int din=1;
-
 
             while(std::getline(dat3, line))
                ++ number_of_lines;
@@ -836,45 +827,47 @@ void PlotSequ::on_pushButton_2_clicked()
             QVector<double> b3(number_of_lines);
 
             for (int i=0; i<number_of_lines; i++){
-            dat3 >> eins >>zwei;
-            istringstream ist(eins);
-            ist >> a3[i];
-            if(ui->checkBox_15->isChecked()){
-                a3[i]=log10(a3[i]);
-            }
-            else{
-                if(ui->checkBox_16->isChecked()){
-                    a3[i]=pow(10,a3[i]);
+                dat3 >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> a3[i];
+                if(ui->checkBox_15->isChecked()){
+                    a3[i]=log10(a3[i]);
                 }
                 else{
+                    if(ui->checkBox_16->isChecked()){
+                        a3[i]=pow(10,a3[i]);
+                    }
+                    else{
 
+                    }
                 }
-            }
 
-            if(ui->checkBox_13->isChecked()){
-                a3[i]=(a3[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
-                if(ui->checkBox_9->isChecked()){
-                    a3[i]=a3[i]+ui->doubleSpinBox_11->value();
+                if(ui->checkBox_13->isChecked()){
+                    a3[i]=(a3[i]-ui->doubleSpinBox_12->value())*c0/ui->doubleSpinBox_12->value();
+                    if(ui->checkBox_9->isChecked()){
+                        a3[i]=a3[i]+ui->doubleSpinBox_11->value();
+                    }
+                    else{
+                        //
+                    }
                 }
                 else{
-                    //
+                    if(ui->checkBox_6->isChecked()){
+                        a3[i]=a3[i]*(1+ui->doubleSpinBox_11->value()/c0);
+                    }
+                    else{
+                        //
+                    }
                 }
-            }
-            else{
-                if(ui->checkBox_6->isChecked()){
-                    a3[i]=a3[i]*(1+ui->doubleSpinBox_11->value()/c0);
-                }
-                else{
-                    //
-                }
-            }
 
-            if((i>0) & (a3[i]<a3[i-1])){
-            ++din;
-            }
-            istringstream ist2(zwei);
-            ist2 >> b3[i];
-            b3[i]=b3[i]+ui->doubleSpinBox_10->value()+offset*din;
+                if(i>0){
+                    if(a3[i]<a3[i-1]){
+                        ++din;
+                    }
+                }
+                istringstream ist2(zwei);
+                ist2 >> b3[i];
+                b3[i]=b3[i]+ui->doubleSpinBox_10->value()+offset*din;
             }
             dat3.close();
 
@@ -990,16 +983,84 @@ void PlotSequ::on_spinBox_3_valueChanged()
 }
 
 //***************************************************
-// Co-Add spectra
+// Add button
 //***************************************************
 void PlotSequ::on_pushButton_5_clicked()
 {
+    if(ui->comboBox->currentIndex()==1){
+        QMessageBox::information(this, "Error", "This function works on 2-column ASCII files only.");
+        return;
+    }
+
     this->setCursor(QCursor(Qt::WaitCursor));
+
+    if(ui->checkBox_21->isChecked()){
+        qSeqPath=ui->lineEdit_5->text();
+        seqPath=qSeqPath.toUtf8().constData();
+
+        QString input1=ui->lineEdit_19->text();
+        string data1 = input1.toUtf8().constData();
+        std::ostringstream dat1NameStream(data1);
+        dat1NameStream<<seqPath<<"/"<<data1;
+        std::string dat1Name = dat1NameStream.str();
+
+        QFile checkfile(dat1Name.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QMessageBox::information(this, "Error", "File "+checkfile.fileName()+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+
+        ifstream dat1(dat1Name.c_str());
+        string lines, one, two;
+
+        int number_of_ave=0;
+
+        while(std::getline(dat1, lines))
+           ++ number_of_ave;
+
+        dat1.clear();
+        dat1.seekg(0, ios::beg);
+
+        int minave=0, maxave=0;
+
+        for (int i=0; i<number_of_ave; i++){
+            dat1 >> one >>two;
+            istringstream ist(one);
+            ist >> minave;
+            istringstream ist2(two);
+            ist2 >> maxave;
+
+            ui->spinBox->setValue(minave);
+            ui->spinBox_2->setValue(maxave);
+
+            ui->lineEdit_10->setText("coAdded_"+QString::number(i)+".txt");
+
+            PlotSequ::coAdd();
+
+        }
+        dat1.close();
+
+        QMessageBox::information(this, "Message", "Added spectra written to coAdded_*.txt.");
+    }
+
+    else PlotSequ::coAdd();
+
+    this->setCursor(QCursor(Qt::ArrowCursor));
+
+}
+
+//*****************************
+// Add Spectra
+//*****************************
+void PlotSequ::coAdd(){
 
     string line, eins, zwei;
     int min=ui->spinBox->value();
     int max=ui->spinBox_2->value();
-    int number_of_lines =0;
+    int number_of_lines =0, number=0;
 
     qSeqPath=ui->lineEdit_5->text();
     seqPath=qSeqPath.toUtf8().constData();
@@ -1011,81 +1072,70 @@ void PlotSequ::on_pushButton_5_clicked()
 
     for (int u=min; u<=max; u++){
 
-        if(ui->comboBox->currentIndex()==0){
-        QString input=ui->lineEdit->text();
-        string data = input.toUtf8().constData();
-        std::ostringstream datNameStream(data);
-        datNameStream<<seqPath<<"/"<<data<<u<<sext;
-        std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
+            QString input=ui->lineEdit->text();
+            string data = input.toUtf8().constData();
+            std::ostringstream datNameStream(data);
+            datNameStream<<seqPath<<"/"<<data<<u<<sext;
+            std::string datName = datNameStream.str();
 
+            QFile checkfile(datName.c_str());
 
-        QFile checkfile(datName.c_str());
-
-        if(!checkfile.exists()){
-            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-            QString fError= QString::number(u);
-            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
-            this->setCursor(QCursor(Qt::ArrowCursor));
-           return;
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+                QString fError= QString::number(u);
+                QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
             }
+            ifstream dat(datName.c_str());
 
-        number_of_lines =0;
+            number_of_lines =0;
 
+            while(std::getline(dat, line))
+               ++ number_of_lines;
 
-        while(std::getline(dat, line))
-           ++ number_of_lines;
+            dat.clear();
+            dat.seekg(0, ios::beg);
 
-        dat.clear();
-        dat.seekg(0, ios::beg);
-
-        if(u==min){
-            aad.resize(number_of_lines);
-        }
-        else a2d.resize(number_of_lines);
-            bad.resize(number_of_lines);
-            b2d.resize(number_of_lines);
-
-        if(u==min){
-            for (int i=0; i<number_of_lines; i++){
-                dat >> eins >>zwei;
-                istringstream ist(eins);
-                ist >> aad[i];
-                istringstream ist2(zwei);
-                ist2 >> bad[i];
-            }
-        dat.close();
-        }
-
-        else {
-            for (int i=0; i<number_of_lines; i++){
-                dat >> eins >>zwei;
-                istringstream ist(eins);
-                ist >> a2d[i];
-                istringstream ist2(zwei);
-                ist2 >> b2d[i];
-            }
+            if(u==min){
+                number=number_of_lines;
+                aad.resize(number_of_lines);
+                bad.resize(number_of_lines);
+                for (int i=0; i<number_of_lines; i++){
+                    dat >> eins >>zwei;
+                    istringstream ist(eins);
+                    ist >> aad[i];
+                    istringstream ist2(zwei);
+                    ist2 >> bad[i];
+                }
             dat.close();
-        }
-        int aa=0;
+            }
 
-        for(int i = 0; i<number_of_lines-1; i++){
-
-            for(int e=aa; e<aa+5; e++){
-
-                if(a2d[e]==aad[i]){
-                    bad[i]+=b2d[e];
-                    aa=e;
+            else {
+                b2d.resize(number_of_lines);
+                a2d.resize(number_of_lines);
+                for (int i=0; i<number_of_lines; i++){
+                    dat >> eins >>zwei;
+                    istringstream ist(eins);
+                    ist >> a2d[i];
+                    istringstream ist2(zwei);
+                    ist2 >> b2d[i];
                 }
-                if((a2d[e]<aad[i])&(a2d[e+1]>aad[i])){
-                    bad[i]+=b2d[e]+(aad[i]-a2d[e])/(a2d[e+1]-a2d[e])*(b2d[e+1]-b2d[e]);
-                    aa=e;
+                dat.close();
+                for(int i = 0; i<number-1; i++){
+                    for(int e=0; e<number_of_lines; e++){
+                        if(a2d[e]==aad[i]){
+                            bad[i]+=b2d[e];
+                            e=number_of_lines;
+                        }
+                        else if((a2d[e]<aad[i])&(a2d[e+1]>=aad[i])){
+                            bad[i]+=b2d[e]+(aad[i]-a2d[e])/(a2d[e+1]-a2d[e])*(b2d[e+1]-b2d[e]);
+                            e=number_of_lines;
+                        }
+                    }
                 }
             }
-        }
-
-
-        }}
+    }
 
         QString input=ui->lineEdit_10->text();
         string data = input.toUtf8().constData();
@@ -1101,37 +1151,37 @@ void PlotSequ::on_pushButton_5_clicked()
                                           QMessageBox::Yes|QMessageBox::No);
             if (reply == QMessageBox::Yes) {
               qDebug() << "Yes was clicked";
-
             }
-
-        else {
-          qDebug() << "Yes was *not* clicked";
-          this->setCursor(QCursor(Qt::ArrowCursor));
-          return;
-        }}
+            else {
+              qDebug() << "Yes was *not* clicked";
+              this->setCursor(QCursor(Qt::ArrowCursor));
+              return;
+            }
+        }
 
         ofstream out(datName.c_str());
         for(int i =0; i <b2d.size(); i++){
             out<<aad[i]<<" "<<bad[i]<<endl;
         }
-
-        this->setCursor(QCursor(Qt::ArrowCursor));
-
-
 }
 
 //***************************************************
-// Co-Average
+// Average button
 //***************************************************
 void PlotSequ::on_pushButton_6_clicked()
 {
+    if(ui->comboBox->currentIndex()==1){
+        QMessageBox::information(this, "Error", "This function works on 2-column ASCII files only.");
+        return;
+    }
+    this->setCursor(QCursor(Qt::WaitCursor));
     // use file with file numbers to be averaged
-    if(ui->checkBox_12->isChecked()){
+    if(ui->checkBox_21->isChecked()){
 
         qSeqPath=ui->lineEdit_5->text();
         seqPath=qSeqPath.toUtf8().constData();
 
-        QString input1=ui->lineEdit_15->text();
+        QString input1=ui->lineEdit_19->text();
         string data1 = input1.toUtf8().constData();
         std::ostringstream dat1NameStream(data1);
         dat1NameStream<<seqPath<<"/"<<data1;
@@ -1229,6 +1279,7 @@ void PlotSequ::on_pushButton_6_clicked()
     else{
         PlotSequ::CoAverage();
     }
+    this->setCursor(QCursor(Qt::ArrowCursor));
 }
 
 //********************************************
@@ -1236,12 +1287,11 @@ void PlotSequ::on_pushButton_6_clicked()
 //********************************************
 void PlotSequ::CoAverage()
 {
-    this->setCursor(QCursor(Qt::WaitCursor));
 
     string line, eins, zwei;
     int min=ui->spinBox->value();
     int max=ui->spinBox_2->value();
-    int number_of_lines =0;
+    int number_of_lines =0, number=0;
 
     QString qext=ui->lineEdit_9->text();
     string sext = qext.toUtf8().constData();
@@ -1281,13 +1331,9 @@ void PlotSequ::CoAverage()
         dat.seekg(0, ios::beg);
 
         if(u==min){
-        aad.resize(number_of_lines);
-        }
-        else a2d.resize(number_of_lines);
-        bad.resize(number_of_lines);
-        b2d.resize(number_of_lines);
-
-        if(u==min){
+            aad.resize(number_of_lines);
+            bad.resize(number_of_lines);
+            number=number_of_lines;
             for (int i=0; i<number_of_lines; i++){
                 dat >> eins >>zwei;
                 istringstream ist(eins);
@@ -1299,6 +1345,8 @@ void PlotSequ::CoAverage()
         }
 
         else {
+            a2d.resize(number_of_lines);
+            b2d.resize(number_of_lines);
             for (int i=0; i<number_of_lines; i++){
                 dat >> eins >>zwei;
                 istringstream ist(eins);
@@ -1310,7 +1358,7 @@ void PlotSequ::CoAverage()
 
             int aa=0;
 
-            for(int i = 0; i<number_of_lines-1; i++){
+            for(int i = 0; i<number-1; i++){
 
                 for(int e=0; e<number_of_lines; e++){
 
@@ -1319,7 +1367,7 @@ void PlotSequ::CoAverage()
                         e=number_of_lines;
                     }
 
-                    if((a2d[e]<aad[i])&(a2d[e+1]>=aad[i])){
+                    else if((a2d[e]<aad[i])&(a2d[e+1]>=aad[i])){
                         bad[i]+=b2d[e]+(aad[i]-a2d[e])/(a2d[e+1]-a2d[e])*(b2d[e+1]-b2d[e]);
                         e=number_of_lines;
                     }
@@ -1343,7 +1391,7 @@ void PlotSequ::CoAverage()
 
         QFile qOut(datName.c_str());
 
-        if(ui->checkBox_12->isChecked()){
+        if(ui->checkBox_21->isChecked()){
             //
         }
         else{
@@ -1369,18 +1417,195 @@ void PlotSequ::CoAverage()
                 out<<aad[i]<<" "<<bad[i]/(max-min+1)<<endl;
         }
 
-        this->setCursor(QCursor(Qt::ArrowCursor));
+}
 
+//***********************
+// Median button
+//***********************
+void PlotSequ::on_pushButton_7_clicked()
+{
+    if(ui->comboBox->currentIndex()==1){
+        QMessageBox::information(this, "Error", "This function works on 2-column ASCII files only.");
+        return;
+    }
+    else{
+
+        this->setCursor(QCursor(Qt::WaitCursor));
+
+        // use file with list of spectra to be averaged
+        if(ui->checkBox_20->isChecked()){
+
+            qSeqPath=ui->lineEdit_5->text();
+            seqPath=qSeqPath.toUtf8().constData();
+
+            QString input1=ui->lineEdit_19->text();
+            string data1 = input1.toUtf8().constData();
+            std::ostringstream dat1NameStream(data1);
+            dat1NameStream<<seqPath<<"/"<<data1;
+            std::string dat1Name = dat1NameStream.str();
+
+            QFile checkfile(dat1Name.c_str());
+
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "File "+checkfile.fileName()+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+
+            ifstream dat1(dat1Name.c_str());
+            string lines, one, two;
+
+            int number_of_ave=0;
+
+            while(std::getline(dat1, lines))
+               ++ number_of_ave;
+
+            dat1.clear();
+            dat1.seekg(0, ios::beg);
+            int minave=0, maxave=0;
+
+            for (int i=0; i<number_of_ave; i++){
+                dat1 >> one >>two;
+                istringstream ist(one);
+                ist >> minave;
+                istringstream ist2(two);
+                ist2 >> maxave;
+
+                ui->spinBox->setValue(minave);
+                ui->spinBox_2->setValue(maxave);
+
+                ui->lineEdit_10->setText("Median_"+QString::number(i)+".txt");
+
+                PlotSequ::createMedian();
+
+            }
+            dat1.close();
+
+            QMessageBox::information(this, "Information", "Median spectrum written to Median_*.txt");
+
+        }
+        else{
+            PlotSequ::createMedian();
+        }
+
+        this->setCursor(QCursor(Qt::ArrowCursor));
+    }
 }
 
 //***************************************************
 // median
 //***************************************************
-void PlotSequ::on_pushButton_7_clicked()
+void PlotSequ::createMedian()
 {
+
+    string line, eins, zwei;
+    int min=ui->spinBox->value();
+    int max=ui->spinBox_2->value();
+    int number_of_lines =0;
+
+    QString qext=ui->lineEdit_9->text();
+    string sext = qext.toUtf8().constData();
+
     qSeqPath=ui->lineEdit_5->text();
     seqPath=qSeqPath.toUtf8().constData();
 
+    QString output=ui->lineEdit_10->text();
+    string odata = output.toUtf8().constData();
+    std::ostringstream outNameStream(odata);
+    outNameStream<<seqPath<<"/"<<odata;
+    std::string outName = outNameStream.str();
+
+    QFile qOut(outName.c_str());
+
+    if(ui->checkBox_21->isChecked()){
+        //
+    }
+    else{
+        if(qOut.exists()){
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Warning!", "The file already exists. \n\n Do you want to overwrite it?",
+                                      QMessageBox::Yes|QMessageBox::No);
+            if (reply == QMessageBox::Yes) {
+                qDebug() << "Yes was clicked";
+            }
+
+            else {
+                qDebug() << "Yes was *not* clicked";
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+        }
+    }
+
+    ofstream out(outName.c_str());
+
+    QVector<double> aad(1), bad(1), a2d(1), b2d(1), mediani(max-min+1);
+
+        QString input=ui->lineEdit->text();
+        string data = input.toUtf8().constData();
+        std::ostringstream datNameStream(data);
+        datNameStream<<seqPath<<"/"<<data<<min<<sext;
+        std::string datName = datNameStream.str();
+
+        QFile checkfile(datName.c_str());
+
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QString fError= QString::number(min);
+            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+fError+qext+" does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        else{
+            ifstream dat(datName.c_str());
+            number_of_lines =0;
+
+            while(std::getline(dat, line))
+               ++ number_of_lines;
+
+            dat.clear();
+            dat.seekg(0, ios::beg);
+
+            aad.resize(number_of_lines);
+            bad.resize(number_of_lines);
+
+
+            for(int i =0; i<number_of_lines; i++){
+                for (int u=min; u<=max; u++){
+                    std::ostringstream datANameStream(data);
+                    datANameStream<<seqPath<<"/"<<data<<u<<sext;
+                    std::string datAName = datANameStream.str();
+                    ifstream datA(datAName.c_str());
+
+                    for(int e=0; e<i; e++){
+                        datA.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                    }
+
+                    datA>> eins>>zwei;
+                    istringstream str(eins);
+                    istringstream str1(zwei);
+                    str1 >> mediani[u];
+                    if(u==0) str >> bad[i];
+
+                    datA.close();
+                }
+
+                // compute median
+                sort(mediani.begin(), mediani.end());
+                int med1=mediani.size()/2, med2=mediani.size()/2-1;
+
+                if(abs(med1-mediani.size()/2)!=0.0){
+                    aad[i]=(mediani[med1]+mediani[med2])/2;
+                }
+                else{
+                    aad[i]=mediani[med1];
+                }
+                out<<bad[i]<<"\t"<<aad[i]<<endl;
+
+            }
+            out.close();
+        }
 }
 
 void PlotSequ::on_comboBox_2_currentIndexChanged()
@@ -1432,12 +1657,12 @@ void PlotSequ::on_pushButton_8_clicked()
         if (reply == QMessageBox::Yes) {
           qDebug() << "Yes was clicked";
         }
-
-    else {
-      qDebug() << "Yes was *not* clicked";
-      this->setCursor(QCursor(Qt::ArrowCursor));
-      return;
-    }}
+        else {
+          qDebug() << "Yes was *not* clicked";
+          this->setCursor(QCursor(Qt::ArrowCursor));
+          return;
+        }
+    }
 
     ofstream out(datName.c_str());
 
@@ -1463,8 +1688,6 @@ void PlotSequ::on_pushButton_8_clicked()
         std::ostringstream dat3NameStream(rvel);
         dat3NameStream<<seqPath<<"/"<<rvel;
         std::string dat3Name = dat3NameStream.str();
-        ifstream RVel(dat3Name.c_str());
-
 
         QFile checkfile(dat3Name.c_str());
 
@@ -1472,8 +1695,9 @@ void PlotSequ::on_pushButton_8_clicked()
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "File "+qSeqPath+"\t"+qrvel+" does not exist!");
             this->setCursor(QCursor(Qt::ArrowCursor));
-           return;
-            }
+            return;
+        }
+        ifstream RVel(dat3Name.c_str());
 
         int nrvel=0;
 
@@ -1487,11 +1711,11 @@ void PlotSequ::on_pushButton_8_clicked()
         rv2.resize(nrvel);
 
         for (int i=0; i<nrvel; i++){
-        RVel >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> rv1[i];
-        istringstream ist2(zwei);
-        ist2 >> rv2[i];
+            RVel >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> rv1[i];
+            istringstream ist2(zwei);
+            ist2 >> rv2[i];
         }
         RVel.close();
 
@@ -1523,7 +1747,6 @@ void PlotSequ::on_pushButton_8_clicked()
         mom2=0;
 
         if(ui->comboBox->currentIndex()==0){
-
 
             QString input=ui->lineEdit->text();
             string data = input.toUtf8().constData();
@@ -1607,18 +1830,13 @@ void PlotSequ::on_pushButton_8_clicked()
                   bad[i]=seintens[i];
                   aad[i]=sewave[i];
                   }
-
-
             }
                 catch (CCfits::FitsException&)
 
                  {
                   std::cerr << " Fits Exception Thrown by test function \n";
                   }
-
-
                // return;
-
         }
 
         if(ui->checkBox_14->isChecked()){
@@ -1688,11 +1906,11 @@ void PlotSequ::on_pushButton_8_clicked()
             QVector<double> lcw(nlines), lw(nlines);
 
             for (int i=0; i<nlines; i++){
-            Lines >> eins >>zwei;
-            istringstream ist(eins);
-            ist >> lcw[i];      // central rest wavelengths
-            istringstream ist2(zwei);
-            ist2 >> lw[i];      // half width of integration intervall
+                Lines >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> lcw[i];      // central rest wavelengths
+                istringstream ist2(zwei);
+                ist2 >> lw[i];      // half width of integration intervall
             }
             Lines.close();
 
@@ -1804,11 +2022,13 @@ void PlotSequ::on_pushButton_8_clicked()
                 xgr=0;
 
                 for(int i =0 ; i<10; i++){
+
                     ykl += bad2[i];
                     ygr += bad2[numb-i-1];
                     xkl += aad2[i];
                     xgr += aad2[numb-i-1];
                 }
+
                 ykl = ykl/10;
                 ygr = ygr/10;
                 xkl = xkl/10;
@@ -1841,9 +2061,7 @@ void PlotSequ::on_pushButton_8_clicked()
 
             double cmw=loww, imin=100, loww2, hiw2;
             for(int i =1; i<number_of_lines; i++){
-
-            if((aad[i]>=loww) & (aad[i]<=hiw)){
-
+                if((aad[i]>=loww) & (aad[i]<=hiw)){
                     if(bad[i]<imin){
                         imin=bad[i];
                         cmw = aad[i];
@@ -1851,142 +2069,137 @@ void PlotSequ::on_pushButton_8_clicked()
                     else{
                         //
                     }
+                }
+                else{
+                    //
+                }
+            }
 
+            loww2 = cmw-ui->doubleSpinBox_14->value();
+            hiw2 = cmw + ui->doubleSpinBox_13->value();
+            cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
+            numb=0;
+
+            for(int i =0; i<number_of_lines; i++){
+                if((aad[i]>loww2) & (aad[i]<hiw2)){
+                    ++numb;
+                }
+                else{
+                    //
+                }
+            }
+
+            QVector<double> aad2(numb), bad2(numb);
+            numb = 0;
+
+            for(int i =0; i<number_of_lines; i++){
+                if((aad[i]>loww2) & (aad[i]<hiw2)){
+                    aad2[numb]=aad[i];
+                    bad2[numb]=bad[i];
+                    ++numb;
+                }
+            }
+
+            mom1 = 0;
+            mom2 = 0;
+            EW=0;
+            Cont=0;
+            sum=0;
+
+            double ykl=0, ygr=0, xkl=0, xgr=0;
+
+            for(int i =0 ; i<10; i++){
+                ykl += bad2[i];
+                ygr += bad2[numb-i-1];
+                xkl += aad2[i];
+                xgr += aad2[numb-i-1];
+            }
+            ykl = ykl/10;
+            ygr = ygr/10;
+            xkl = xkl/10;
+            xgr = xgr/10;
+
+            double steig = (ygr-ykl)/(xgr-xkl);
+
+            for(int i =1; i<aad2.size(); i++){
+                Cont = ykl+(aad2[i]-xkl)*steig;
+                sum+=bad2[i];
+                EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
+                mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
+                mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
+            }
+            mom1 = mom1/EW;
+            mom2 = mom2/EW;
+
+            cmw=mom1;
+
+            loww2 = cmw-ui->doubleSpinBox_14->value();
+            hiw2 = cmw + ui->doubleSpinBox_13->value();
+            cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
+            numb=0;
+
+            for(int i =0; i<number_of_lines; i++){
+                if((aad[i]>loww2) & (aad[i]<hiw2)){
+                    ++numb;
+                }
+                else{
+                    //
+                }
+            }
+
+            aad2.resize(numb);
+            bad2.resize(numb);
+            numb = 0;
+
+            for(int i =0; i<number_of_lines; i++){
+                if((aad[i]>loww2) & (aad[i]<hiw2)){
+                    aad2[numb]=aad[i];
+                    bad2[numb]=bad[i];
+                    ++numb;
+                }
+            }
+
+            mom1 = 0;
+            mom2 = 0;
+            EW=0;
+            Cont=0;
+            sum=0;
+
+            ykl=0;
+            ygr=0;
+            xkl=0;
+            xgr=0;
+
+            for(int i =0 ; i<10; i++){
+                ykl += bad2[i];
+                ygr += bad2[numb-i-1];
+                xkl += aad2[i];
+                xgr += aad2[numb-i-1];
+            }
+            ykl = ykl/10;
+            ygr = ygr/10;
+            xkl = xkl/10;
+            xgr = xgr/10;
+
+            steig = (ygr-ykl)/(xgr-xkl);
+
+            for(int i =1; i<aad2.size(); i++){
+                Cont = ykl+(aad2[i]-xkl)*steig;
+                sum+=bad2[i];
+                EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
+                mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
+                mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
+            }
+            mom1 = mom1/EW;
+            mom2 = mom2/EW;
+
+            if(ui->checkBox_14->isChecked()){
+                out<<setprecision(14)<<otim[u]<<"\t"<<sum<<"\t"<<EW<<"\t"<<mom1<<"\t"<<mom2<<endl;
             }
             else{
-                //
-                //
+                out<<sum<<"\t"<<EW<<"\t"<<mom1<<"\t"<<mom2<<endl;
             }
         }
-
-        loww2 = cmw-ui->doubleSpinBox_14->value();
-        hiw2 = cmw + ui->doubleSpinBox_13->value();
-        cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
-        numb=0;
-
-        for(int i =0; i<number_of_lines; i++){
-            if((aad[i]>loww2) & (aad[i]<hiw2)){
-                ++numb;
-            }
-            else{
-                //
-            }
-        }
-
-        QVector<double> aad2(numb), bad2(numb);
-        numb = 0;
-
-        for(int i =0; i<number_of_lines; i++){
-            if((aad[i]>loww2) & (aad[i]<hiw2)){
-
-                aad2[numb]=aad[i];
-                bad2[numb]=bad[i];
-                ++numb;
-            }
-        }
-
-        mom1 = 0;
-        mom2 = 0;
-        EW=0;
-        Cont=0;
-        sum=0;
-
-        double ykl=0, ygr=0, xkl=0, xgr=0;
-
-        for(int i =0 ; i<10; i++){
-            ykl += bad2[i];
-            ygr += bad2[numb-i-1];
-            xkl += aad2[i];
-            xgr += aad2[numb-i-1];
-        }
-        ykl = ykl/10;
-        ygr = ygr/10;
-        xkl = xkl/10;
-        xgr = xgr/10;
-
-        double steig = (ygr-ykl)/(xgr-xkl);
-
-        for(int i =1; i<aad2.size(); i++){
-            Cont = ykl+(aad2[i]-xkl)*steig;
-            sum+=bad2[i];
-            EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
-            mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
-            mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
-        }
-        mom1 = mom1/EW;
-        mom2 = mom2/EW;
-
-        cmw=mom1;
-
-        loww2 = cmw-ui->doubleSpinBox_14->value();
-        hiw2 = cmw + ui->doubleSpinBox_13->value();
-        cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
-        numb=0;
-
-        for(int i =0; i<number_of_lines; i++){
-            if((aad[i]>loww2) & (aad[i]<hiw2)){
-                ++numb;
-            }
-            else{
-                //
-            }
-        }
-
-        aad2.resize(numb);
-        bad2.resize(numb);
-        numb = 0;
-
-        for(int i =0; i<number_of_lines; i++){
-            if((aad[i]>loww2) & (aad[i]<hiw2)){
-
-                aad2[numb]=aad[i];
-                bad2[numb]=bad[i];
-                ++numb;
-            }
-        }
-
-        mom1 = 0;
-        mom2 = 0;
-        EW=0;
-        Cont=0;
-        sum=0;
-
-        ykl=0;
-        ygr=0;
-        xkl=0;
-        xgr=0;
-
-        for(int i =0 ; i<10; i++){
-            ykl += bad2[i];
-            ygr += bad2[numb-i-1];
-            xkl += aad2[i];
-            xgr += aad2[numb-i-1];
-        }
-        ykl = ykl/10;
-        ygr = ygr/10;
-        xkl = xkl/10;
-        xgr = xgr/10;
-
-        steig = (ygr-ykl)/(xgr-xkl);
-
-        for(int i =1; i<aad2.size(); i++){
-            Cont = ykl+(aad2[i]-xkl)*steig;
-            sum+=bad2[i];
-            EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
-            mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
-            mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
-        }
-        mom1 = mom1/EW;
-        mom2 = mom2/EW;
-
-        if(ui->checkBox_14->isChecked()){
-            out<<setprecision(14)<<otim[u]<<"\t"<<sum<<"\t"<<EW<<"\t"<<mom1<<"\t"<<mom2<<endl;
-        }
-        else{
-            out<<sum<<"\t"<<EW<<"\t"<<mom1<<"\t"<<mom2<<endl;
-        }
-        }
-
     }
 
     if(ui->checkBox_4->isChecked() or ui->checkBox_10->isChecked()){
@@ -2042,10 +2255,8 @@ void PlotSequ::on_pushButton_8_clicked()
         double cmw=loww, imin=100, loww2, hiw2;
 
 
-    for(int i =1; i<number_of_lines; i++){
-
-        if((aad[i]>=loww) & (aad[i]<=hiw)){
-
+        for(int i =1; i<number_of_lines; i++){
+            if((aad[i]>=loww) & (aad[i]<=hiw)){
                 if(bad[i]<imin){
                     imin=bad[i];
                     cmw = aad[i];
@@ -2053,136 +2264,131 @@ void PlotSequ::on_pushButton_8_clicked()
                 else{
                     //
                 }
+            }
+            else{
+                //
+            }
+        }
 
+        loww2 = cmw-ui->doubleSpinBox_14->value();
+        hiw2 = cmw + ui->doubleSpinBox_13->value();
+        cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
+        numb=0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                ++numb;
+            }
+            else{
+                //
+            }
+        }
+
+        QVector<double> aad2(numb), bad2(numb);
+        numb = 0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                aad2[numb]=aad[i];
+                bad2[numb]=bad[i];
+                ++numb;
+            }
+        }
+
+        double ykl=0, ygr=0, xkl=0, xgr=0;
+
+        for(int i =0 ; i<10; i++){
+            ykl += bad2[i];
+            ygr += bad2[numb-i-1];
+            xkl += aad2[i];
+            xgr += aad2[numb-i-1];
+        }
+        ykl = ykl/10;
+        ygr = ygr/10;
+        xkl = xkl/10;
+        xgr = xgr/10;
+
+        double steig = (ygr-ykl)/(xgr-xkl);
+
+        for(int i =1; i<aad2.size(); i++){
+            Cont = ykl+(aad2[i]-xkl)*steig;
+            sum+=bad2[i];
+            EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
+            mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
+            mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad[i];
+        }
+        mom1 = mom1/EW;
+        mom2 = mom2/EW;
+
+        cmw=mom1;
+
+        loww2 = cmw-ui->doubleSpinBox_14->value();
+        hiw2 = cmw + ui->doubleSpinBox_13->value();
+        cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
+        numb=0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                ++numb;
+            }
+            else{
+                //
+            }
+        }
+
+        aad2.resize(numb);
+        bad2.resize(numb);
+        numb = 0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                aad2[numb]=aad[i];
+                bad2[numb]=bad[i];
+                ++numb;
+            }
+        }
+
+        mom1 = 0;
+        mom2 = 0;
+        EW=0;
+        Cont=0;
+        sum=0;
+
+        ykl=0;
+        ygr=0;
+        xkl=0;
+        xgr=0;
+
+        for(int i =0 ; i<10; i++){
+            ykl += bad2[i];
+            ygr += bad2[numb-i-1];
+            xkl += aad2[i];
+            xgr += aad2[numb-i-1];
+        }
+        ykl = ykl/10;
+        ygr = ygr/10;
+        xkl = xkl/10;
+        xgr = xgr/10;
+
+        steig = (ygr-ykl)/(xgr-xkl);
+
+        for(int i =1; i<aad2.size(); i++){
+            Cont = ykl+(aad2[i]-xkl)*steig;
+            sum+=bad2[i];
+            EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
+            mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
+            mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
+        }
+        mom1 = mom1/EW;
+        mom2 = mom2/EW;
+
+
+        if(ui->checkBox_14->isChecked()){
+            out<<"NaN"<<"\t"<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
         }
         else{
-            //
-            //
+            out<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
         }
-    }
-
-    loww2 = cmw-ui->doubleSpinBox_14->value();
-    hiw2 = cmw + ui->doubleSpinBox_13->value();
-    cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
-    numb=0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-            ++numb;
-        }
-        else{
-            //
-        }
-    }
-
-    QVector<double> aad2(numb), bad2(numb);
-    numb = 0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-
-            aad2[numb]=aad[i];
-            bad2[numb]=bad[i];
-            ++numb;
-        }
-    }
-
-    double ykl=0, ygr=0, xkl=0, xgr=0;
-
-    for(int i =0 ; i<10; i++){
-        ykl += bad2[i];
-        ygr += bad2[numb-i-1];
-        xkl += aad2[i];
-        xgr += aad2[numb-i-1];
-    }
-    ykl = ykl/10;
-    ygr = ygr/10;
-    xkl = xkl/10;
-    xgr = xgr/10;
-
-    double steig = (ygr-ykl)/(xgr-xkl);
-
-    for(int i =1; i<aad2.size(); i++){
-        Cont = ykl+(aad2[i]-xkl)*steig;
-        sum+=bad2[i];
-        EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
-        mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
-        mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad[i];
-    }
-    mom1 = mom1/EW;
-    mom2 = mom2/EW;
-
-    cmw=mom1;
-
-    loww2 = cmw-ui->doubleSpinBox_14->value();
-    hiw2 = cmw + ui->doubleSpinBox_13->value();
-    cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
-    numb=0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-            ++numb;
-        }
-        else{
-            //
-        }
-    }
-
-    aad2.resize(numb);
-    bad2.resize(numb);
-    numb = 0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-
-            aad2[numb]=aad[i];
-            bad2[numb]=bad[i];
-            ++numb;
-        }
-    }
-
-    mom1 = 0;
-    mom2 = 0;
-    EW=0;
-    Cont=0;
-    sum=0;
-
-    ykl=0;
-    ygr=0;
-    xkl=0;
-    xgr=0;
-
-    for(int i =0 ; i<10; i++){
-        ykl += bad2[i];
-        ygr += bad2[numb-i-1];
-        xkl += aad2[i];
-        xgr += aad2[numb-i-1];
-    }
-    ykl = ykl/10;
-    ygr = ygr/10;
-    xkl = xkl/10;
-    xgr = xgr/10;
-
-    steig = (ygr-ykl)/(xgr-xkl);
-
-    for(int i =1; i<aad2.size(); i++){
-        Cont = ykl+(aad2[i]-xkl)*steig;
-        sum+=bad2[i];
-        EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
-        mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
-        mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
-    }
-    mom1 = mom1/EW;
-    mom2 = mom2/EW;
-
-
-    if(ui->checkBox_14->isChecked()){
-        out<<"NaN"<<"\t"<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
-    }
-    else{
-        out<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
-    }
-
     }
 
     if(ui->checkBox_5->isChecked() or ui->checkBox_11->isChecked()){
@@ -2236,10 +2442,8 @@ void PlotSequ::on_pushButton_8_clicked()
         }
 
         double cmw=loww, imin=100, loww2, hiw2;
-    for(int i =1; i<number_of_lines; i++){
-
-        if((aad[i]>=loww) & (aad[i]<=hiw)){
-
+        for(int i =1; i<number_of_lines; i++){
+            if((aad[i]>=loww) & (aad[i]<=hiw)){
                 if(bad[i]<imin){
                     imin=bad[i];
                     cmw = aad[i];
@@ -2248,134 +2452,129 @@ void PlotSequ::on_pushButton_8_clicked()
                     //
                 }
 
+            }
+            else{
+                //
+            }
+        }
+
+        loww2 = cmw-ui->doubleSpinBox_14->value();
+        hiw2 = cmw + ui->doubleSpinBox_13->value();
+        cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
+        numb=0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                ++numb;
+            }
+            else{
+                //
+            }
+        }
+
+        QVector<double> aad2(numb), bad2(numb);
+        numb = 0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                aad2[numb]=aad[i];
+                bad2[numb]=bad[i];
+                ++numb;
+            }
+        }
+
+        double ykl=0, ygr=0, xkl=0, xgr=0;
+
+        for(int i =0 ; i<10; i++){
+            ykl += bad2[i];
+            ygr += bad2[numb-i-1];
+            xkl += aad2[i];
+            xgr += aad2[numb-i-1];
+        }
+        ykl = ykl/10;
+        ygr = ygr/10;
+        xkl = xkl/10;
+        xgr = xgr/10;
+
+        double steig = (ygr-ykl)/(xgr-xkl);
+
+        for(int i =1; i<aad2.size(); i++){
+            Cont = ykl+(aad2[i]-xkl)*steig;
+            sum+=bad2[i];
+            EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
+            mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
+            mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
+        }
+        mom1 = mom1/EW;
+        mom2 = mom2/EW;
+        cmw=mom1;
+
+        loww2 = cmw-ui->doubleSpinBox_14->value();
+        hiw2 = cmw + ui->doubleSpinBox_13->value();
+        cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
+        numb=0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                ++numb;
+            }
+            else{
+                //
+            }
+        }
+
+        aad2.resize(numb);
+        bad2.resize(numb);
+        numb = 0;
+
+        for(int i =0; i<number_of_lines; i++){
+            if((aad[i]>loww2) & (aad[i]<hiw2)){
+                aad2[numb]=aad[i];
+                bad2[numb]=bad[i];
+                ++numb;
+            }
+        }
+
+        mom1 = 0;
+        mom2 = 0;
+        EW=0;
+        Cont=0;
+        sum=0;
+
+        ykl=0;
+        ygr=0;
+        xkl=0;
+        xgr=0;
+
+        for(int i =0 ; i<10; i++){
+            ykl += bad2[i];
+            ygr += bad2[numb-i-1];
+            xkl += aad2[i];
+            xgr += aad2[numb-i-1];
+        }
+        ykl = ykl/10;
+        ygr = ygr/10;
+        xkl = xkl/10;
+        xgr = xgr/10;
+
+        steig = (ygr-ykl)/(xgr-xkl);
+
+        for(int i =1; i<aad2.size(); i++){
+            Cont = ykl+(aad2[i]-xkl)*steig;
+            sum+=bad2[i];
+            EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
+            mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
+            mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
+        }
+        mom1 = mom1/EW;
+        mom2 = mom2/EW;
+
+        if(ui->checkBox_14->isChecked()){
+            out<<"NaN"<<"\t"<<sum<<"\t"<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
         }
         else{
-            //
-            //
+            out<<sum<<"\t"<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
         }
-    }
-
-    loww2 = cmw-ui->doubleSpinBox_14->value();
-    hiw2 = cmw + ui->doubleSpinBox_13->value();
-    cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
-    numb=0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-            ++numb;
-        }
-        else{
-            //
-        }
-    }
-
-    QVector<double> aad2(numb), bad2(numb);
-    numb = 0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-
-            aad2[numb]=aad[i];
-            bad2[numb]=bad[i];
-            ++numb;
-        }
-    }
-
-    double ykl=0, ygr=0, xkl=0, xgr=0;
-
-    for(int i =0 ; i<10; i++){
-        ykl += bad2[i];
-        ygr += bad2[numb-i-1];
-        xkl += aad2[i];
-        xgr += aad2[numb-i-1];
-    }
-    ykl = ykl/10;
-    ygr = ygr/10;
-    xkl = xkl/10;
-    xgr = xgr/10;
-
-    double steig = (ygr-ykl)/(xgr-xkl);
-
-    for(int i =1; i<aad2.size(); i++){
-        Cont = ykl+(aad2[i]-xkl)*steig;
-        sum+=bad2[i];
-        EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
-        mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
-        mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
-    }
-    mom1 = mom1/EW;
-    mom2 = mom2/EW;
-
-    cmw=mom1;
-
-    loww2 = cmw-ui->doubleSpinBox_14->value();
-    hiw2 = cmw + ui->doubleSpinBox_13->value();
-    cout<<loww2<<"\t"<<cmw<<"\t"<<hiw2<<endl;
-    numb=0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-            ++numb;
-        }
-        else{
-            //
-        }
-    }
-
-    aad2.resize(numb);
-    bad2.resize(numb);
-    numb = 0;
-
-    for(int i =0; i<number_of_lines; i++){
-        if((aad[i]>loww2) & (aad[i]<hiw2)){
-
-            aad2[numb]=aad[i];
-            bad2[numb]=bad[i];
-            ++numb;
-        }
-    }
-
-    mom1 = 0;
-    mom2 = 0;
-    EW=0;
-    Cont=0;
-    sum=0;
-
-    ykl=0;
-    ygr=0;
-    xkl=0;
-    xgr=0;
-
-    for(int i =0 ; i<10; i++){
-        ykl += bad2[i];
-        ygr += bad2[numb-i-1];
-        xkl += aad2[i];
-        xgr += aad2[numb-i-1];
-    }
-    ykl = ykl/10;
-    ygr = ygr/10;
-    xkl = xkl/10;
-    xgr = xgr/10;
-
-    steig = (ygr-ykl)/(xgr-xkl);
-
-    for(int i =1; i<aad2.size(); i++){
-        Cont = ykl+(aad2[i]-xkl)*steig;
-        sum+=bad2[i];
-        EW += (Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]);
-        mom1 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i];
-        mom2 += ((Cont-(bad2[i-1]+bad2[i])/2)*(aad2[i]-aad2[i-1]))*aad2[i]*aad2[i];
-    }
-    mom1 = mom1/EW;
-    mom2 = mom2/EW;
-
-    if(ui->checkBox_14->isChecked()){
-        out<<"NaN"<<"\t"<<sum<<"\t"<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
-    }
-    else{
-        out<<sum<<"\t"<<EW<<"\t"<<sum<<"\t"<<mom1<<"\t"<<mom2<<endl;
-    }
-
     }
 
     out.close();
@@ -2430,113 +2629,105 @@ void PlotSequ::on_pushButton_9_clicked()
             if (reply == QMessageBox::Yes) {
               qDebug() << "Yes was clicked";
             }
-
-        else {
-          qDebug() << "Yes was *not* clicked";
-          this->setCursor(QCursor(Qt::ArrowCursor));
-          return;
-        }
+            else {
+              qDebug() << "Yes was *not* clicked";
+              this->setCursor(QCursor(Qt::ArrowCursor));
+              return;
+            }
         }
 
         ofstream out(datName.c_str());
 
-    if(ui->comboBox->currentIndex()==0){
-        QString input=ui->lineEdit->text();
-        string data = input.toUtf8().constData();
-        std::ostringstream datNameStream(data);
-        datNameStream<<seqPath<<"/"<<data<<u<<sext;
-        std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
+        if(ui->comboBox->currentIndex()==0){
+            QString input=ui->lineEdit->text();
+            string data = input.toUtf8().constData();
+            std::ostringstream datNameStream(data);
+            datNameStream<<seqPath<<"/"<<data<<u<<sext;
+            std::string datName = datNameStream.str();
 
+            QFile checkfile(datName.c_str());
 
-        QFile checkfile(datName.c_str());
+            if(!checkfile.exists()){
+                qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                return;
+            }
+            ifstream dat(datName.c_str());
 
-        if(!checkfile.exists()){
-            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error", "File "+qSeqPath+"/"+input+" does not exist!");
-            this->setCursor(QCursor(Qt::ArrowCursor));
-            return;
+            number_of_lines =0;
+
+            while(std::getline(dat, line))
+                ++ number_of_lines;
+
+            dat.clear();
+            dat.seekg(0, ios::beg);
+
+            aad.resize(number_of_lines);
+            bad.resize(number_of_lines);
+
+            for (int i=0; i<number_of_lines; i++){
+                dat >> eins >>zwei;
+                istringstream ist(eins);
+                ist >> aad[i];
+                istringstream ist2(zwei);
+                ist2 >> bad[i];
+            }
+            dat.close();
         }
 
-        number_of_lines =0;
+        if(ui->comboBox->currentIndex()==1){
+            QString input=ui->lineEdit->text();
+            string data = input.toUtf8().constData();
+            std::ostringstream datNameStream(data);
+            datNameStream<<seqPath<<"/"<<data<<u<<sext;
+            std::string datName = datNameStream.str();
 
-        while(std::getline(dat, line))
-            ++ number_of_lines;
+            QFile checkfile1(datName.c_str());
 
-        dat.clear();
-        dat.seekg(0, ios::beg);
+            if(!checkfile1.exists()){
+                qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
+                QMessageBox::information(this, "Error1 ", "Error 1: File "+checkfile1.fileName()+" does not exist!");
+                this->setCursor(QCursor(Qt::ArrowCursor));
+                //check=1;
+               return;
+            }
 
-        aad.resize(number_of_lines);
-        bad.resize(number_of_lines);
+            CCfits::FITS::setVerboseMode(true);
 
-        for (int i=0; i<number_of_lines; i++){
-            dat >> eins >>zwei;
-            istringstream ist(eins);
-            ist >> aad[i];
-            istringstream ist2(zwei);
-            ist2 >> bad[i];
-        }
-        dat.close();
-    }
+            try
+            {
+                //open file for reading
+                shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
 
-    if(ui->comboBox->currentIndex()==1){
-        QString input=ui->lineEdit->text();
-        string data = input.toUtf8().constData();
-        std::ostringstream datNameStream(data);
-        datNameStream<<seqPath<<"/"<<data<<u<<sext;
-        std::string datName = datNameStream.str();
-
-        QFile checkfile1(datName.c_str());
-
-        if(!checkfile1.exists()){
-            qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-            QMessageBox::information(this, "Error1 ", "Error 1: File "+checkfile1.fileName()+" does not exist!");
-            this->setCursor(QCursor(Qt::ArrowCursor));
-            //check=1;
-           return;
-        }
-
-        CCfits::FITS::setVerboseMode(true);
-
-        try
-        {
-
-            //open file for reading
-            shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
-
-            // Create pointer to extension
+                // Create pointer to extension
                 CCfits::ExtHDU& datavector = input_file->extension(seExtension);
 
-              // Read rows
-              CCfits::Column& column = datavector.column(seWavecol);
-              column.read(sewave, 1, column.rows());
+                // Read rows
+                CCfits::Column& column = datavector.column(seWavecol);
+                column.read(sewave, 1, column.rows());
 
-              // Read rows
-              CCfits::Column& column2 = datavector.column(seIntenscol);
-              column2.read(seintens, 1, column2.rows());
+                // Read rows
+                CCfits::Column& column2 = datavector.column(seIntenscol);
+                column2.read(seintens, 1, column2.rows());
 
-              number_of_lines=sewave.size();
+                number_of_lines=sewave.size();
 
-              aad.resize(number_of_lines);
-              bad.resize(number_of_lines);
+                aad.resize(number_of_lines);
+                bad.resize(number_of_lines);
 
-              for(int i=0; i<number_of_lines; i++){
-              bad[i]=seintens[i];
-              aad[i]=sewave[i];
-              }
-
-
-        }
+                for(int i=0; i<number_of_lines; i++){
+                    bad[i]=seintens[i];
+                    aad[i]=sewave[i];
+                }
+            }
             catch (CCfits::FitsException&)
 
-             {
-              std::cerr << " Fits Exception Thrown by test function \n";
-              }
-
-
+            {
+                  std::cerr << " Fits Exception Thrown by test function \n";
+            }
            // return;
-
-    }
+        }
 
         double cmw=loww, imin=100, loww2, hiw2;
         int minI, count=0;
@@ -2550,13 +2741,13 @@ void PlotSequ::on_pushButton_9_clicked()
                     minI = i;
                 }
                 else{
-                    imin = imin;
+                    //imin = imin;
                 }
 
                 }
             else{
-                cmw=cmw;
-                imin = imin;
+                //cmw=cmw;
+                //imin = imin;
             }
         }
         loww2=cmw;
@@ -2744,7 +2935,6 @@ void PlotSequ::on_pushButton_9_clicked()
             if (reply == QMessageBox::Yes) {
               qDebug() << "Yes was clicked";
             }
-
             else {
                 qDebug() << "Yes was *not* clicked";
                 this->setCursor(QCursor(Qt::ArrowCursor));
@@ -2759,8 +2949,6 @@ void PlotSequ::on_pushButton_9_clicked()
         std::ostringstream dat2NameStream(data);
         dat2NameStream<<seqPath<<"/"<<data;
         std::string dat2Name = dat2NameStream.str();
-        ifstream dat(dat2Name.c_str());
-
 
         QFile checkfile(datName.c_str());
 
@@ -2770,6 +2958,7 @@ void PlotSequ::on_pushButton_9_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
             return;
         }
+        ifstream dat(dat2Name.c_str());
 
         number_of_lines =0;
 
@@ -2809,13 +2998,13 @@ void PlotSequ::on_pushButton_9_clicked()
                     minI = i;
                 }
                 else{
-                    imin = imin;
+                    //imin = imin;
                 }
 
                 }
             else{
-                cmw=cmw;
-                imin = imin;
+                //cmw=cmw;
+                //imin = imin;
             }
         }
 
@@ -2877,8 +3066,6 @@ void PlotSequ::on_pushButton_9_clicked()
         std::ostringstream dat2NameStream(data);
         dat2NameStream<<seqPath<<"/"<<data;
         std::string dat2Name = dat2NameStream.str();
-        ifstream dat(dat2Name.c_str());
-
 
         QFile checkfile(datName.c_str());
 
@@ -2888,6 +3075,7 @@ void PlotSequ::on_pushButton_9_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
             return;
         }
+        ifstream dat(dat2Name.c_str());
 
         number_of_lines =0;
 
@@ -2927,13 +3115,13 @@ void PlotSequ::on_pushButton_9_clicked()
                     minI = i;
                 }
                 else{
-                    imin = imin;
+                    //imin = imin;
                 }
 
                 }
             else{
-                cmw=cmw;
-                imin = imin;
+                //cmw=cmw;
+                //imin = imin;
             }
         }
 
@@ -2943,18 +3131,16 @@ void PlotSequ::on_pushButton_9_clicked()
 
         for(int i=0;i < number_of_lines-1; i++){
             if(loww2>cmw-ui->doubleSpinBox_14->value()){    //lowI2<=0.45
-            lowI2 = bad[minI-i];
-            loww2 = aad[minI-i];
-            while (higI2<lowI2){
-                ++count;
-                higI2 = bad[minI+count];
-
-            }
-            hiw2=aad[minI+count]+((lowI2-higI2)/(bad[minI+count+1]-higI2))*(aad[minI+count+1]-aad[minI+count]);
-            count = 0;
-            cout<<cmw<<"\t"<<hiw2<<"\t"<<loww2<<endl;
-            out<<(hiw2+loww2)/2-cmw<<"\t"<<lowI2<<endl;
-
+                lowI2 = bad[minI-i];
+                loww2 = aad[minI-i];
+                while (higI2<lowI2){
+                    ++count;
+                    higI2 = bad[minI+count];
+                }
+                hiw2=aad[minI+count]+((lowI2-higI2)/(bad[minI+count+1]-higI2))*(aad[minI+count+1]-aad[minI+count]);
+                count = 0;
+                cout<<cmw<<"\t"<<hiw2<<"\t"<<loww2<<endl;
+                out<<(hiw2+loww2)/2-cmw<<"\t"<<lowI2<<endl;
             }
             else{
                 i = number_of_lines;
@@ -2999,12 +3185,12 @@ void PlotSequ::on_pushButton_10_clicked()
         if (reply == QMessageBox::Yes) {
           qDebug() << "Yes was clicked";
         }
-
-    else {
-      qDebug() << "Yes was *not* clicked";
-      this->setCursor(QCursor(Qt::ArrowCursor));
-      return;
-    }}
+        else {
+          qDebug() << "Yes was *not* clicked";
+          this->setCursor(QCursor(Qt::ArrowCursor));
+          return;
+        }
+    }
 
     ofstream out(datName.c_str());
 
@@ -3157,14 +3343,14 @@ void PlotSequ::on_pushButton_10_clicked()
                   bad2.resize(number_of_lines);
 
                   for(int i=0; i<number_of_lines; i++){
-                  bad2[i]=seintens[i];
-                  aad2[i]=sewave[i];
-                  if((aad2[i]>loww) & (aad2[i]<hiw)){
-                      if(bad2[i]<Imin){
-                          Imin = bad2[i];
-                          cwl = aad2[i];
-                      }
-                  }
+                    bad2[i]=seintens[i];
+                    aad2[i]=sewave[i];
+                    if((aad2[i]>loww) & (aad2[i]<hiw)){
+                        if(bad2[i]<Imin){
+                            Imin = bad2[i];
+                            cwl = aad2[i];
+                        }
+                    }
                   }
 
             }
@@ -3184,7 +3370,7 @@ void PlotSequ::on_pushButton_10_clicked()
                 ++numb;
             }
             else{
-                numb=numb;
+                //numb=numb;
             }
         }
 
@@ -3193,7 +3379,6 @@ void PlotSequ::on_pushButton_10_clicked()
 
         for(int i =0; i<number_of_lines; i++){
             if((aad2[i]>loww) & (aad2[i]<hiw)){
-
                 aad[numb]=aad2[i];
                 bad[numb]=bad2[i];
                 ++numb;
@@ -3258,8 +3443,6 @@ void PlotSequ::on_pushButton_10_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<seqPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
-
 
         QFile checkfile(datName.c_str());
 
@@ -3269,6 +3452,7 @@ void PlotSequ::on_pushButton_10_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
             return;
         }
+        ifstream dat(datName.c_str());
 
         number_of_lines =0;
 
@@ -3311,7 +3495,7 @@ void PlotSequ::on_pushButton_10_clicked()
                 ++numb;
             }
             else{
-                numb=numb;
+                //numb=numb;
             }
         }
 
@@ -3320,7 +3504,6 @@ void PlotSequ::on_pushButton_10_clicked()
 
         for(int i =0; i<number_of_lines; i++){
             if((aad2[i]>loww) & (aad2[i]<hiw)){
-
                 aad[numb]=aad2[i];
                 bad[numb]=bad2[i];
                 ++numb;
@@ -3380,8 +3563,6 @@ void PlotSequ::on_pushButton_10_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<seqPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
-
 
         QFile checkfile(datName.c_str());
 
@@ -3391,6 +3572,7 @@ void PlotSequ::on_pushButton_10_clicked()
             this->setCursor(QCursor(Qt::ArrowCursor));
             return;
         }
+        ifstream dat(datName.c_str());
 
         number_of_lines =0;
 
@@ -3433,7 +3615,7 @@ void PlotSequ::on_pushButton_10_clicked()
                 ++numb;
             }
             else{
-                numb=numb;
+                //numb=numb;
             }
         }
 

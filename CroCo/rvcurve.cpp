@@ -67,7 +67,6 @@ void RvCurve::on_pushButton_2_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<wPath<<"/"<<data<<u<<".txt";
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile(datName.c_str());
 
@@ -77,6 +76,7 @@ void RvCurve::on_pushButton_2_clicked()
             QMessageBox::information(this, "Error", "File "+QwPath+"/"+input+fError+".txt does not exist!");
            return;
         }
+        ifstream dat(datName.c_str());
 
         dat >> eins >>zwei;
         istringstream ist(eins);
@@ -123,7 +123,6 @@ void RvCurve::on_pushButton_3_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<wPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile(datName.c_str());
 
@@ -132,9 +131,9 @@ void RvCurve::on_pushButton_3_clicked()
             QMessageBox::information(this, "Error", "File "+QwPath+"/"+input+" does not exist!");
            return;
         }
+        ifstream dat(datName.c_str());
 
            for(int u=min; u<=max; u++){
-
                dat >> eins;
                istringstream ist3(eins);
                ist3 >> otime[u];
@@ -165,15 +164,16 @@ void RvCurve::on_pushButton_4_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<wPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile(datName.c_str());
 
         if(!checkfile.exists()){
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "File "+QwPath+"/"+input+" does not exist!");
-           return;
+            return;
         }
+        ifstream dat(datName.c_str());
+
         for(int u=min; u<=max; u++){
 
             dat >> eins;
@@ -193,7 +193,6 @@ void RvCurve::on_pushButton_4_clicked()
                std::ostringstream dat2NameStream(data2);
                dat2NameStream<<wPath<<"/"<<data2<<u<<".txt";
                std::string dat2Name = dat2NameStream.str();
-               ifstream dat2(dat2Name.c_str());
 
                QFile checkfile(dat2Name.c_str());
 
@@ -203,63 +202,64 @@ void RvCurve::on_pushButton_4_clicked()
                    QMessageBox::information(this, "Error", "File "+QwPath+"/"+input+fError+".txt does not exist!");
                   return;
                }
+               ifstream dat2(dat2Name.c_str());
 
                dat2 >> eins >>zwei;
                istringstream ist(eins);
                ist >> RV1[u];
                if(ui->checkBox->isChecked()){
-                RV1[u]=RV1[u]*(-1);
+                    RV1[u]=RV1[u]*(-1);
                }
                istringstream ist2(zwei);
                ist2 >> RV2[u];
                if(ui->checkBox_2->isChecked()){
-                RV2[u]=RV2[u]*(-1);
+                    RV2[u]=RV2[u]*(-1);
                }
                RV3[u]=RV1[u]+RV2[u];
                sinus[u]=sin1+sin2*sin(6.28*sin3*otime[u]+sin4);
            }
 
-      xrv1=ui->doubleSpinBox->value();
-      xrv2=ui->doubleSpinBox_2->value();
-      yrv1=ui->doubleSpinBox_3->value();
-      yrv2=ui->doubleSpinBox_4->value();
+        xrv1=ui->doubleSpinBox->value();
+        xrv2=ui->doubleSpinBox_2->value();
+        yrv1=ui->doubleSpinBox_3->value();
+        yrv2=ui->doubleSpinBox_4->value();
 
-      QPen pen;
-      pen.setWidth(2);
-      pen.setColor(Qt::red);
-      QPen pen2;
-      pen2.setWidth(2);
-      pen2.setColor(Qt::green);
-      QPen pen3;
-      pen3.setWidth(2);
-      pen3.setColor(Qt::blue);
-    ui->customPlot->legend->setVisible(true);
-    ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom|Qt::AlignLeft);
-    ui->customPlot->addGraph();
-    ui->customPlot->addGraph();
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(0)->setName("RV1");
-    ui->customPlot->graph(2)->setName("RV1+RV2");
-    ui->customPlot->graph(1)->setName("RV2");
-    ui->customPlot->graph(0)->setPen(pen3);
-    ui->customPlot->graph(0)->setData(otime, RV1);
-    ui->customPlot->graph(1)->setPen(pen);
-    ui->customPlot->graph(1)->setData(otime, RV2);
-    ui->customPlot->graph(2)->setPen(pen2);
-    ui->customPlot->graph(2)->setData(otime, RV3);
+        QPen pen;
+        pen.setWidth(2);
+        pen.setColor(Qt::red);
+        QPen pen2;
+        pen2.setWidth(2);
+        pen2.setColor(Qt::green);
+        QPen pen3;
+        pen3.setWidth(2);
+        pen3.setColor(Qt::blue);
+        ui->customPlot->legend->setVisible(true);
+        ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom|Qt::AlignLeft);
+        ui->customPlot->addGraph();
+        ui->customPlot->addGraph();
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(0)->setName("RV1");
+        ui->customPlot->graph(2)->setName("RV1+RV2");
+        ui->customPlot->graph(1)->setName("RV2");
+        ui->customPlot->graph(0)->setPen(pen3);
+        ui->customPlot->graph(0)->setData(otime, RV1);
+        ui->customPlot->graph(1)->setPen(pen);
+        ui->customPlot->graph(1)->setData(otime, RV2);
+        ui->customPlot->graph(2)->setPen(pen2);
+        ui->customPlot->graph(2)->setData(otime, RV3);
 
-    if(ui->checkBox_3->isChecked()){
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(3)->setName("f(x)");
-    ui->customPlot->graph(3)->setPen(QPen(Qt::black));
-    ui->customPlot->graph(3)->setData(otime, sinus);
+        if(ui->checkBox_3->isChecked()){
+            ui->customPlot->addGraph();
+            ui->customPlot->graph(3)->setName("f(x)");
+            ui->customPlot->graph(3)->setPen(QPen(Qt::black));
+            ui->customPlot->graph(3)->setData(otime, sinus);
         }
 
-    ui->customPlot->xAxis->setLabel("time/phase");
-    ui->customPlot->yAxis->setLabel("RV [km/s]");
-    ui->customPlot->xAxis->setRange(xrv1, xrv2);
-    ui->customPlot->yAxis->setRange(yrv1, yrv2);
-    ui->customPlot->replot();
+        ui->customPlot->xAxis->setLabel("time/phase");
+        ui->customPlot->yAxis->setLabel("RV [km/s]");
+        ui->customPlot->xAxis->setRange(xrv1, xrv2);
+        ui->customPlot->yAxis->setRange(yrv1, yrv2);
+        ui->customPlot->replot();
 }
 
 //****************************************************************
@@ -278,15 +278,15 @@ void RvCurve::on_pushButton_5_clicked()
         std::ostringstream datNameStream(data);
         datNameStream<<wPath<<"/"<<data;
         std::string datName = datNameStream.str();
-        ifstream dat(datName.c_str());
 
         QFile checkfile(datName.c_str());
 
         if(!checkfile.exists()){
             qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
             QMessageBox::information(this, "Error", "File "+QwPath+"/"+input+" does not exist!");
-           return;
+            return;
         }
+        ifstream dat(datName.c_str());
 
            for(int u=min; u<=max; u++){
                dat >> eins;
@@ -320,7 +320,6 @@ void RvCurve::on_pushButton_5_clicked()
                std::ostringstream dat2NameStream(data2);
                dat2NameStream<<wPath<<"/"<<data2<<u<<".txt";
                std::string dat2Name = dat2NameStream.str();
-               ifstream dat2(dat2Name.c_str());
 
                QFile checkfile(dat2Name.c_str());
 
@@ -330,17 +329,18 @@ void RvCurve::on_pushButton_5_clicked()
                    QMessageBox::information(this, "Error", "File "+QwPath+"/"+input+fError+".txt does not exist!");
                   return;
                }
+               ifstream dat2(dat2Name.c_str());
 
                dat2 >> eins >>zwei;
                istringstream ist(eins);
                ist >> RV1[u];
                if(ui->checkBox->isChecked()){
-                RV1[u]=RV1[u]*(-1);
+                    RV1[u]=RV1[u]*(-1);
                }
                istringstream ist2(zwei);
                ist2 >> RV2[u];
                if(ui->checkBox_2->isChecked()){
-                RV2[u]=RV2[u]*(-1);
+                    RV2[u]=RV2[u]*(-1);
                }
                RV3[u]=RV1[u]+RV2[u];
            }
@@ -460,7 +460,7 @@ void RvCurve::on_pushButton_7_clicked()
     int lsi2 = lsi+1;
 
     string eins, zwei, drei, zeile;
-    int lines1;
+    int lines1=0;
     QString input=ui->lineEdit_5->text();
     string data = input.toUtf8().constData();
     std::ostringstream datNameStream(data);
@@ -570,13 +570,13 @@ void RvCurve::on_pushButton_7_clicked()
 
 
             if(RV1max > RV2max){
-                RV1max = RV1max;
+                //RV1max = RV1max;
             }
             else{
                 RV1max = RV2max;
             }
             if(RV1min < RV2min){
-                RV1min = RV1min;
+                //RV1min = RV1min;
             }
             else{
                 RV1min = RV2min;
@@ -593,46 +593,46 @@ void RvCurve::on_pushButton_7_clicked()
             QPen pen3;
             pen3.setWidth(lsi);
             pen3.setColor(Qt::blue);
-          //ui->customPlot->legend->setVisible(true);
-          //ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
-          ui->customPlot->addGraph();
-          ui->customPlot->addGraph();
+            //ui->customPlot->legend->setVisible(true);
+            //ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
+            ui->customPlot->addGraph();
+            ui->customPlot->addGraph();
 
-          ui->customPlot->graph(0)->setName("Col1");
-          ui->customPlot->graph(1)->setName("Col2");
-          ui->customPlot->graph(0)->setPen(pen3);
-          ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
-          ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, lsi2));
-          ui->customPlot->graph(0)->setData(otime, RV1);
-          ui->customPlot->graph(1)->setPen(pen);
-          ui->customPlot->graph(1)->setLineStyle(QCPGraph::lsNone);
-          ui->customPlot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, lsi2));
-          ui->customPlot->graph(1)->setData(otime, RV2);
-          ui->customPlot->addGraph();
+            ui->customPlot->graph(0)->setName("Col1");
+            ui->customPlot->graph(1)->setName("Col2");
+            ui->customPlot->graph(0)->setPen(pen3);
+            ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+            ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, lsi2));
+            ui->customPlot->graph(0)->setData(otime, RV1);
+            ui->customPlot->graph(1)->setPen(pen);
+            ui->customPlot->graph(1)->setLineStyle(QCPGraph::lsNone);
+            ui->customPlot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, lsi2));
+            ui->customPlot->graph(1)->setData(otime, RV2);
+            ui->customPlot->addGraph();
 
-          if(ui->checkBox_10->isChecked()){
-            ui->customPlot->graph(2)->setName("sinus");
-            ui->customPlot->graph(2)->setPen(pen2);
-            ui->customPlot->graph(2)->setData(pha, sinus);
-          }
+            if(ui->checkBox_10->isChecked()){
+                ui->customPlot->graph(2)->setName("sinus");
+                ui->customPlot->graph(2)->setPen(pen2);
+                ui->customPlot->graph(2)->setData(pha, sinus);
+            }
 
-          if(ui->checkBox_11->isChecked()){
-              QPen pen4;
-              pen4.setWidth(lsi);
-              pen4.setColor(Qt::black);
-            ui->customPlot->graph(2)->setName("sinus2");
-            ui->customPlot->graph(2)->setPen(pen4);
-            ui->customPlot->graph(2)->setData(pha, sinus2);
-          }
+            if(ui->checkBox_11->isChecked()){
+                QPen pen4;
+                pen4.setWidth(lsi);
+                pen4.setColor(Qt::black);
+                ui->customPlot->graph(2)->setName("sinus2");
+                ui->customPlot->graph(2)->setPen(pen4);
+                ui->customPlot->graph(2)->setData(pha, sinus2);
+            }
 
-          if(ui->checkBox_12->isChecked()){
-              QPen pen4;
-              pen4.setWidth(lsi);
-              pen4.setColor(Qt::black);
-            ui->customPlot->graph(2)->setName("sinus3");
-            ui->customPlot->graph(2)->setPen(pen4);
-            ui->customPlot->graph(2)->setData(pha, sinus3);
-          }
+            if(ui->checkBox_12->isChecked()){
+                QPen pen4;
+                pen4.setWidth(lsi);
+                pen4.setColor(Qt::black);
+                ui->customPlot->graph(2)->setName("sinus3");
+                ui->customPlot->graph(2)->setPen(pen4);
+                ui->customPlot->graph(2)->setData(pha, sinus3);
+            }
 
         }
         else{
@@ -646,44 +646,42 @@ void RvCurve::on_pushButton_7_clicked()
             QPen pen3;
             pen3.setWidth(lsi);
             pen3.setColor(Qt::blue);
-          //ui->customPlot->legend->setVisible(true);
-          //ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
-          ui->customPlot->addGraph();
+            //ui->customPlot->legend->setVisible(true);
+            //ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
+            ui->customPlot->addGraph();
 
-          ui->customPlot->graph(0)->setName("Col1");
-          ui->customPlot->graph(0)->setPen(pen3);
-          ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
-          ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, lsi2));
-          ui->customPlot->graph(0)->setData(otime, RV1);
+            ui->customPlot->graph(0)->setName("Col1");
+            ui->customPlot->graph(0)->setPen(pen3);
+            ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+            ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, lsi2));
+            ui->customPlot->graph(0)->setData(otime, RV1);
 
+            if(ui->checkBox_10->isChecked()){
+                ui->customPlot->addGraph();
+                ui->customPlot->graph(1)->setName("sinus");
+                ui->customPlot->graph(1)->setPen(pen);
+                ui->customPlot->graph(1)->setData(pha, sinus);
+            }
 
-          if(ui->checkBox_10->isChecked()){
-              ui->customPlot->addGraph();
-              ui->customPlot->graph(1)->setName("sinus");
-              ui->customPlot->graph(1)->setPen(pen);
-              ui->customPlot->graph(1)->setData(pha, sinus);
-          }
+            if(ui->checkBox_11->isChecked()){
+                ui->customPlot->addGraph();
+                QPen pen4;
+                pen4.setWidth(lsi);
+                pen4.setColor(Qt::black);
+                ui->customPlot->graph(1)->setName("sinus2");
+                ui->customPlot->graph(1)->setPen(pen4);
+                ui->customPlot->graph(1)->setData(pha, sinus2);
+            }
 
-          if(ui->checkBox_11->isChecked()){
-              ui->customPlot->addGraph();
-              QPen pen4;
-              pen4.setWidth(lsi);
-              pen4.setColor(Qt::black);
-            ui->customPlot->graph(1)->setName("sinus2");
-            ui->customPlot->graph(1)->setPen(pen4);
-            ui->customPlot->graph(1)->setData(pha, sinus2);
-          }
-
-          if(ui->checkBox_12->isChecked()){
-              QPen pen4;
-              pen4.setWidth(lsi);
-              pen4.setColor(Qt::black);
-              ui->customPlot->addGraph();
-            ui->customPlot->graph(1)->setName("sinus3");
-            ui->customPlot->graph(1)->setPen(pen4);
-            ui->customPlot->graph(1)->setData(pha, sinus3);
-          }
-
+            if(ui->checkBox_12->isChecked()){
+                QPen pen4;
+                pen4.setWidth(lsi);
+                pen4.setColor(Qt::black);
+                ui->customPlot->addGraph();
+                ui->customPlot->graph(1)->setName("sinus3");
+                ui->customPlot->graph(1)->setPen(pen4);
+                ui->customPlot->graph(1)->setData(pha, sinus3);
+            }
         }
     }
 
@@ -697,48 +695,48 @@ void RvCurve::on_pushButton_7_clicked()
         QPen pen3;
         pen3.setWidth(lsi);
         pen3.setColor(Qt::blue);
-      //ui->customPlot->legend->setVisible(true);
-      //ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
-      ui->customPlot->addGraph();
-      ui->customPlot->addGraph();
-
-      ui->customPlot->graph(0)->setName("Col2");
-      ui->customPlot->graph(0)->setPen(pen3);
-      ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
-      ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, lsi2));
-      ui->customPlot->graph(0)->setData(otime, RV2);
-
-      if(ui->checkBox_10->isChecked()){
+        //ui->customPlot->legend->setVisible(true);
+        //ui->customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignRight);
         ui->customPlot->addGraph();
-        ui->customPlot->graph(1)->setName("sinus");
-        ui->customPlot->graph(1)->setPen(pen);
-        ui->customPlot->graph(1)->setData(pha, sinus);
-      }
-      if(ui->checkBox_11->isChecked()){
-          ui->customPlot->addGraph();
-          QPen pen4;
-          pen4.setWidth(lsi);
-          pen4.setColor(Qt::black);
-        ui->customPlot->graph(1)->setName("sinus2");
-        ui->customPlot->graph(1)->setPen(pen4);
-        ui->customPlot->graph(1)->setData(pha, sinus2);
-      }
-      if(ui->checkBox_12->isChecked()){
-          QPen pen4;
-          pen4.setWidth(lsi);
-          pen4.setColor(Qt::black);
-          ui->customPlot->addGraph();
-        ui->customPlot->graph(1)->setName("sinus3");
-        ui->customPlot->graph(1)->setPen(pen4);
-        ui->customPlot->graph(1)->setData(pha, sinus3);
-      }
+        ui->customPlot->addGraph();
+
+        ui->customPlot->graph(0)->setName("Col2");
+        ui->customPlot->graph(0)->setPen(pen3);
+        ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+        ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, lsi2));
+        ui->customPlot->graph(0)->setData(otime, RV2);
+
+        if(ui->checkBox_10->isChecked()){
+            ui->customPlot->addGraph();
+            ui->customPlot->graph(1)->setName("sinus");
+            ui->customPlot->graph(1)->setPen(pen);
+            ui->customPlot->graph(1)->setData(pha, sinus);
+        }
+        if(ui->checkBox_11->isChecked()){
+            ui->customPlot->addGraph();
+            QPen pen4;
+            pen4.setWidth(lsi);
+            pen4.setColor(Qt::black);
+            ui->customPlot->graph(1)->setName("sinus2");
+            ui->customPlot->graph(1)->setPen(pen4);
+            ui->customPlot->graph(1)->setData(pha, sinus2);
+        }
+        if(ui->checkBox_12->isChecked()){
+            QPen pen4;
+            pen4.setWidth(lsi);
+            pen4.setColor(Qt::black);
+            ui->customPlot->addGraph();
+            ui->customPlot->graph(1)->setName("sinus3");
+            ui->customPlot->graph(1)->setPen(pen4);
+            ui->customPlot->graph(1)->setData(pha, sinus3);
+        }
     }
 
     ui->customPlot->replot();
 
 }
 
-void RvCurve::on_doubleSpinBox_8_valueChanged(double arg1)
+void RvCurve::on_doubleSpinBox_8_valueChanged()
 {
     sin4 = ui->doubleSpinBox_8->value();
 }
@@ -753,22 +751,22 @@ void RvCurve::on_lineEdit_7_editingFinished()
     ui->customPlot->yAxis->setLabel(ui->lineEdit_7->text());
 }
 
-void RvCurve::on_doubleSpinBox_9_valueChanged(double arg1)
+void RvCurve::on_doubleSpinBox_9_valueChanged()
 {
     sin5 = ui->doubleSpinBox_9->value();
 }
 
-void RvCurve::on_doubleSpinBox_10_valueChanged(double arg1)
+void RvCurve::on_doubleSpinBox_10_valueChanged()
 {
         sin6 = ui->doubleSpinBox_10->value();
 }
 
-void RvCurve::on_doubleSpinBox_11_valueChanged(double arg1)
+void RvCurve::on_doubleSpinBox_11_valueChanged()
 {
         sin7 = ui->doubleSpinBox_11->value();
 }
 
-void RvCurve::on_doubleSpinBox_12_valueChanged(double arg1)
+void RvCurve::on_doubleSpinBox_12_valueChanged()
 {
         sin8 = ui->doubleSpinBox_12->value();
 }

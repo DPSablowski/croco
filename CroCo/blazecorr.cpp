@@ -13,11 +13,16 @@
 #define ARMA_64BIT_WORD
 #include <armadillo>
 #include <CCfits/CCfits>
+#include <stdio.h>
+#include <QMessageBox>
+#include <QVector>
+#include <CCfits/CCfits>
 
 using namespace std;
 using std::vector;
 using namespace arma;
 using namespace arpack;
+
 
 double g, thetabc, dbc, tot, lwbc, uwbc, fcam, pix, in, atbc, out, n1, n2, Il1, Il2, dout, powA, powB, scalef, gres, gres2;
 int npix, nl, nu, nor, nmlines, bcorab=0;
@@ -26,6 +31,7 @@ const double RAD = M_PI/180;
 tk::spline s;
 QString qBExt, qWCol, qICol;
 string bExt, wCol, iCol;
+
 
 BlazeCorr::BlazeCorr(QWidget *parent) :
     QDialog(parent),
@@ -41,24 +47,11 @@ BlazeCorr::BlazeCorr(QWidget *parent) :
     ui->lineEdit_5->setText("spica.dat");
     ui->lineEdit_6->setText("splinefit.dat");
 
-    ui->lineEdit_7->setText("Ha_vel_diff.txt");
-    ui->lineEdit_10->setText("Ha_vel_diff_");
+    ui->lineEdit_7->setText("zetuma_diff.txt");
+    ui->lineEdit_10->setText("zeta_diff_");
     ui->lineEdit_11->setText("txt");
 
-    ui->comboBox->addItem("ASCII");
-    ui->comboBox->addItem("fits");
-
     ui->lineEdit_15->setText("cor");
-
-    ui->lineEdit_12->setText("DataVector");
-    ui->lineEdit_13->setText("Arg");
-    ui->lineEdit_14->setText("Fun");
-    qBExt=ui->lineEdit_12->text();
-    bExt = qBExt.toUtf8().constData();
-    qWCol=ui->lineEdit_13->text();
-    wCol = qWCol.toUtf8().constData();
-    qICol=ui->lineEdit_14->text();
-    iCol = qICol.toUtf8().constData();
 
     QFont legendFont = font();
     legendFont.setPointSize(16);
@@ -87,9 +80,8 @@ void BlazeCorr::seData(QString str)
 //******************************************
 void BlazeCorr::on_pushButton_5_clicked()
 {
-    int sppoi = ui->spinBox_2->value();
-    int inter=0, counts=0;
-    int smlines = 0;
+
+    int smlines = 0, nplot=0;;
     string eins, zwei, line;
 
     QString inputA=ui->lineEdit_2->text()+"/"+ui->lineEdit->text();
@@ -100,64 +92,152 @@ void BlazeCorr::on_pushButton_5_clicked()
 
     QFile checkfile1(datAName.c_str());
 
-    if(!checkfile1.exists()){
+    if(checkfile1.exists()){
+        ifstream inA(datAName.c_str());
+
+        while(std::getline(inA, line))
+           ++smlines;
+
+        inA.clear();
+        inA.seekg(0, ios::beg);
+
+        QVector<double> Msw(smlines), Msi(smlines);
+
+        for(int i =0; i<smlines; i++){
+            inA >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> Msw[i];
+            istringstream ist2(zwei);
+            ist2 >> Msi[i];
+        }
+        inA.close();
+
+        ui->customPlot->clearGraphs();
+
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(nplot)->setData(Msw, Msi);
+        if(nplot==0){
+            ui->customPlot->graph(nplot)->rescaleAxes();
+        }
+        else{
+            ui->customPlot->graph(nplot)->rescaleAxes(true);
+        }
+        ++nplot;
+    }
+    else{
         qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+checkfile1.fileName()+ " does not exist!");
         this->setCursor(QCursor(Qt::ArrowCursor));
-       return;
+        //return;
     }
 
-    ifstream inA(datAName.c_str());
 
-    QString outputA=ui->lineEdit_2->text()+"/"+ui->lineEdit_3->text();
-    string dataoA = outputA.toUtf8().constData();
-    std::ostringstream datoANameStream(dataoA);
-    datoANameStream<<dataoA;
-    std::string datoAName = datoANameStream.str();
-    ofstream outA(datoAName.c_str());
 
-    while(std::getline(inA, line))
-       ++smlines;
+    QString inputB=ui->lineEdit_2->text()+"/"+ui->lineEdit_3->text();
+    string dataB = inputB.toUtf8().constData();
+    std::ostringstream datBNameStream(dataB);
+    datBNameStream<<dataB;
+    std::string datBName = datBNameStream.str();
 
-    inA.clear();
-    inA.seekg(0, ios::beg);
+    QFile checkfile2(datBName.c_str());
 
-    inter = smlines/sppoi;
-    sppoi = smlines/inter+1;
-    cout<<inter<<"\t"<<smlines<<"\t"<<sppoi<<endl;
+    if(checkfile2.exists()){
 
-    QVector<double> Msw(smlines), Msi(smlines), sw(sppoi), si(sppoi);
+        ifstream inB(datBName.c_str());
 
-    for(int i =0; i<smlines; i++){
-        inA >> eins >>zwei;
-        istringstream ist(eins);
-        ist >> Msw[i];
-        istringstream ist2(zwei);
-        ist2 >> Msi[i];
-        if(i == counts*inter){
-            sw[counts] = Msw[i];
-            si[counts] = Msi[i];
+        smlines=0;
 
-            outA<<setprecision(14)<<sw[counts]<<"\t"<<si[counts]<<endl;
-            ++counts;
+        while(std::getline(inB, line))
+           ++smlines;
+
+        inB.clear();
+        inB.seekg(0, ios::beg);
+
+        QVector<double>  sw(smlines), si(smlines);
+
+        for(int i =0; i<smlines; i++){
+            inB >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> sw[i];
+            istringstream ist2(zwei);
+            ist2 >> si[i];
         }
+        inB.close();
+
+        QPen pen1;
+        pen1.setColor(Qt::red);
+
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(nplot)->setLineStyle(QCPGraph::lsNone);
+        ui->customPlot->graph(nplot)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 2));
+        ui->customPlot->graph(nplot)->setPen(pen1);
+        ui->customPlot->graph(nplot)->setData(sw, si);
+        if(nplot==0){
+            ui->customPlot->graph(nplot)->rescaleAxes();
+        }
+        else{
+            ui->customPlot->graph(nplot)->rescaleAxes(true);
+        }
+        ++nplot;
     }
-    inA.close();
-    outA.close();
+    else{
+        qDebug()<<"Error 1: The file "<<checkfile2.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error1 ", "Error 1: Spline file "+checkfile2.fileName()+ " does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        //return;
+    }
 
-    QPen pen1;
-    pen1.setColor(Qt::red);
+    string dataC = (ui->lineEdit_2->text()+"/"+ui->lineEdit_6->text()).toUtf8().constData();
+    std::ostringstream datCNameStream(dataC);
+    datCNameStream<<dataC;
+    string datCName = datCNameStream.str();
 
-    ui->customPlot->clearGraphs();
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(0)->setData(Msw, Msi);
-    ui->customPlot->graph(0)->rescaleAxes();
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(1)->setLineStyle(QCPGraph::lsNone);
-    ui->customPlot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 2));
-    ui->customPlot->graph(1)->setPen(pen1);
-    ui->customPlot->graph(1)->setData(sw, si);
-    ui->customPlot->graph(1)->rescaleAxes(true);
+    QFile checkfile3(datCName.c_str());
+
+    if(checkfile3.exists()){
+
+        ifstream in(datCName.c_str());
+
+        smlines=0;
+
+        while(std::getline(in, line))
+           ++smlines;
+
+        in.clear();
+        in.seekg(0, ios::beg);
+
+        QVector<double>  sw(smlines), si(smlines);
+
+        for(int i =0; i<smlines; i++){
+            in >> eins >>zwei;
+            istringstream ist(eins);
+            ist >> sw[i];
+            istringstream ist2(zwei);
+            ist2 >> si[i];
+        }
+        in.close();
+
+        QPen pen1;
+        pen1.setColor(Qt::green);
+
+        ui->customPlot->addGraph();
+        ui->customPlot->graph(nplot)->setPen(pen1);
+        ui->customPlot->graph(nplot)->setData(sw, si);
+        if(nplot==0){
+            ui->customPlot->graph(nplot)->rescaleAxes();
+        }
+        else{
+            ui->customPlot->graph(nplot)->rescaleAxes(true);
+        }
+        ++nplot;
+    }
+    else{
+        qDebug()<<"Error 1: The file "<<checkfile3.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error1 ", "Error 1: Spline file "+checkfile3.fileName()+ " does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+        //return;
+    }
+
     ui->customPlot->replot();
 }
 
@@ -186,7 +266,7 @@ void BlazeCorr::on_pushButton_4_clicked()
 
     if(!checkfile1.exists()){
         qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-        QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+checkfile1.fileName()+ " does not exist!");
+        QMessageBox::information(this, "Error1 ", "Error 1: Flat spectrum "+checkfile1.fileName()+ " does not exist!");
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
@@ -203,7 +283,7 @@ void BlazeCorr::on_pushButton_4_clicked()
 
     if(!checkfile2.exists()){
         qDebug()<<"Error 1: The file "<<checkfile2.fileName()<<" does not exist.";
-        QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+checkfile2.fileName()+ " does not exist!");
+        QMessageBox::information(this, "Error1 ", "Error 1: Spline points file "+checkfile2.fileName()+ " does not exist!");
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
@@ -256,7 +336,7 @@ void BlazeCorr::on_pushButton_4_clicked()
                         stabw[counts] += pow((tmean-Msi[i-e]),2);
                     }
                 }
-                else{
+                else if(i>4){
                     for(int e = -4; e<5; e++){
                          tmean += Msi[i+e]/10;
                     }
@@ -293,10 +373,12 @@ void BlazeCorr::on_pushButton_4_clicked()
         istringstream ist4(zwei);
         ist3 >> spw[i];
         ist4 >> spi[i];
-        if(i>0 & (spw[i]<spw[i-1])){
-            cout<<"Wrong order at position: "<<i<<endl;
-            spw[i]=spw[i-1];
-            spw[i]=spi[i-1];
+        if(i>0){
+            if(spw[i]<spw[i-1]){
+                cout<<"Wrong order at position: "<<i<<endl;
+                spw[i]=spw[i-1];
+                spw[i]=spi[i-1];
+            }
         }
         else{
             ist3 >> spw[i];
@@ -314,7 +396,8 @@ void BlazeCorr::on_pushButton_4_clicked()
         clipiter=1;
     }
 
-    int valr = smlines2, upda=0, ccount=0, zaehler=3*smlines2;
+    int valr = smlines2;
+    int upda=0, ccount=0, zaehler=3*smlines2;
     double resi=0;
     cout<<valr<<endl;
     int Ph, Pl, Psh, eval=0;
@@ -323,7 +406,8 @@ void BlazeCorr::on_pushButton_4_clicked()
     double alpha =1.0;	//reflection coeff.
     double beta=0.5;	//contraction coeff.
     double btot=0.5;	//total contraction coeff.
-    mat Pm(valr+1,valr), e(valr+1,valr);
+    mat Pm(valr+1,valr);
+    mat e(valr+1,valr);
 
     for(int cl=0; cl<clipiter; cl++){
 
@@ -332,9 +416,6 @@ void BlazeCorr::on_pushButton_4_clicked()
     resi=0;
     eval=0;
     double Z[valr], C[valr], S[valr], Em[valr], X[valr], y[valr+1], step[valr];
-
-    Pm.resize(valr+1,valr);
-    e.resize(valr+1,valr);
 
     //initial points
     for(int i =0; i<valr; i++){
@@ -399,19 +480,218 @@ void BlazeCorr::on_pushButton_4_clicked()
              //cout<<"tmean: "<<tmean<<endl;
              ui->progressBar->setValue(100*(tc+valr+2)/(2*(valr+1)));
 
-         //initialize next step
-         ym=0;
-         ys=0;
-         for (int i=0; i<valr; i++){
-            Z[i]=0;
-         }
+            //initialize next step
+            ym=0;
+            ys=0;
+            for (int i=0; i<valr; i++){
+               Z[i]=0;
+            }
+
+            //looking for highest value
+            yh=y[0];
+            for (int j=0; j<valr+1; j++){
+               if(y[j]>=yh){
+                   yh = y[j];
+                   Ph = j;
+               }
+            }
+
+            //looking for smallest value
+            yl=yh;
+            for (int j=0; j<valr+1; j++){
+               if(y[j]<yl){
+                   yl=y[j];
+                   Pl = j;
+               }
+            }
+
+            // second highest value
+            ysh=yl;
+            for (int j=0; j<valr+1; j++){
+                if((y[j]>ysh) & (y[j]<yh) & (y[j]>yl) & (j !=Pl)){
+                    ysh=y[j];
+                    Psh=j;
+                }
+            }
+
+
+            yh=y[Ph];
+            yl=y[Pl];
+            ysh=y[Psh];
+
+            //computing mean and sigma
+            for (int i=0; i<valr+1; i++){
+               ym+=y[i]/(valr+1);
+            }
+            for (int i=0; i<valr+1; i++){
+               ys+=sqrt(pow((y[i]-ym),2));
+            }
+            ys=ys/(valr);
+
+            //compute centroid
+            for (int j=0; j<valr; j++){
+               for (int i=0; i<valr+1; i++){
+                   if (i!=Ph){
+                       Z[j]+=Pm(i,j)/valr;
+                   }
+               }
+            }
+
+            //reflect highest value at centroid
+            for (int i=0; i<valr; i++){
+               C[i]=Z[i]+alpha*(Z[i]-Pm(Ph,i));
+               spi[i]=C[i];
+            }
+            //*************************************
+            // function
+            s.set_points(spw,spi);
+            tmean=0;
+            for(int ef = 0; ef<smlines; ef++){
+                x = Msw[ef];
+                si[ef]=s(x);
+                tmean += pow((si[ef]-Msi[ef]),2);
+            }
+            tmean = sqrt(tmean/smlines);
+            //*************************************
+            yt=tmean;
+            if(yt<resi){
+                resi=yt;
+                ++upda;
+            }
+            else{
+                //
+            }
+            eval++;
+
+            if(yi<yl){
+               for (int i=0; i<valr; i++){
+                   Em[i]=Z[i]+gamma*(C[i]-Z[i]);
+                   spi[i]=Em[i];
+                }
+                //*************************************
+                // function
+                s.set_points(spw,spi);
+                tmean=0;
+                for(int ef = 0; ef<smlines; ef++){
+                    x = Msw[ef];
+                    si[ef]=s(x);
+                    tmean += pow((si[ef]-Msi[ef]),2);
+                }
+                tmean = sqrt(tmean/smlines);
+                //*************************************
+                yt=tmean;
+                if(yt<resi){
+                    resi=yt;
+                    ++upda;
+                }
+                else{
+                    //
+                }
+                eval++;
+                    if(yt<yl){
+                       for (int i=0; i<valr; i++){
+                           Pm(Ph,i)=Em[i];
+                       }
+                       y[Ph]=yt;//BTfunction(E);
+                       //eval++;
+                    }
+                    if (yt>=yl){
+                       for (int i=0; i<valr; i++){
+                           Pm(Ph,i)=C[i];
+                       }
+                       eval++;
+                       y[Ph]=yi;
+                    }
+                }
+
+                if(yi>=yl){
+                    if(yi<=ysh){
+                       for(int i=0; i<valr; i++){
+                          Pm(Ph,i)=C[i];
+                       }
+                       eval++;
+                       y[Ph]=yi;
+                    }
+                    if(yi>ysh){
+                        if(yi<=yh){
+                            for(int i=0; i<valr; i++){
+                                Pm(Ph,i)=C[i];
+                        }
+                        eval++;
+                        y[Ph]=yi;
+                        yh=y[Ph];
+                    }
+                    for(int i=0; i<valr; i++){
+                        S[i]=Z[i]+beta*(Pm(Ph,i)-Z[i]);
+                        spi[i]=S[i];
+                    }
+                    //*************************************
+                    // function
+                    s.set_points(spw,spi);
+                    tmean=0;;
+                    for(int ef = 0; ef<smlines; ef++){
+                        x = Msw[ef];
+                        si[ef]=s(x);
+                        tmean += pow((si[ef]-Msi[ef]),2);
+                    }
+                    tmean = sqrt(tmean/smlines);
+                    //*************************************
+                    yt=tmean;
+                    if(yt<resi){
+                        resi=yt;
+                        ++upda;
+                    }
+                    else{
+                        //
+                    }
+                    eval++;
+                    if(yt>yh){
+                        for (int j=0; j<valr+1; j++){
+                            for (int i=0; i<valr; i++){
+                            Pm(j,i)=Pm(Pl,i)+btot*(Pm(j,i)-Pm(Pl,i)); //total contraction
+                            X[i]=Pm(j,i);
+                            spi[i]=X[i];
+                         }
+                         //*************************************
+                         // function
+                         s.set_points(spw,spi);
+                         tmean=0;
+                         for(int ef = 0; ef<smlines; ef++){
+                             x = Msw[ef];
+                             si[ef]=s(x);
+                             tmean += pow((si[ef]-Msi[ef]),2);
+                         }
+                         tmean = sqrt(tmean/smlines);
+                         //*************************************
+                         y[j]=tmean;
+                         if(y[j]<resi){
+                             resi=y[j];
+                             ++upda;
+                         }
+                         else{
+                             //
+                         }
+                         eval++;
+                         }
+                    }
+
+                    if(yt<=yh){
+                        for(int i=0; i<valr; i++){
+                           Pm(Ph,i)=S[i];
+                         }
+                         eval++;
+                         y[Ph]=yt;
+                    }
+                }
+            }
+         }//end main loop
 
          //looking for highest value
          yh=y[0];
          for (int j=0; j<valr+1; j++){
             if(y[j]>=yh){
-                yh = y[j];
-                Ph = j;
+            yh = y[j];
+            Ph = j;
             }
          }
 
@@ -419,218 +699,23 @@ void BlazeCorr::on_pushButton_4_clicked()
          yl=yh;
          for (int j=0; j<valr+1; j++){
             if(y[j]<yl){
-                yl=y[j];
-                Pl = j;
+            yl=y[j];
+            if(y[j]<resi){
+                resi=y[j];
+                ++upda;
+            }
+            Pl = j;
             }
          }
-
-         // second highest value
-         ysh=yl;
-         for (int j=0; j<valr+1; j++){
-             if((y[j]>ysh) & (y[j]<yh) & (y[j]>yl) & (j !=Pl)){
-                 ysh=y[j];
-                 Psh=j;
-             }
-         }
-
-
-         yh=y[Ph];
-         yl=y[Pl];
-         ysh=y[Psh];
-
-         //computing mean and sigma
-         for (int i=0; i<valr+1; i++){
-            ym+=y[i]/(valr+1);
-         }
-         for (int i=0; i<valr+1; i++){
-            ys+=sqrt(pow((y[i]-ym),2));
-         }
-         ys=ys/(valr);
-
-         //compute centroid
-         for (int j=0; j<valr; j++){
-            for (int i=0; i<valr+1; i++){
-                if (i!=Ph){
-                    Z[j]+=Pm(i,j)/valr;
-                }
-            }
-         }
-
-         //reflect highest value at centroid
-         for (int i=0; i<valr; i++){
-            C[i]=Z[i]+alpha*(Z[i]-Pm(Ph,i));
-            spi[i]=C[i];
-         }
-         //*************************************
-         // function
-         s.set_points(spw,spi);
-         tmean=0;
-         for(int ef = 0; ef<smlines; ef++){
-             x = Msw[ef];
-             si[ef]=s(x);
-             tmean += pow((si[ef]-Msi[ef]),2);
-         }
-         tmean = sqrt(tmean/smlines);
-         //*************************************
-         yt=tmean;
-         if(yt<resi){
-             resi=yt;
-             ++upda;
-         }
-         else{
-             //
-         }
-         eval++;
-
-         if(yi<yl){
-                 for (int i=0; i<valr; i++){
-                    Em[i]=Z[i]+gamma*(C[i]-Z[i]);
-                    spi[i]=Em[i];
-                 }
-                 //*************************************
-                 // function
-                 s.set_points(spw,spi);
-                 tmean=0;
-                 for(int ef = 0; ef<smlines; ef++){
-                     x = Msw[ef];
-                     si[ef]=s(x);
-                     tmean += pow((si[ef]-Msi[ef]),2);
-                 }
-                 tmean = sqrt(tmean/smlines);
-                 //*************************************
-                 yt=tmean;
-                 if(yt<resi){
-                     resi=yt;
-                     ++upda;
-                 }
-                 else{
-                     //
-                 }
-                 eval++;
-                 if(yt<yl){
-                 for (int i=0; i<valr; i++){
-                 Pm(Ph,i)=Em[i];
-                 }
-                 y[Ph]=yt;//BTfunction(E);
-                 //eval++;
-                 }
-                 if (yt>=yl){
-                 for (int i=0; i<valr; i++){
-                 Pm(Ph,i)=C[i];
-                 }
-                 eval++;
-                 y[Ph]=yi;
-                 }}
-
-                 if(yi>=yl){
-                 if(yi<=ysh){
-                 for(int i=0; i<valr; i++){
-                 Pm(Ph,i)=C[i];
-                 }
-                 eval++;
-                 y[Ph]=yi;
-                 }
-                 if(yi>ysh){
-                 if(yi<=yh){
-                 for(int i=0; i<valr; i++){
-                 Pm(Ph,i)=C[i];
-                 }
-                 eval++;
-                 y[Ph]=yi;
-                 yh=y[Ph];
-                 }
-                 for(int i=0; i<valr; i++){
-                 S[i]=Z[i]+beta*(Pm(Ph,i)-Z[i]);
-                 spi[i]=S[i];
-                 }
-                 //*************************************
-                 // function
-                 s.set_points(spw,spi);
-                 tmean=0;;
-                 for(int ef = 0; ef<smlines; ef++){
-                     x = Msw[ef];
-                     si[ef]=s(x);
-                     tmean += pow((si[ef]-Msi[ef]),2);
-                 }
-                 tmean = sqrt(tmean/smlines);
-                 //*************************************
-                 yt=tmean;
-                 if(yt<resi){
-                     resi=yt;
-                     ++upda;
-                 }
-                 else{
-                     //
-                 }
-                 eval++;
-                 if(yt>yh){
-                 for (int j=0; j<valr+1; j++){
-                 for (int i=0; i<valr; i++){
-                 Pm(j,i)=Pm(Pl,i)+btot*(Pm(j,i)-Pm(Pl,i)); //total contraction
-                 X[i]=Pm(j,i);
-                 spi[i]=X[i];
-                 }
-                 //*************************************
-                 // function
-                 s.set_points(spw,spi);
-                 tmean=0;
-                 for(int ef = 0; ef<smlines; ef++){
-                     x = Msw[ef];
-                     si[ef]=s(x);
-                     tmean += pow((si[ef]-Msi[ef]),2);
-                 }
-                 tmean = sqrt(tmean/smlines);
-                 //*************************************
-                 y[j]=tmean;
-                 if(y[j]<resi){
-                     resi=y[j];
-                     ++upda;
-                 }
-                 else{
-                     //
-                 }
-                 eval++;
-                 }}
-
-                 if(yt<=yh){
-                 for(int i=0; i<valr; i++){
-                 Pm(Ph,i)=S[i];
-                 }
-                 eval++;
-                 y[Ph]=yt;
-                 }}
-
-                 }
-
-                 }//end main loop
-
-         //looking for highest value
-         yh=y[0];
-         for (int j=0; j<valr+1; j++){
-         if(y[j]>=yh){
-         yh = y[j];
-         Ph = j;
-         }}
-
-         //looking for smallest value
-         yl=yh;
-         for (int j=0; j<valr+1; j++){
-         if(y[j]<yl){
-         yl=y[j];
-         if(y[j]<resi){
-             resi=y[j];
-             ++upda;
-         }
-         Pl = j;
-         }}
 
          //looking for second highest value
          ysh=yl;
          for (int j=0; j<valr+1; j++){
-         if(y[j]>ysh & (y[j]<yh)){
-         ysh=y[j];
-         Psh=j;
-         }}
+            if((y[j]>ysh) & (y[j]<yh)){
+                ysh=y[j];
+                Psh=j;
+            }
+         }
 
          QVector<double> spi2(smlines), spw2(smlines);
 
@@ -657,7 +742,7 @@ void BlazeCorr::on_pushButton_4_clicked()
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
             }
-            if(ccount<3){
+            else if(ccount<3){
                 cout<<"Not enough points left."<<endl;
                 this->setCursor(QCursor(Qt::ArrowCursor));
                 return;
@@ -740,7 +825,7 @@ void BlazeCorr::on_pushButton_4_clicked()
 
                  ui->progressBar->setValue(100);
                  cout<<"upda: "<<upda<<endl;
-                 if(ui->checkBox_4->isChecked() & upda!=2){
+                 if(ui->checkBox_4->isChecked() & (upda!=2)){
                      BlazeCorr::on_pushButton_4_clicked();
                  }
 
@@ -904,8 +989,10 @@ void BlazeCorr::on_pushButton_clicked()
             diffw[counter] = test;
             str2 >> diffi[counter];
 
-            if(i>0 & diffw[counter]<diffw[counter-1]){
-                ++ndiff;
+            if((i>0) & (counter>=1)){
+                if(diffw[counter]<diffw[counter-1]){
+                    ++ndiff;
+                }
             }
 
             else{
@@ -916,6 +1003,7 @@ void BlazeCorr::on_pushButton_clicked()
         else{
             // do nothing
         }
+        cout<<"test: "<<i<<endl;
 
     }
 
@@ -932,17 +1020,21 @@ void BlazeCorr::on_pushButton_clicked()
 
         for(int i =0; i<dlines1; i++){
             if(counter==0){
-                if(i>0 & diffw[i]<diffw[i-1]){
-                    pdiff[counter]=i;
-                    cout<<pdiff[counter]<<endl;
-                    ++counter;
+                if(i>0){
+                    if(diffw[i]<diffw[i-1]){
+                        pdiff[counter]=i;
+                        cout<<pdiff[counter]<<endl;
+                        ++counter;
+                    }
                 }
             }
             else{
-                if(i>pdiff[counter-1]-1 & (diffw[i]<diffw[i-1])){
-                    pdiff[counter]=i;
-                    cout<<pdiff[counter]<<endl;
-                    ++counter;
+                if((i>pdiff[counter-1]-1) & (i>0)){
+                    if(diffw[i]<diffw[i-1]){
+                        pdiff[counter]=i;
+                        cout<<pdiff[counter]<<endl;
+                        ++counter;
+                    }
                 }
             }
         }
@@ -964,7 +1056,7 @@ void BlazeCorr::on_pushButton_clicked()
         ofstream ouA(outAName.c_str());
 
         for(int n =0; n<pdiff[i]; n++){
-            if(i ==0){
+            if(i==0){
                 ouA<<diffw[n]<<"\t"<<diffi[n]<<endl;
             }
             else{
@@ -977,9 +1069,7 @@ void BlazeCorr::on_pushButton_clicked()
                 }
             }
         }
-
     }
-
 }
 
 //***********************************
@@ -1008,77 +1098,7 @@ void BlazeCorr::on_pushButton_2_clicked()
 
         Qout = ui->lineEdit_8->text()+ind+"."+ui->lineEdit_9->text(); // individual spectra
 
-        // fits files
-        if(ui->comboBox->currentIndex()==1){
-
-            std::valarray<double> wave;
-            std::valarray<double> intens;
-
-                string data = Qout.toUtf8().constData();
-                std::ostringstream datNameStream(data);
-                datNameStream<<bPath<<"/"<<data;
-                std::string datName = datNameStream.str();
-
-                QFile checkfile1(datName.c_str());
-
-                if(!checkfile1.exists()){
-                    qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
-                    QMessageBox::information(this, "Error1 ", "Error 1: Spectrum "+Qout+ " does not exist!");
-                    return;
-                }
-
-                CCfits::FITS::setVerboseMode(true);
-
-                try
-                {
-                    qBExt=ui->lineEdit_12->text();
-                    bExt = qBExt.toUtf8().constData();
-                    qWCol=ui->lineEdit_13->text();
-                    wCol = qWCol.toUtf8().constData();
-                    qICol=ui->lineEdit_14->text();
-                    iCol = qICol.toUtf8().constData();
-
-                    //open file for reading
-                    shared_ptr<CCfits::FITS> input_file(new CCfits::FITS(datName.c_str(),CCfits::Read,true));
-
-                    // Create pointer to extension
-                        CCfits::ExtHDU& datavector = input_file->extension(bExt);
-
-                      // Read rows
-                      CCfits::Column& column = datavector.column(wCol);
-                      column.read(wave, 1, column.rows());
-
-                      // Read rows
-                      CCfits::Column& column2 = datavector.column(iCol);
-                      column2.read(intens, 1, column2.rows());
-
-                      int bini=wave.size();
-
-                      QString Qdata2 = ui->lineEdit_8->text()+ind+".bco";
-                      string data2 = Qdata2.toUtf8().constData();
-                      std::ostringstream dat2NameStream(data2);
-                      dat2NameStream<<bPath<<"/"<<data2;
-                      std::string dat2Name = dat2NameStream.str();
-                      ofstream bcor(dat2Name.c_str());
-
-                      for(int i=0; i<bini; i++){
-                          bcor<<wave[i]<<"\t"<<intens[i]<<endl;
-                      }
-                      ui->lineEdit_5->setText(Qdata2);
-
-                }
-                    catch (CCfits::FitsException&)
-
-                     {
-                      std::cerr << " Fits exception thrown by test function \n";
-                      }
-
-        }
-
-        // ASCII files
-        else{
-            ui->lineEdit_5->setText(Qout);
-        }
+        ui->lineEdit_5->setText(Qout);
 
         Qout2 = ui->lineEdit_8->text()+ui->lineEdit_15->text()+"_"+ind+"."+ui->lineEdit_9->text(); // corrected individual spectra
         ui->lineEdit_4->setText(Qout2);
@@ -1086,7 +1106,7 @@ void BlazeCorr::on_pushButton_2_clicked()
         ui->lineEdit_3->setText("spline_"+ui->lineEdit_15->text()+"_"+ind+".dat");
         ui->lineEdit_6->setText("splinefit_"+ui->lineEdit_15->text()+"_"+ind+".dat");
 
-        BlazeCorr::on_pushButton_5_clicked();
+        BlazeCorr::on_pushButton_3_clicked();
         //QTimer::singleShot(2000, this, SLOT(yourSlot()));
         BlazeCorr::on_pushButton_4_clicked();
         //QTimer::singleShot(2000, this, SLOT(yourSlot()));
@@ -1113,4 +1133,68 @@ void BlazeCorr::on_checkBox_3_clicked()
     else{
         ui->checkBox_2->setChecked(true);
     }
+}
+
+//**********************************
+// distribute points over flat
+//**********************************
+void BlazeCorr::on_pushButton_3_clicked()
+{
+    int sppoi = ui->spinBox_2->value();
+    int inter=0, counts=0;
+    int smlines = 0;
+    string eins, zwei, line;
+
+    QString inputA=ui->lineEdit_2->text()+"/"+ui->lineEdit->text();
+    string dataA = inputA.toUtf8().constData();
+    std::ostringstream datANameStream(dataA);
+    datANameStream<<dataA;
+    std::string datAName = datANameStream.str();
+
+    QFile checkfile1(datAName.c_str());
+
+    if(!checkfile1.exists()){
+        qDebug()<<"Error 1: The file "<<checkfile1.fileName()<<" does not exist.";
+        QMessageBox::information(this, "Error1 ", "Error 1: Flat "+checkfile1.fileName()+ " does not exist!");
+        this->setCursor(QCursor(Qt::ArrowCursor));
+       return;
+    }
+
+    ifstream inA(datAName.c_str());
+
+    QString outputA=ui->lineEdit_2->text()+"/"+ui->lineEdit_3->text();
+    string dataoA = outputA.toUtf8().constData();
+    std::ostringstream datoANameStream(dataoA);
+    datoANameStream<<dataoA;
+    std::string datoAName = datoANameStream.str();
+    ofstream outA(datoAName.c_str());
+
+    while(std::getline(inA, line))
+       ++smlines;
+
+    inA.clear();
+    inA.seekg(0, ios::beg);
+
+    inter = smlines/sppoi;
+    sppoi = smlines/inter+1;
+    cout<<inter<<"\t"<<smlines<<"\t"<<sppoi<<endl;
+
+    QVector<double> Msw(smlines), Msi(smlines), sw(sppoi), si(sppoi);
+
+    for(int i =0; i<smlines; i++){
+        inA >> eins >>zwei;
+        istringstream ist(eins);
+        ist >> Msw[i];
+        istringstream ist2(zwei);
+        ist2 >> Msi[i];
+        if(i == counts*inter){
+            sw[counts] = Msw[i];
+            si[counts] = Msi[i];
+
+            outA<<setprecision(14)<<sw[counts]<<"\t"<<si[counts]<<endl;
+            ++counts;
+        }
+    }
+    inA.close();
+    outA.close();
 }

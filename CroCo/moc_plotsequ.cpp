@@ -1,18 +1,19 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'plotsequ.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
+#include <memory>
 #include "plotsequ.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'plotsequ.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.12.1. It"
+#error "This file was generated using the moc from 5.15.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -21,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_PlotSequ_t {
-    QByteArrayData data[40];
-    char stringdata0[833];
+    QByteArrayData data[42];
+    char stringdata0[852];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -70,7 +71,9 @@ QT_MOC_LITERAL(35, 694, 22), // "on_checkBox_16_clicked"
 QT_MOC_LITERAL(36, 717, 32), // "on_doubleSpinBox_15_valueChanged"
 QT_MOC_LITERAL(37, 750, 32), // "on_doubleSpinBox_16_valueChanged"
 QT_MOC_LITERAL(38, 783, 24), // "on_pushButton_11_clicked"
-QT_MOC_LITERAL(39, 808, 24) // "on_pushButton_12_clicked"
+QT_MOC_LITERAL(39, 808, 24), // "on_pushButton_12_clicked"
+QT_MOC_LITERAL(40, 833, 12), // "createMedian"
+QT_MOC_LITERAL(41, 846, 5) // "coAdd"
 
     },
     "PlotSequ\0seData\0\0str\0str2\0str3\0str4\0"
@@ -97,7 +100,8 @@ QT_MOC_LITERAL(39, 808, 24) // "on_pushButton_12_clicked"
     "on_doubleSpinBox_15_valueChanged\0"
     "on_doubleSpinBox_16_valueChanged\0"
     "on_pushButton_11_clicked\0"
-    "on_pushButton_12_clicked"
+    "on_pushButton_12_clicked\0createMedian\0"
+    "coAdd"
 };
 #undef QT_MOC_LITERAL
 
@@ -107,7 +111,7 @@ static const uint qt_meta_data_PlotSequ[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      31,   14, // methods
+      33,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -115,37 +119,39 @@ static const uint qt_meta_data_PlotSequ[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    5,  169,    2, 0x0a /* Public */,
-       8,    0,  180,    2, 0x08 /* Private */,
-       9,    0,  181,    2, 0x08 /* Private */,
-      10,    0,  182,    2, 0x08 /* Private */,
-      11,    0,  183,    2, 0x08 /* Private */,
-      12,    0,  184,    2, 0x08 /* Private */,
-      13,    0,  185,    2, 0x08 /* Private */,
-      14,    0,  186,    2, 0x08 /* Private */,
-      15,    0,  187,    2, 0x08 /* Private */,
-      16,    0,  188,    2, 0x08 /* Private */,
-      17,    0,  189,    2, 0x08 /* Private */,
-      18,    0,  190,    2, 0x08 /* Private */,
-      19,    0,  191,    2, 0x08 /* Private */,
-      20,    0,  192,    2, 0x08 /* Private */,
-      21,    0,  193,    2, 0x08 /* Private */,
-      22,    0,  194,    2, 0x08 /* Private */,
-      23,    0,  195,    2, 0x08 /* Private */,
-      24,    0,  196,    2, 0x08 /* Private */,
-      25,    0,  197,    2, 0x08 /* Private */,
-      26,    0,  198,    2, 0x08 /* Private */,
-      27,    0,  199,    2, 0x08 /* Private */,
-      28,    1,  200,    2, 0x08 /* Private */,
-      31,    0,  203,    2, 0x08 /* Private */,
-      32,    0,  204,    2, 0x08 /* Private */,
-      33,    0,  205,    2, 0x08 /* Private */,
-      34,    0,  206,    2, 0x08 /* Private */,
-      35,    0,  207,    2, 0x08 /* Private */,
-      36,    0,  208,    2, 0x08 /* Private */,
-      37,    0,  209,    2, 0x08 /* Private */,
-      38,    0,  210,    2, 0x08 /* Private */,
-      39,    0,  211,    2, 0x08 /* Private */,
+       1,    5,  179,    2, 0x0a /* Public */,
+       8,    0,  190,    2, 0x08 /* Private */,
+       9,    0,  191,    2, 0x08 /* Private */,
+      10,    0,  192,    2, 0x08 /* Private */,
+      11,    0,  193,    2, 0x08 /* Private */,
+      12,    0,  194,    2, 0x08 /* Private */,
+      13,    0,  195,    2, 0x08 /* Private */,
+      14,    0,  196,    2, 0x08 /* Private */,
+      15,    0,  197,    2, 0x08 /* Private */,
+      16,    0,  198,    2, 0x08 /* Private */,
+      17,    0,  199,    2, 0x08 /* Private */,
+      18,    0,  200,    2, 0x08 /* Private */,
+      19,    0,  201,    2, 0x08 /* Private */,
+      20,    0,  202,    2, 0x08 /* Private */,
+      21,    0,  203,    2, 0x08 /* Private */,
+      22,    0,  204,    2, 0x08 /* Private */,
+      23,    0,  205,    2, 0x08 /* Private */,
+      24,    0,  206,    2, 0x08 /* Private */,
+      25,    0,  207,    2, 0x08 /* Private */,
+      26,    0,  208,    2, 0x08 /* Private */,
+      27,    0,  209,    2, 0x08 /* Private */,
+      28,    1,  210,    2, 0x08 /* Private */,
+      31,    0,  213,    2, 0x08 /* Private */,
+      32,    0,  214,    2, 0x08 /* Private */,
+      33,    0,  215,    2, 0x08 /* Private */,
+      34,    0,  216,    2, 0x08 /* Private */,
+      35,    0,  217,    2, 0x08 /* Private */,
+      36,    0,  218,    2, 0x08 /* Private */,
+      37,    0,  219,    2, 0x08 /* Private */,
+      38,    0,  220,    2, 0x08 /* Private */,
+      39,    0,  221,    2, 0x08 /* Private */,
+      40,    0,  222,    2, 0x08 /* Private */,
+      41,    0,  223,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString, QMetaType::QString,    3,    4,    5,    6,    7,
@@ -170,6 +176,8 @@ static const uint qt_meta_data_PlotSequ[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 29,   30,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -220,13 +228,15 @@ void PlotSequ::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         case 28: _t->on_doubleSpinBox_16_valueChanged(); break;
         case 29: _t->on_pushButton_11_clicked(); break;
         case 30: _t->on_pushButton_12_clicked(); break;
+        case 31: _t->createMedian(); break;
+        case 32: _t->coAdd(); break;
         default: ;
         }
     }
 }
 
 QT_INIT_METAOBJECT const QMetaObject PlotSequ::staticMetaObject = { {
-    &QDialog::staticMetaObject,
+    QMetaObject::SuperData::link<QDialog::staticMetaObject>(),
     qt_meta_stringdata_PlotSequ.data,
     qt_meta_data_PlotSequ,
     qt_static_metacall,
@@ -254,13 +264,13 @@ int PlotSequ::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 31)
+        if (_id < 33)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 31;
+        _id -= 33;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 31)
+        if (_id < 33)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 31;
+        _id -= 33;
     }
     return _id;
 }

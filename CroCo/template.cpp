@@ -112,15 +112,15 @@ void Template::on_pushButton_4_clicked()
     std::ostringstream dat1NameStream(data1);
     dat1NameStream<<tpath<<"/"<<data1;
     std::string dat1Name = dat1NameStream.str();
-    ifstream dat1(dat1Name.c_str());
 
     QFile checkfile1(dat1Name.c_str());
 
     if(!checkfile1.exists()){
         qDebug()<<"The file "<<checkfile1.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+input1+" does not exist!");
-       return;
+        return;
     }
+    ifstream dat1(dat1Name.c_str());
 
     linesA=0;
 
@@ -135,11 +135,11 @@ void Template::on_pushButton_4_clicked()
     temiA.resize(linesA);
 
     for (int i =0; i < linesA; i++){
-    dat1 >> eins >> zwei;
-    istringstream istr1(eins);
-    istr1 >> linwA[i];
-    istringstream istr2(zwei);
-    istr2 >> liniA[i];
+        dat1 >> eins >> zwei;
+        istringstream istr1(eins);
+        istr1 >> linwA[i];
+        istringstream istr2(zwei);
+        istr2 >> liniA[i];
     }
     dat1.close();
 
@@ -149,7 +149,6 @@ void Template::on_pushButton_4_clicked()
     std::ostringstream dat2NameStream(data2);
     dat2NameStream<<tpath<<"/"<<data2;
     std::string dat2Name = dat2NameStream.str();
-    ifstream dat2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -158,6 +157,7 @@ void Template::on_pushButton_4_clicked()
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+input2+".txt does not exist!");
        return;
     }
+    ifstream dat2(dat2Name.c_str());
 
     linesB=0;
 
@@ -172,11 +172,11 @@ void Template::on_pushButton_4_clicked()
     temiB.resize(linesB);
 
     for (int i =0; i < linesB; i++){
-    dat2 >> eins >> zwei;
-    istringstream istr3(eins);
-    istr3 >> linwB[i];
-    istringstream istr4(zwei);
-    istr4 >> liniB[i];
+        dat2 >> eins >> zwei;
+        istringstream istr3(eins);
+        istr3 >> linwB[i];
+        istringstream istr4(zwei);
+        istr4 >> liniB[i];
     }
     dat2.close();
 
@@ -210,20 +210,20 @@ void Template::on_pushButton_4_clicked()
 
 
 
-    for(int n=0; n < linesA; n++){
-        temiA[n]=((1+noise)-liniA[n]*linesA*exp(-5.545/2/(vsinA/c0*2*linwA[n]*0.83255)*pow((linwA[n]-w),2)))/linesA+gauss()*noise/2;
-        tempiA+=temiA[n];
+        for(int n=0; n < linesA; n++){
+            temiA[n]=((1+noise)-liniA[n]*linesA*exp(-5.545/2/(vsinA/c0*2*linwA[n]*0.83255)*pow((linwA[n]-w),2)))/linesA+gauss()*noise/2;
+            tempiA+=temiA[n];
         }
 
-    for(int n=0; n < linesB; n++){
-        temiB[n]=((1+noise)-liniB[n]*linesB*exp(-5.545/2/(vsinB/c0*2*linwB[n]*0.83255)*pow((linwB[n]-w),2)))/linesB+gauss()*noise/2;
-        tempiB+=temiB[n];
+        for(int n=0; n < linesB; n++){
+            temiB[n]=((1+noise)-liniB[n]*linesB*exp(-5.545/2/(vsinB/c0*2*linwB[n]*0.83255)*pow((linwB[n]-w),2)))/linesB+gauss()*noise/2;
+            tempiB+=temiB[n];
         }
 
-    file1<<tempiA<<"\n";
-    file2<<tempiB<<"\n";
-    tempiA=0;
-    tempiB=0;
+        file1<<tempiA<<"\n";
+        file2<<tempiB<<"\n";
+        tempiA=0;
+        tempiB=0;
     }
 
 }
@@ -247,7 +247,6 @@ void Template::on_pushButton_2_clicked()
     std::ostringstream datNameStream(plot11);
     datNameStream<<tpath<<"/"<<plot11;
     std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
 
     QFile checkfile(datName.c_str());
 
@@ -256,6 +255,7 @@ void Template::on_pushButton_2_clicked()
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+plot1+" does not exist!");
        return;
     }
+    ifstream toplot1(datName.c_str());
 
     int number_of_lines=0;
 
@@ -268,18 +268,18 @@ void Template::on_pushButton_2_clicked()
     QVector<double> a(number_of_lines), b(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> one >>two;
-    istringstream ist(one);
-    ist >> a[i];
-    a[i]=a[i]*(1+RVA/c0);
-    if(ui->checkBox->isChecked()){
-        a[i]=log10(a[i]);
-    }
-    istringstream ist2(two);
-    ist2 >> b[i];
-    if(ui->checkBox_4->isChecked()){
-        b[i]=b[i]+y1add;
-    }
+        toplot1 >> one >>two;
+        istringstream ist(one);
+        ist >> a[i];
+        a[i]=a[i]*(1+RVA/c0);
+        if(ui->checkBox->isChecked()){
+            a[i]=log10(a[i]);
+        }
+        istringstream ist2(two);
+        ist2 >> b[i];
+        if(ui->checkBox_4->isChecked()){
+            b[i]=b[i]+y1add;
+        }
     }
     toplot1.close();
 
@@ -315,7 +315,6 @@ void Template::on_pushButton_2_clicked()
     std::ostringstream dat2NameStream(plot12);
     dat2NameStream<<tpath<<"/"<<plot12;
     std::string dat2Name = dat2NameStream.str();
-    ifstream toplot2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -324,6 +323,7 @@ void Template::on_pushButton_2_clicked()
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+plot2+" does not exist!");
        return;
     }
+    ifstream toplot2(dat2Name.c_str());
 
     number_of_lines=0;
 
@@ -337,19 +337,19 @@ void Template::on_pushButton_2_clicked()
     b.reserve(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot2 >> one >>two;
-    istringstream ist3(one);
-    ist3 >> a[i];
-    a[i]=a[i]*(1+RVB/c0);
-    if(ui->checkBox_2->isChecked()){
-        a[i]=log10(a[i]);
-    }
-    istringstream ist4(two);
-    ist4 >> b[i];
-    b[i]=b[i]+toffset;
-    if(ui->checkBox_5->isCheckable()){
-        b[i]=b[i]+y2add;
-    }
+        toplot2 >> one >>two;
+        istringstream ist3(one);
+        ist3 >> a[i];
+        a[i]=a[i]*(1+RVB/c0);
+        if(ui->checkBox_2->isChecked()){
+            a[i]=log10(a[i]);
+        }
+        istringstream ist4(two);
+        ist4 >> b[i];
+        b[i]=b[i]+toffset;
+        if(ui->checkBox_5->isCheckable()){
+            b[i]=b[i]+y2add;
+        }
     }
     toplot2.close();
 
@@ -426,7 +426,6 @@ void Template::on_pushButton_3_clicked()
     std::ostringstream datNameStream(plot11);
     datNameStream<<tpath<<"/"<<plot11;
     std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
 
     QFile checkfile(datName.c_str());
 
@@ -435,6 +434,7 @@ void Template::on_pushButton_3_clicked()
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+plot1+" does not exist!");
        return;
     }
+    ifstream toplot1(datName.c_str());
 
     int number_of_lines =0;
 
@@ -448,18 +448,18 @@ void Template::on_pushButton_3_clicked()
     QVector<double> a(number_of_lines), b(number_of_lines), RshiftA(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot1 >> one >>two;
-    istringstream ist(one);
-    ist >> a[i];
-    a[i]=a[i]*(1+RVA/c0);
-    if(ui->checkBox->isChecked()){
-        a[i]=log10(a[i]);
-    }
-    istringstream ist2(two);
-    ist2 >> b[i];
-    if(ui->checkBox_4->isChecked()){
-        b[i]=b[i]+y1add;
-    }
+        toplot1 >> one >>two;
+        istringstream ist(one);
+        ist >> a[i];
+        a[i]=a[i]*(1+RVA/c0);
+        if(ui->checkBox->isChecked()){
+            a[i]=log10(a[i]);
+        }
+        istringstream ist2(two);
+        ist2 >> b[i];
+        if(ui->checkBox_4->isChecked()){
+            b[i]=b[i]+y1add;
+        }
     }
     toplot1.close();
 
@@ -472,7 +472,6 @@ void Template::on_pushButton_3_clicked()
     std::ostringstream dat2NameStream(plot12);
     dat2NameStream<<tpath<<"/"<<plot12;
     std::string dat2Name = dat2NameStream.str();
-    ifstream toplot2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -481,6 +480,7 @@ void Template::on_pushButton_3_clicked()
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+plot2+" does not exist!");
        return;
     }
+    ifstream toplot2(dat2Name.c_str());
 
     number_of_lines =0;
 
@@ -493,25 +493,25 @@ void Template::on_pushButton_3_clicked()
     QVector<double> c(number_of_lines), d(number_of_lines), e(number_of_lines), f(number_of_lines), RshiftB(number_of_lines);;
 
     for (int i=0; i<number_of_lines; i++){
-    toplot2 >> one >>two;
-    istringstream ist3(one);
-    ist3 >> c[i];
-    if(ui->checkBox_2->isChecked()){
-    f[i]=log10(c[i]);
+        toplot2 >> one >>two;
+        istringstream ist3(one);
+        ist3 >> c[i];
+        if(ui->checkBox_2->isChecked()){
+            f[i]=log10(c[i]);
         }
-    else{
-        f[i]=c[i];
-    }
-    c[i]=c[i]*(1+RVB/c0);
-    if(ui->checkBox_2->isChecked()){
-        c[i]=log10(c[i]);
-    }
-    istringstream ist4(two);
-    ist4 >> d[i];
-    d[i]=d[i]+toffset;
-    if(ui->checkBox_5->isChecked()){
-        d[i]=d[i]+y2add;
-    }
+        else{
+          f[i]=c[i];
+        }
+        c[i]=c[i]*(1+RVB/c0);
+        if(ui->checkBox_2->isChecked()){
+            c[i]=log10(c[i]);
+        }
+        istringstream ist4(two);
+        ist4 >> d[i];
+        d[i]=d[i]+toffset;
+        if(ui->checkBox_5->isChecked()){
+            d[i]=d[i]+y2add;
+        }
     }
     toplot2.close();
 
@@ -521,7 +521,7 @@ void Template::on_pushButton_3_clicked()
 
     for (int i=0; i<number_of_lines; i++){
         if((i-RshiftA[i]>0)&(i-RshiftB[i]>0)&(i-RshiftA[i]<number_of_lines)&(i-RshiftB[i]<number_of_lines)){
-        e[i]=b[i-RshiftA[i]]+d[i-RshiftB[i]]+toffset;
+            e[i]=b[i-RshiftA[i]]+d[i-RshiftB[i]]+toffset;
         }
 
         else{
@@ -538,15 +538,15 @@ void Template::on_pushButton_3_clicked()
     std::ostringstream dat3NameStream(plot13);
     dat3NameStream<<tpath<<"/"<<plot13;
     std::string dat3Name = dat3NameStream.str();
-    ifstream toplot3(dat3Name.c_str());
 
     QFile checkfile3(dat3Name.c_str());
 
     if(!checkfile3.exists()){
         qDebug()<<"The file "<<checkfile3.fileName()<<" does not exist.";
         QMessageBox::information(this, "Error", "File "+qtpath+"/"+plot3+" does not exist!");
-       return;
+        return;
     }
+    ifstream toplot3(dat3Name.c_str());
 
     number_of_lines =0;
 
@@ -559,18 +559,18 @@ void Template::on_pushButton_3_clicked()
     QVector<double> g(number_of_lines), h(number_of_lines);
 
     for (int i=0; i<number_of_lines; i++){
-    toplot3 >> one >>two;
-    istringstream ist5(one);
-    ist5 >> g[i];
-    if(ui->checkBox_3->isChecked()){
-        g[i]=log10(g[i]);
-    }
-    istringstream ist6(two);
-    ist6 >> h[i];
-    h[i]=h[i]+3*toffset;
-    if(ui->checkBox_6->isChecked()){
-        h[i]=h[i]+y3add;
-    }
+        toplot3 >> one >>two;
+        istringstream ist5(one);
+        ist5 >> g[i];
+        if(ui->checkBox_3->isChecked()){
+            g[i]=log10(g[i]);
+        }
+        istringstream ist6(two);
+        ist6 >> h[i];
+        h[i]=h[i]+3*toffset;
+        if(ui->checkBox_6->isChecked()){
+            h[i]=h[i]+y3add;
+        }
     }
     toplot3.close();
 

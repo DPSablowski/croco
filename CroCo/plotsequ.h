@@ -79,6 +79,10 @@ private slots:
 
     void on_pushButton_12_clicked();
 
+    void createMedian();
+
+    void coAdd();
+
 private:
     Ui::PlotSequ *ui;
 };

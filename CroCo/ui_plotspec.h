@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'plotspec.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -478,30 +478,30 @@ public:
 
     void retranslateUi(QDialog *PlotSpec)
     {
-        PlotSpec->setWindowTitle(QApplication::translate("PlotSpec", "Dialog", nullptr));
-        label_2->setText(QApplication::translate("PlotSpec", "x1:", nullptr));
-        label_3->setText(QApplication::translate("PlotSpec", "x2:", nullptr));
-        label_5->setText(QApplication::translate("PlotSpec", "y1:", nullptr));
-        label_4->setText(QApplication::translate("PlotSpec", "y2:", nullptr));
-        checkBox_4->setText(QApplication::translate("PlotSpec", "legend", nullptr));
-        pushButton_3->setText(QApplication::translate("PlotSpec", "find values", nullptr));
-        pushButton_2->setText(QApplication::translate("PlotSpec", "Plot", nullptr));
-        label->setText(QApplication::translate("PlotSpec", "File", nullptr));
-        label_11->setText(QApplication::translate("PlotSpec", "Ext:", nullptr));
-        label_12->setText(QApplication::translate("PlotSpec", "W.Col.", nullptr));
-        label_13->setText(QApplication::translate("PlotSpec", "I.Col.", nullptr));
-        label_6->setText(QApplication::translate("PlotSpec", "x Label", nullptr));
-        label_7->setText(QApplication::translate("PlotSpec", "y Label", nullptr));
-        checkBox_6->setText(QApplication::translate("PlotSpec", "Flux-Data", nullptr));
-        checkBox_5->setText(QApplication::translate("PlotSpec", "divide by y2", nullptr));
-        label_9->setText(QApplication::translate("PlotSpec", "work path", nullptr));
-        label_8->setText(QApplication::translate("PlotSpec", "Save as", nullptr));
-        checkBox->setText(QApplication::translate("PlotSpec", "pdf", nullptr));
-        checkBox_2->setText(QApplication::translate("PlotSpec", "png", nullptr));
-        checkBox_3->setText(QApplication::translate("PlotSpec", "jpg", nullptr));
-        label_10->setText(QApplication::translate("PlotSpec", "Font Size:", nullptr));
-        pushButton_4->setText(QApplication::translate("PlotSpec", "Save", nullptr));
-        pushButton->setText(QApplication::translate("PlotSpec", "Close", nullptr));
+        PlotSpec->setWindowTitle(QCoreApplication::translate("PlotSpec", "Dialog", nullptr));
+        label_2->setText(QCoreApplication::translate("PlotSpec", "x1:", nullptr));
+        label_3->setText(QCoreApplication::translate("PlotSpec", "x2:", nullptr));
+        label_5->setText(QCoreApplication::translate("PlotSpec", "y1:", nullptr));
+        label_4->setText(QCoreApplication::translate("PlotSpec", "y2:", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("PlotSpec", "legend", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("PlotSpec", "find values", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("PlotSpec", "Plot", nullptr));
+        label->setText(QCoreApplication::translate("PlotSpec", "File", nullptr));
+        label_11->setText(QCoreApplication::translate("PlotSpec", "Ext:", nullptr));
+        label_12->setText(QCoreApplication::translate("PlotSpec", "W.Col.", nullptr));
+        label_13->setText(QCoreApplication::translate("PlotSpec", "I.Col.", nullptr));
+        label_6->setText(QCoreApplication::translate("PlotSpec", "x Label", nullptr));
+        label_7->setText(QCoreApplication::translate("PlotSpec", "y Label", nullptr));
+        checkBox_6->setText(QCoreApplication::translate("PlotSpec", "Flux-Data", nullptr));
+        checkBox_5->setText(QCoreApplication::translate("PlotSpec", "divide by y2", nullptr));
+        label_9->setText(QCoreApplication::translate("PlotSpec", "work path", nullptr));
+        label_8->setText(QCoreApplication::translate("PlotSpec", "Save as", nullptr));
+        checkBox->setText(QCoreApplication::translate("PlotSpec", "pdf", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("PlotSpec", "png", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("PlotSpec", "jpg", nullptr));
+        label_10->setText(QCoreApplication::translate("PlotSpec", "Font Size:", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("PlotSpec", "Save", nullptr));
+        pushButton->setText(QCoreApplication::translate("PlotSpec", "Close", nullptr));
     } // retranslateUi
 
 };

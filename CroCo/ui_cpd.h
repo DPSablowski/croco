@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'cpd.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -104,7 +104,7 @@ public:
     {
         if (CPD->objectName().isEmpty())
             CPD->setObjectName(QString::fromUtf8("CPD"));
-        CPD->resize(1055, 274);
+        CPD->resize(948, 280);
         verticalLayout_3 = new QVBoxLayout(CPD);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         horizontalLayout = new QHBoxLayout();
@@ -518,36 +518,36 @@ public:
 
     void retranslateUi(QDialog *CPD)
     {
-        CPD->setWindowTitle(QApplication::translate("CPD", "Dialog", nullptr));
-        label->setText(QApplication::translate("CPD", "Files:", nullptr));
-        label_2->setText(QApplication::translate("CPD", "from", nullptr));
-        label_3->setText(QApplication::translate("CPD", "to", nullptr));
-        label_4->setText(QApplication::translate("CPD", "*", nullptr));
-        label_27->setText(QApplication::translate("CPD", "RV-File", nullptr));
-        label_12->setText(QApplication::translate("CPD", "Primary", nullptr));
-        checkBox->setText(QApplication::translate("CPD", "Window 1 from", nullptr));
-        label_6->setText(QApplication::translate("CPD", "to", nullptr));
-        label_20->setText(QApplication::translate("CPD", "Value", nullptr));
-        checkBox_2->setText(QApplication::translate("CPD", "Window 2 from", nullptr));
-        label_8->setText(QApplication::translate("CPD", "to", nullptr));
-        label_21->setText(QApplication::translate("CPD", "Value", nullptr));
-        checkBox_3->setText(QApplication::translate("CPD", "Window 3 from", nullptr));
-        label_10->setText(QApplication::translate("CPD", "to", nullptr));
-        label_22->setText(QApplication::translate("CPD", "Value", nullptr));
-        label_13->setText(QApplication::translate("CPD", "Secondary", nullptr));
-        label_14->setText(QApplication::translate("CPD", "from", nullptr));
-        label_17->setText(QApplication::translate("CPD", "to", nullptr));
-        label_23->setText(QApplication::translate("CPD", "Value", nullptr));
-        label_15->setText(QApplication::translate("CPD", "from", nullptr));
-        label_18->setText(QApplication::translate("CPD", "to", nullptr));
-        label_24->setText(QApplication::translate("CPD", "Value", nullptr));
-        label_16->setText(QApplication::translate("CPD", "from", nullptr));
-        label_19->setText(QApplication::translate("CPD", "to", nullptr));
-        label_25->setText(QApplication::translate("CPD", "Value", nullptr));
-        label_26->setText(QApplication::translate("CPD", "Output", nullptr));
-        label_5->setText(QApplication::translate("CPD", "Work Path", nullptr));
-        pushButton_2->setText(QApplication::translate("CPD", "Go", nullptr));
-        pushButton->setText(QApplication::translate("CPD", "Close", nullptr));
+        CPD->setWindowTitle(QCoreApplication::translate("CPD", "Dialog", nullptr));
+        label->setText(QCoreApplication::translate("CPD", "Files:", nullptr));
+        label_2->setText(QCoreApplication::translate("CPD", "from", nullptr));
+        label_3->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_4->setText(QCoreApplication::translate("CPD", "*", nullptr));
+        label_27->setText(QCoreApplication::translate("CPD", "RV-File", nullptr));
+        label_12->setText(QCoreApplication::translate("CPD", "Primary", nullptr));
+        checkBox->setText(QCoreApplication::translate("CPD", "Window 1 from", nullptr));
+        label_6->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_20->setText(QCoreApplication::translate("CPD", "Value", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("CPD", "Window 2 from", nullptr));
+        label_8->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_21->setText(QCoreApplication::translate("CPD", "Value", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("CPD", "Window 3 from", nullptr));
+        label_10->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_22->setText(QCoreApplication::translate("CPD", "Value", nullptr));
+        label_13->setText(QCoreApplication::translate("CPD", "Secondary", nullptr));
+        label_14->setText(QCoreApplication::translate("CPD", "from", nullptr));
+        label_17->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_23->setText(QCoreApplication::translate("CPD", "Value", nullptr));
+        label_15->setText(QCoreApplication::translate("CPD", "from", nullptr));
+        label_18->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_24->setText(QCoreApplication::translate("CPD", "Value", nullptr));
+        label_16->setText(QCoreApplication::translate("CPD", "from", nullptr));
+        label_19->setText(QCoreApplication::translate("CPD", "to", nullptr));
+        label_25->setText(QCoreApplication::translate("CPD", "Value", nullptr));
+        label_26->setText(QCoreApplication::translate("CPD", "Output", nullptr));
+        label_5->setText(QCoreApplication::translate("CPD", "Work Path", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("CPD", "Go", nullptr));
+        pushButton->setText(QCoreApplication::translate("CPD", "Close", nullptr));
     } // retranslateUi
 
 };

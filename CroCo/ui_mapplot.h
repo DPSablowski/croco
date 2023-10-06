@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mapplot.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -218,17 +218,17 @@ public:
 
     void retranslateUi(QDialog *MapPlot)
     {
-        MapPlot->setWindowTitle(QApplication::translate("MapPlot", "Dialog", nullptr));
-        label->setText(QApplication::translate("MapPlot", "File", nullptr));
-        label_2->setText(QApplication::translate("MapPlot", "from", nullptr));
-        label_3->setText(QApplication::translate("MapPlot", "to", nullptr));
-        pushButton_2->setText(QApplication::translate("MapPlot", "Show", nullptr));
-        label_4->setText(QApplication::translate("MapPlot", "Work Path:", nullptr));
-        pushButton_3->setText(QApplication::translate("MapPlot", "Save As", nullptr));
-        checkBox->setText(QApplication::translate("MapPlot", "pdf", nullptr));
-        checkBox_2->setText(QApplication::translate("MapPlot", "png", nullptr));
-        label_5->setText(QApplication::translate("MapPlot", "Font Size:", nullptr));
-        pushButton->setText(QApplication::translate("MapPlot", "Close", nullptr));
+        MapPlot->setWindowTitle(QCoreApplication::translate("MapPlot", "Dialog", nullptr));
+        label->setText(QCoreApplication::translate("MapPlot", "File", nullptr));
+        label_2->setText(QCoreApplication::translate("MapPlot", "from", nullptr));
+        label_3->setText(QCoreApplication::translate("MapPlot", "to", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MapPlot", "Show", nullptr));
+        label_4->setText(QCoreApplication::translate("MapPlot", "Work Path:", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MapPlot", "Save As", nullptr));
+        checkBox->setText(QCoreApplication::translate("MapPlot", "pdf", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("MapPlot", "png", nullptr));
+        label_5->setText(QCoreApplication::translate("MapPlot", "Font Size:", nullptr));
+        pushButton->setText(QCoreApplication::translate("MapPlot", "Close", nullptr));
     } // retranslateUi
 
 };

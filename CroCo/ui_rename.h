@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'rename.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -54,6 +54,8 @@ public:
     QLineEdit *lineEdit_2;
     QLabel *label_3;
     QLineEdit *lineEdit_3;
+    QLabel *label_31;
+    QSpinBox *spinBox_11;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_7;
     QLineEdit *lineEdit_4;
@@ -91,6 +93,7 @@ public:
     QVBoxLayout *verticalLayout_3;
     QLabel *label_16;
     QHBoxLayout *horizontalLayout_10;
+    QLabel *label_30;
     QLineEdit *lineEdit_9;
     QLabel *label_17;
     QLineEdit *lineEdit_10;
@@ -174,6 +177,8 @@ public:
 
         spinBox = new QSpinBox(Rename);
         spinBox->setObjectName(QString::fromUtf8("spinBox"));
+        sizePolicy.setHeightForWidth(spinBox->sizePolicy().hasHeightForWidth());
+        spinBox->setSizePolicy(sizePolicy);
         spinBox->setMaximum(9999);
 
         horizontalLayout_4->addWidget(spinBox);
@@ -234,6 +239,8 @@ public:
         lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
         sizePolicy.setHeightForWidth(lineEdit_2->sizePolicy().hasHeightForWidth());
         lineEdit_2->setSizePolicy(sizePolicy);
+        lineEdit_2->setMinimumSize(QSize(100, 0));
+        lineEdit_2->setMaximumSize(QSize(100, 16777215));
 
         horizontalLayout->addWidget(lineEdit_2);
 
@@ -244,13 +251,23 @@ public:
 
         lineEdit_3 = new QLineEdit(Rename);
         lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(lineEdit_3->sizePolicy().hasHeightForWidth());
-        lineEdit_3->setSizePolicy(sizePolicy2);
+        sizePolicy.setHeightForWidth(lineEdit_3->sizePolicy().hasHeightForWidth());
+        lineEdit_3->setSizePolicy(sizePolicy);
+        lineEdit_3->setMinimumSize(QSize(50, 0));
+        lineEdit_3->setMaximumSize(QSize(50, 16777215));
 
         horizontalLayout->addWidget(lineEdit_3);
+
+        label_31 = new QLabel(Rename);
+        label_31->setObjectName(QString::fromUtf8("label_31"));
+
+        horizontalLayout->addWidget(label_31);
+
+        spinBox_11 = new QSpinBox(Rename);
+        spinBox_11->setObjectName(QString::fromUtf8("spinBox_11"));
+        spinBox_11->setMaximum(9999);
+
+        horizontalLayout->addWidget(spinBox_11);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -276,11 +293,11 @@ public:
         if (tableWidget->columnCount() < 2)
             tableWidget->setColumnCount(2);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(tableWidget->sizePolicy().hasHeightForWidth());
-        tableWidget->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(tableWidget->sizePolicy().hasHeightForWidth());
+        tableWidget->setSizePolicy(sizePolicy2);
         tableWidget->setColumnCount(2);
         tableWidget->horizontalHeader()->setCascadingSectionResizes(true);
         tableWidget->horizontalHeader()->setDefaultSectionSize(200);
@@ -324,11 +341,11 @@ public:
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         customPlot = new QCustomPlot(Rename);
         customPlot->setObjectName(QString::fromUtf8("customPlot"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(customPlot->sizePolicy().hasHeightForWidth());
-        customPlot->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(customPlot->sizePolicy().hasHeightForWidth());
+        customPlot->setSizePolicy(sizePolicy3);
 
         verticalLayout_2->addWidget(customPlot);
 
@@ -399,11 +416,11 @@ public:
         lineEdit_8 = new QLineEdit(Rename);
         lineEdit_8->setObjectName(QString::fromUtf8("lineEdit_8"));
         lineEdit_8->setEnabled(false);
-        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(lineEdit_8->sizePolicy().hasHeightForWidth());
-        lineEdit_8->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(lineEdit_8->sizePolicy().hasHeightForWidth());
+        lineEdit_8->setSizePolicy(sizePolicy4);
 
         horizontalLayout_8->addWidget(lineEdit_8);
 
@@ -433,8 +450,11 @@ public:
 
         lineEdit_5 = new QLineEdit(Rename);
         lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
-        sizePolicy2.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
-        lineEdit_5->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy5(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
+        lineEdit_5->setSizePolicy(sizePolicy5);
 
         horizontalLayout_9->addWidget(lineEdit_5);
 
@@ -445,8 +465,8 @@ public:
 
         lineEdit_6 = new QLineEdit(Rename);
         lineEdit_6->setObjectName(QString::fromUtf8("lineEdit_6"));
-        sizePolicy2.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
-        lineEdit_6->setSizePolicy(sizePolicy2);
+        sizePolicy5.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
+        lineEdit_6->setSizePolicy(sizePolicy5);
 
         horizontalLayout_9->addWidget(lineEdit_6);
 
@@ -457,8 +477,8 @@ public:
 
         lineEdit_7 = new QLineEdit(Rename);
         lineEdit_7->setObjectName(QString::fromUtf8("lineEdit_7"));
-        sizePolicy2.setHeightForWidth(lineEdit_7->sizePolicy().hasHeightForWidth());
-        lineEdit_7->setSizePolicy(sizePolicy2);
+        sizePolicy5.setHeightForWidth(lineEdit_7->sizePolicy().hasHeightForWidth());
+        lineEdit_7->setSizePolicy(sizePolicy5);
 
         horizontalLayout_9->addWidget(lineEdit_7);
 
@@ -481,6 +501,11 @@ public:
 
         horizontalLayout_10 = new QHBoxLayout();
         horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
+        label_30 = new QLabel(Rename);
+        label_30->setObjectName(QString::fromUtf8("label_30"));
+
+        horizontalLayout_10->addWidget(label_30);
+
         lineEdit_9 = new QLineEdit(Rename);
         lineEdit_9->setObjectName(QString::fromUtf8("lineEdit_9"));
         sizePolicy.setHeightForWidth(lineEdit_9->sizePolicy().hasHeightForWidth());
@@ -499,6 +524,8 @@ public:
         lineEdit_10->setObjectName(QString::fromUtf8("lineEdit_10"));
         sizePolicy.setHeightForWidth(lineEdit_10->sizePolicy().hasHeightForWidth());
         lineEdit_10->setSizePolicy(sizePolicy);
+        lineEdit_10->setMinimumSize(QSize(70, 0));
+        lineEdit_10->setMaximumSize(QSize(70, 16777215));
 
         horizontalLayout_10->addWidget(lineEdit_10);
 
@@ -547,8 +574,8 @@ public:
 
         spinBox_8 = new QSpinBox(Rename);
         spinBox_8->setObjectName(QString::fromUtf8("spinBox_8"));
-        sizePolicy5.setHeightForWidth(spinBox_8->sizePolicy().hasHeightForWidth());
-        spinBox_8->setSizePolicy(sizePolicy5);
+        sizePolicy.setHeightForWidth(spinBox_8->sizePolicy().hasHeightForWidth());
+        spinBox_8->setSizePolicy(sizePolicy);
         spinBox_8->setMaximum(9999);
 
         horizontalLayout_12->addWidget(spinBox_8);
@@ -579,6 +606,10 @@ public:
         horizontalLayout_13->setObjectName(QString::fromUtf8("horizontalLayout_13"));
         label_22 = new QLabel(Rename);
         label_22->setObjectName(QString::fromUtf8("label_22"));
+        sizePolicy1.setHeightForWidth(label_22->sizePolicy().hasHeightForWidth());
+        label_22->setSizePolicy(sizePolicy1);
+        label_22->setMinimumSize(QSize(90, 0));
+        label_22->setMaximumSize(QSize(90, 16777215));
 
         horizontalLayout_13->addWidget(label_22);
 
@@ -586,6 +617,8 @@ public:
         lineEdit_11->setObjectName(QString::fromUtf8("lineEdit_11"));
         sizePolicy.setHeightForWidth(lineEdit_11->sizePolicy().hasHeightForWidth());
         lineEdit_11->setSizePolicy(sizePolicy);
+        lineEdit_11->setMinimumSize(QSize(140, 0));
+        lineEdit_11->setMaximumSize(QSize(140, 16777215));
 
         horizontalLayout_13->addWidget(lineEdit_11);
 
@@ -598,7 +631,7 @@ public:
         lineEdit_13->setObjectName(QString::fromUtf8("lineEdit_13"));
         sizePolicy.setHeightForWidth(lineEdit_13->sizePolicy().hasHeightForWidth());
         lineEdit_13->setSizePolicy(sizePolicy);
-        lineEdit_13->setMinimumSize(QSize(50, 0));
+        lineEdit_13->setMinimumSize(QSize(70, 0));
         lineEdit_13->setMaximumSize(QSize(70, 16777215));
 
         horizontalLayout_13->addWidget(lineEdit_13);
@@ -610,6 +643,10 @@ public:
         horizontalLayout_14->setObjectName(QString::fromUtf8("horizontalLayout_14"));
         label_23 = new QLabel(Rename);
         label_23->setObjectName(QString::fromUtf8("label_23"));
+        sizePolicy1.setHeightForWidth(label_23->sizePolicy().hasHeightForWidth());
+        label_23->setSizePolicy(sizePolicy1);
+        label_23->setMinimumSize(QSize(90, 0));
+        label_23->setMaximumSize(QSize(90, 16777215));
 
         horizontalLayout_14->addWidget(label_23);
 
@@ -617,6 +654,8 @@ public:
         lineEdit_12->setObjectName(QString::fromUtf8("lineEdit_12"));
         sizePolicy.setHeightForWidth(lineEdit_12->sizePolicy().hasHeightForWidth());
         lineEdit_12->setSizePolicy(sizePolicy);
+        lineEdit_12->setMinimumSize(QSize(140, 0));
+        lineEdit_12->setMaximumSize(QSize(140, 16777215));
 
         horizontalLayout_14->addWidget(lineEdit_12);
 
@@ -629,7 +668,7 @@ public:
         lineEdit_14->setObjectName(QString::fromUtf8("lineEdit_14"));
         sizePolicy.setHeightForWidth(lineEdit_14->sizePolicy().hasHeightForWidth());
         lineEdit_14->setSizePolicy(sizePolicy);
-        lineEdit_14->setMinimumSize(QSize(50, 0));
+        lineEdit_14->setMinimumSize(QSize(70, 0));
         lineEdit_14->setMaximumSize(QSize(70, 16777215));
 
         horizontalLayout_14->addWidget(lineEdit_14);
@@ -641,6 +680,10 @@ public:
         horizontalLayout_16->setObjectName(QString::fromUtf8("horizontalLayout_16"));
         label_26 = new QLabel(Rename);
         label_26->setObjectName(QString::fromUtf8("label_26"));
+        sizePolicy1.setHeightForWidth(label_26->sizePolicy().hasHeightForWidth());
+        label_26->setSizePolicy(sizePolicy1);
+        label_26->setMinimumSize(QSize(90, 0));
+        label_26->setMaximumSize(QSize(90, 16777215));
 
         horizontalLayout_16->addWidget(label_26);
 
@@ -648,6 +691,8 @@ public:
         lineEdit_15->setObjectName(QString::fromUtf8("lineEdit_15"));
         sizePolicy.setHeightForWidth(lineEdit_15->sizePolicy().hasHeightForWidth());
         lineEdit_15->setSizePolicy(sizePolicy);
+        lineEdit_15->setMinimumSize(QSize(140, 0));
+        lineEdit_15->setMaximumSize(QSize(140, 16777215));
 
         horizontalLayout_16->addWidget(lineEdit_15);
 
@@ -660,7 +705,7 @@ public:
         lineEdit_16->setObjectName(QString::fromUtf8("lineEdit_16"));
         sizePolicy.setHeightForWidth(lineEdit_16->sizePolicy().hasHeightForWidth());
         lineEdit_16->setSizePolicy(sizePolicy);
-        lineEdit_16->setMinimumSize(QSize(50, 0));
+        lineEdit_16->setMinimumSize(QSize(70, 0));
         lineEdit_16->setMaximumSize(QSize(70, 16777215));
 
         horizontalLayout_16->addWidget(lineEdit_16);
@@ -672,22 +717,32 @@ public:
         horizontalLayout_17->setObjectName(QString::fromUtf8("horizontalLayout_17"));
         label_28 = new QLabel(Rename);
         label_28->setObjectName(QString::fromUtf8("label_28"));
+        sizePolicy1.setHeightForWidth(label_28->sizePolicy().hasHeightForWidth());
+        label_28->setSizePolicy(sizePolicy1);
+        label_28->setMinimumSize(QSize(90, 0));
+        label_28->setMaximumSize(QSize(90, 16777215));
 
         horizontalLayout_17->addWidget(label_28);
 
         spinBox_9 = new QSpinBox(Rename);
         spinBox_9->setObjectName(QString::fromUtf8("spinBox_9"));
+        sizePolicy.setHeightForWidth(spinBox_9->sizePolicy().hasHeightForWidth());
+        spinBox_9->setSizePolicy(sizePolicy);
         spinBox_9->setMaximum(9999);
 
         horizontalLayout_17->addWidget(spinBox_9);
 
         label_29 = new QLabel(Rename);
         label_29->setObjectName(QString::fromUtf8("label_29"));
+        sizePolicy1.setHeightForWidth(label_29->sizePolicy().hasHeightForWidth());
+        label_29->setSizePolicy(sizePolicy1);
 
         horizontalLayout_17->addWidget(label_29);
 
         spinBox_10 = new QSpinBox(Rename);
         spinBox_10->setObjectName(QString::fromUtf8("spinBox_10"));
+        sizePolicy.setHeightForWidth(spinBox_10->sizePolicy().hasHeightForWidth());
+        spinBox_10->setSizePolicy(sizePolicy);
         spinBox_10->setMaximum(9999);
 
         horizontalLayout_17->addWidget(spinBox_10);
@@ -707,15 +762,15 @@ public:
 
         horizontalLayout_15->addWidget(checkBox_4);
 
-
-        verticalLayout_3->addLayout(horizontalLayout_15);
-
         pushButton_5 = new QPushButton(Rename);
         pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
         sizePolicy.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
         pushButton_5->setSizePolicy(sizePolicy);
 
-        verticalLayout_3->addWidget(pushButton_5);
+        horizontalLayout_15->addWidget(pushButton_5);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_15);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -733,45 +788,47 @@ public:
 
     void retranslateUi(QDialog *Rename)
     {
-        Rename->setWindowTitle(QApplication::translate("Rename", "Dialog", nullptr));
-        label->setText(QApplication::translate("Rename", "Path to files:", nullptr));
-        checkBox_2->setText(QApplication::translate("Rename", "keep all files", nullptr));
-        label_4->setText(QApplication::translate("Rename", "Number of Files:", nullptr));
-        checkBox->setText(QApplication::translate("Rename", "Reject file", nullptr));
-        label_5->setText(QApplication::translate("Rename", ",", nullptr));
-        label_6->setText(QApplication::translate("Rename", "and", nullptr));
-        label_2->setText(QApplication::translate("Rename", "New Name:", nullptr));
-        label_3->setText(QApplication::translate("Rename", "*", nullptr));
-        label_7->setText(QApplication::translate("Rename", "Save Table As:", nullptr));
-        pushButton->setText(QApplication::translate("Rename", "List Files", nullptr));
-        pushButton_2->setText(QApplication::translate("Rename", "Rename", nullptr));
-        pushButton_3->setText(QApplication::translate("Rename", "Close", nullptr));
-        label_8->setText(QApplication::translate("Rename", "x1:", nullptr));
-        label_9->setText(QApplication::translate("Rename", "x2:", nullptr));
-        label_10->setText(QApplication::translate("Rename", "y1:", nullptr));
-        label_11->setText(QApplication::translate("Rename", "y2:", nullptr));
-        label_12->setText(QApplication::translate("Rename", "Plot #:", nullptr));
-        label_13->setText(QApplication::translate("Rename", "Extension:", nullptr));
-        label_14->setText(QApplication::translate("Rename", "W-Col:", nullptr));
-        label_15->setText(QApplication::translate("Rename", "I.Col", nullptr));
-        label_16->setText(QApplication::translate("Rename", "<html><head/><body><p><span style=\" font-weight:600;\">Renumerate</span></p></body></html>", nullptr));
-        label_17->setText(QApplication::translate("Rename", "*", nullptr));
-        label_18->setText(QApplication::translate("Rename", "from", nullptr));
-        label_19->setText(QApplication::translate("Rename", "to", nullptr));
-        label_20->setText(QApplication::translate("Rename", "New start from", nullptr));
-        pushButton_4->setText(QApplication::translate("Rename", "Do", nullptr));
-        label_21->setText(QApplication::translate("Rename", "<html><head/><body><p><span style=\" font-weight:600;\">Combine Sequences</span></p></body></html>", nullptr));
-        label_22->setText(QApplication::translate("Rename", "Sequence 1:", nullptr));
-        label_24->setText(QApplication::translate("Rename", "*.", nullptr));
-        label_23->setText(QApplication::translate("Rename", "Sequence 2:", nullptr));
-        label_25->setText(QApplication::translate("Rename", "*.", nullptr));
-        label_26->setText(QApplication::translate("Rename", "Out 1 & 2:", nullptr));
-        label_27->setText(QApplication::translate("Rename", "*.", nullptr));
-        label_28->setText(QApplication::translate("Rename", "From", nullptr));
-        label_29->setText(QApplication::translate("Rename", "to", nullptr));
-        checkBox_3->setText(QApplication::translate("Rename", "2-column", nullptr));
-        checkBox_4->setText(QApplication::translate("Rename", "3-column", nullptr));
-        pushButton_5->setText(QApplication::translate("Rename", "Combine", nullptr));
+        Rename->setWindowTitle(QCoreApplication::translate("Rename", "Dialog", nullptr));
+        label->setText(QCoreApplication::translate("Rename", "Path to files:", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("Rename", "keep all files", nullptr));
+        label_4->setText(QCoreApplication::translate("Rename", "Number of Files:", nullptr));
+        checkBox->setText(QCoreApplication::translate("Rename", "Reject file", nullptr));
+        label_5->setText(QCoreApplication::translate("Rename", ",", nullptr));
+        label_6->setText(QCoreApplication::translate("Rename", "and", nullptr));
+        label_2->setText(QCoreApplication::translate("Rename", "New Name:", nullptr));
+        label_3->setText(QCoreApplication::translate("Rename", "*.", nullptr));
+        label_31->setText(QCoreApplication::translate("Rename", "Start:", nullptr));
+        label_7->setText(QCoreApplication::translate("Rename", "Save Table As:", nullptr));
+        pushButton->setText(QCoreApplication::translate("Rename", "List Files", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Rename", "Rename", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Rename", "Close", nullptr));
+        label_8->setText(QCoreApplication::translate("Rename", "x1:", nullptr));
+        label_9->setText(QCoreApplication::translate("Rename", "x2:", nullptr));
+        label_10->setText(QCoreApplication::translate("Rename", "y1:", nullptr));
+        label_11->setText(QCoreApplication::translate("Rename", "y2:", nullptr));
+        label_12->setText(QCoreApplication::translate("Rename", "Plot #:", nullptr));
+        label_13->setText(QCoreApplication::translate("Rename", "Extension:", nullptr));
+        label_14->setText(QCoreApplication::translate("Rename", "W-Col:", nullptr));
+        label_15->setText(QCoreApplication::translate("Rename", "I.Col", nullptr));
+        label_16->setText(QCoreApplication::translate("Rename", "<html><head/><body><p><span style=\" font-weight:600;\">Renumerate</span></p></body></html>", nullptr));
+        label_30->setText(QCoreApplication::translate("Rename", "Files:", nullptr));
+        label_17->setText(QCoreApplication::translate("Rename", "*.", nullptr));
+        label_18->setText(QCoreApplication::translate("Rename", "from", nullptr));
+        label_19->setText(QCoreApplication::translate("Rename", "to", nullptr));
+        label_20->setText(QCoreApplication::translate("Rename", "New start from", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Rename", "Do", nullptr));
+        label_21->setText(QCoreApplication::translate("Rename", "<html><head/><body><p><span style=\" font-weight:600;\">Combine Sequences</span></p></body></html>", nullptr));
+        label_22->setText(QCoreApplication::translate("Rename", "Sequence 1:", nullptr));
+        label_24->setText(QCoreApplication::translate("Rename", "*.", nullptr));
+        label_23->setText(QCoreApplication::translate("Rename", "Sequence 2:", nullptr));
+        label_25->setText(QCoreApplication::translate("Rename", "*.", nullptr));
+        label_26->setText(QCoreApplication::translate("Rename", "Out 1 & 2:", nullptr));
+        label_27->setText(QCoreApplication::translate("Rename", "*.", nullptr));
+        label_28->setText(QCoreApplication::translate("Rename", "From", nullptr));
+        label_29->setText(QCoreApplication::translate("Rename", "to", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("Rename", "2-column", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("Rename", "3-column", nullptr));
+        pushButton_5->setText(QCoreApplication::translate("Rename", "Combine", nullptr));
     } // retranslateUi
 
 };

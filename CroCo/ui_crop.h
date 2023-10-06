@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'crop.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -365,26 +365,26 @@ public:
 
     void retranslateUi(QDialog *Crop)
     {
-        Crop->setWindowTitle(QApplication::translate("Crop", "Dialog", nullptr));
-        label->setText(QApplication::translate("Crop", "Input Spectra", nullptr));
-        label_2->setText(QApplication::translate("Crop", "from", nullptr));
-        label_3->setText(QApplication::translate("Crop", "to", nullptr));
-        label_13->setText(QApplication::translate("Crop", ".", nullptr));
-        label_5->setText(QApplication::translate("Crop", "Extension", nullptr));
-        label_4->setText(QApplication::translate("Crop", "W.Col.", nullptr));
-        label_6->setText(QApplication::translate("Crop", "I.Col.", nullptr));
-        pushButton_2->setText(QApplication::translate("Crop", "Crop", nullptr));
-        label_7->setText(QApplication::translate("Crop", "from", nullptr));
-        label_8->setText(QApplication::translate("Crop", "to", nullptr));
-        pushButton_4->setText(QApplication::translate("Crop", "Abort", nullptr));
-        checkBox_2->setText(QApplication::translate("Crop", "File with multiple ranges:", nullptr));
-        pushButton_3->setText(QApplication::translate("Crop", "Bin", nullptr));
-        label_11->setText(QApplication::translate("Crop", "X", nullptr));
-        checkBox->setText(QApplication::translate("Crop", "and crop", nullptr));
-        label_9->setText(QApplication::translate("Crop", "Output", nullptr));
-        label_12->setText(QApplication::translate("Crop", "*.", nullptr));
-        label_10->setText(QApplication::translate("Crop", "Work Path:", nullptr));
-        pushButton->setText(QApplication::translate("Crop", "Close", nullptr));
+        Crop->setWindowTitle(QCoreApplication::translate("Crop", "Dialog", nullptr));
+        label->setText(QCoreApplication::translate("Crop", "Input Spectra", nullptr));
+        label_2->setText(QCoreApplication::translate("Crop", "from", nullptr));
+        label_3->setText(QCoreApplication::translate("Crop", "to", nullptr));
+        label_13->setText(QCoreApplication::translate("Crop", ".", nullptr));
+        label_5->setText(QCoreApplication::translate("Crop", "Extension", nullptr));
+        label_4->setText(QCoreApplication::translate("Crop", "W.Col.", nullptr));
+        label_6->setText(QCoreApplication::translate("Crop", "I.Col.", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Crop", "Crop", nullptr));
+        label_7->setText(QCoreApplication::translate("Crop", "from", nullptr));
+        label_8->setText(QCoreApplication::translate("Crop", "to", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Crop", "Abort", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("Crop", "File with multiple ranges:", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Crop", "Bin", nullptr));
+        label_11->setText(QCoreApplication::translate("Crop", "X", nullptr));
+        checkBox->setText(QCoreApplication::translate("Crop", "and crop", nullptr));
+        label_9->setText(QCoreApplication::translate("Crop", "Output", nullptr));
+        label_12->setText(QCoreApplication::translate("Crop", "*.", nullptr));
+        label_10->setText(QCoreApplication::translate("Crop", "Work Path:", nullptr));
+        pushButton->setText(QCoreApplication::translate("Crop", "Close", nullptr));
     } // retranslateUi
 
 };

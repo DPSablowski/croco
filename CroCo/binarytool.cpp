@@ -16,6 +16,7 @@ QVector<double> t(1), V1(1), V2(1);
 QString list1, list2;
 QString qBPath;
 string BPath;
+int blindex=0;
 QVector<double> rvb1(1), rvb2(1), rvb3(1), rvb4(1), rvb5(1), cctimes(1);
 QVector<double> PERa(1), ECCa(1), AMPAa(1), AMPBa(1), GAMa(1), PERIa(1), LPERIa(1);
 
@@ -27,6 +28,7 @@ BinaryTool::BinaryTool(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowTitle("Binary Tool");
 
+    ui->lineEdit_14->setText("BinaryData.dat");
     string sbin = "BinaryData.dat";
 
     QFile qBin(sbin.c_str());
@@ -43,7 +45,7 @@ BinaryTool::BinaryTool(QWidget *parent) :
         string zeile1, eins1, zwei1, drei1, vier1, fuenf1, sechs1, sieben1, acht1;
 
         while(std::getline(binaries, zeile1))
-        ++ lines;
+            ++lines;
 
         binaries.clear();
         binaries.seekg(0, ios::beg);
@@ -79,6 +81,8 @@ BinaryTool::BinaryTool(QWidget *parent) :
             istringstream str8(acht1);
             str8 >> LPERIa[i];
         }
+
+        binaries.close();
 
         ui->doubleSpinBox_17->setValue(PERa[0]);
         ui->doubleSpinBox_3->setValue(ECCa[0]);
@@ -234,7 +238,7 @@ void BinaryTool::CalcRVs(){
 
     QFile checkfile(sratioName.c_str());
 
-            if(!checkfile.exists()){
+           if(!checkfile.exists()){
                 qDebug()<<"Error 3: The file "<<checkfile.fileName()<<" does not exist.";
                 QMessageBox::information(this, "Error", "Error 3: Spectrum "+checkfile.fileName()+" of primary does not exist!");
                 this->setCursor(QCursor(Qt::ArrowCursor));
@@ -331,27 +335,26 @@ void BinaryTool::on_pushButton_2_clicked()
 
     for(int m=0; m<phistep; m++){
 
-    t[m]=BTT0+(m+1)*dphi*BTP;
+        t[m]=BTT0+(m+1)*dphi*BTP;
 
-    if(BTe!=0){
-        BTt=t[m];
-        BinaryTool::BTfindroot();
-        E=BTE;
+        if(BTe!=0){
+            BTt=t[m];
+            BinaryTool::BTfindroot();
+            E=BTE;
 
-    theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
-    }
-    else{
-        E = M_PI*(t[m]-BTT0)/BTP;
-        theta=2*(atan(tan(E/2)));
-    }
+            theta=2*(atan(tan(E/2)*sqrt((1+BTe)/(1-BTe))));
+        }
+        else{
+            E = M_PI*(t[m]-BTT0)/BTP;
+            theta=2*(atan(tan(E/2)));
+        }
 
+        V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
+        V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
 
-    V1[m] = V + K1*(cos(theta+w1)+BTe*cos(w1));
-    V2[m] = V + K2*(cos(theta+w2)+BTe*cos(w2));
-
-    file<<setprecision(14)<<t[m]<<" "<<V1[m]<<" "<<V2[m]<<endl;
-    file2<<setprecision(14)<<V1[m]<<" "<<V2[m]<<endl;
-    file3<<setprecision(14)<<t[m]<<endl;
+        file<<setprecision(14)<<t[m]<<" "<<V1[m]<<" "<<V2[m]<<endl;
+        file2<<setprecision(14)<<V1[m]<<" "<<V2[m]<<endl;
+        file3<<setprecision(14)<<t[m]<<endl;
     }
 
     file.close();
@@ -410,7 +413,6 @@ void BinaryTool::on_pushButton_2_clicked()
     ostringstream dat2NameStream(data2);
     dat2NameStream<<BPath<<"/"<<data2;
     string dat2Name = dat2NameStream.str();
-    ifstream dat2(dat2Name.c_str());
 
     QFile checkfile2(dat2Name.c_str());
 
@@ -420,6 +422,7 @@ void BinaryTool::on_pushButton_2_clicked()
         this->setCursor(QCursor(Qt::ArrowCursor));
        return;
     }
+    ifstream dat2(dat2Name.c_str());
 
     int nlines=0;
 
@@ -734,10 +737,10 @@ void BinaryTool::on_pushButton_3_clicked()
                           ifstream input3(input3Name.c_str());
 
                           while(std::getline(input3, line))
-                               ++ num_lines3;
+                               ++num_lines3;
 
-                               input3.clear();
-                               input3.seekg(0, ios::beg);
+                          input3.clear();
+                          input3.seekg(0, ios::beg);
 
                           lineswt.resize(num_lines3);
                           linesit.resize(num_lines3);
@@ -1156,7 +1159,7 @@ void BinaryTool::on_pushButton_4_clicked()
            for(int e=0; e<number; e++){
                for(int u=aa; (u<aa+150) & (u<number); u++){
 
-                    if((WCs1[u]==WC1[e])){
+                    if(WCs1[u]==WC1[e]){
                         CI[e]=ICs1[u];
                         aa=u;
                     }
@@ -1173,7 +1176,7 @@ void BinaryTool::on_pushButton_4_clicked()
            for(int e=0; e<number; e++){
                for(int u=aa; (u<aa+150) & (u<number); u++){
 
-                    if((WCs2[u]==WC1[e])){
+                    if(WCs2[u]==WC1[e]){
                         CI[e]+=ICs2[u];
                         aa=u;
                     }
@@ -1296,7 +1299,7 @@ void BinaryTool::on_pushButton_4_clicked()
                for(int e=0; e<number; e++){
                    for(int u=0; u<WC1.size(); u++){
 
-                    if((WCs1[u]==WC1[e])){
+                    if(WCs1[u]==WC1[e]){
                         CI[e]=ICs1[u];
                         u=WC1.size();
                         //aa=u;
@@ -1320,7 +1323,7 @@ void BinaryTool::on_pushButton_4_clicked()
                for(int e=0; e<number; e++){
                    for(int u=0; u<WC1.size(); u++){
 
-                    if((WCs2[u]==WC1[e])){
+                    if(WCs2[u]==WC1[e]){
                         CI[e]+=ICs2[u];
                         u=WC1.size();
                         //aa=u;
@@ -1641,211 +1644,24 @@ void BinaryTool::on_doubleSpinBox_17_valueChanged()
 //**************************************
 void BinaryTool::BTfindroot(){
 
-    int n=1, Ph, Pl, Psh, zaehler=40, eval=0;
-    double yh, ysh, yl, ym, yi, ys, yt;
-    double sigma = 1e-5;
-    double step=0.1;
-    double gamma=2.0;	//expansion coeff.
-    double alpha =1.0;	//reflection coeff.
-    double beta=0.5;	//contraction coeff.
-    double btot=0.5;	//total contraction coeff.
-    double y[n+1], Pm[n+1][n], Z[n], C[n], S[n], Em[n], X[n], e[n][n];
+        double Estart=2*M_PI*(BTt-BTT0)/BTP-2*BTe;
+        double RE=2*M_PI*(BTt-BTT0)/BTP+BTe*sin(Estart);
+        double diff=abs(Estart-RE);
+        int fcount=0;
 
-        //initial points
-        Pm[0][0]=2*M_PI*(BTt-BTT0)/BTP-2*BTe;
-        for (int i=0; i<n+1; i++){
-            for (int j=0; j<n; j++){
-                if(i>0 & i==j+1){
-                    e[i][j]=1;
-                }
-                else{
-                    e[i][j]=0;
-                }
-                if(i==0){
-                    X[j]=Pm[i][j];
-                    //cout <<X[j]<<"\t";
-                }
-                if(i!=0){
-                    Pm[i][j]=Pm[0][j]+step*e[i][j];
-                    X[j]=Pm[i][j];
-                    //cout <<X[j]<<"\t";
-                }
-            }
-            y[i]=BTfunction(X, BTt, BTT0, BTP, BTe);
-            eval++;
-            //cout <<y[i]<<endl;
-        }
-
-        //start main loop
-        for (int tc=0; tc<zaehler; tc++){
-
-            //initialize next step
-            ym=0;
-            ys=0;
-            for (int i=0; i<n; i++){
-                Z[i]=0;
-            }
-
-            //looking for highest value
-            yh=y[0];
-            for (int j=0; j<n+1; j++){
-                if(y[j]>=yh){
-                    yh = y[j];
-                    Ph = j;
-                }
-            }
-
-            //looking for smallest value
-            yl=yh;
-            for (int j=0; j<n+1; j++){
-                if(y[j]<yl){
-                    yl=y[j];
-                    Pl = j;
-                }
-            }
-
-            // second highest value
-            ysh=yl;
-            yh=y[Ph];
-            yl=y[Pl];
-            ysh=y[Psh];
-
-            //computing mean and sigma
-            for (int i=0; i<n+1; i++){
-                ym+=y[i]/(n+1);
-            }
-            for (int i=0; i<n+1; i++){
-                ys+=sqrt(pow((y[i]-ym),2));
-            }
-            ys=ys/(n);
-
-            //compute centroid
-            for (int j=0; j<n; j++){
-                for (int i=0; i<n+1; i++){
-                    if (i!=Ph){
-                        Z[j]+=Pm[i][j]/n;
-                    }
-                }
-            }
-
-            //reflect highest value at centroid
-            for (int i=0; i<n; i++){
-                C[i]=Z[i]+alpha*(Z[i]-Pm[Ph][i]);
-            }
-            yi=BTfunction(C, BTt, BTT0, BTP, BTe);
-            eval++;
-
-            if(yi<yl){
-                for (int i=0; i<n; i++){
-                    Em[i]=Z[i]+gamma*(C[i]-Z[i]);
-                }
-                yt=BTfunction(Em, BTt, BTT0, BTP, BTe);
-                eval++;
-                if(yt<yl){
-                    for (int i=0; i<n; i++){
-                        Pm[Ph][i]=Em[i];
-                    }
-                    y[Ph]=yt;//BTfunction(E);
-                    //eval++;
-                }
-                if (yt>=yl){
-                    for (int i=0; i<n; i++){
-                        Pm[Ph][i]=C[i];
-                    }
-                    eval++;
-                    y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
-                }
-            }
-
-            if(yi>=yl){
-                if(yi<=ysh){
-                    for(int i=0; i<n; i++){
-                        Pm[Ph][i]=C[i];
-                    }
-                    eval++;
-                    y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
-                }
-                if(yi>ysh){
-                    if(yi<=yh){
-                        for(int i=0; i<n; i++){
-                            Pm[Ph][i]=C[i];
-                        }
-                        eval++;
-                        y[Ph]=BTfunction(C, BTt, BTT0, BTP, BTe);
-                        yh=y[Ph];
-                    }
-                    for(int i=0; i<n; i++){
-                        S[i]=Z[i]+beta*(Pm[Ph][i]-Z[i]);
-                    }
-                    yt=BTfunction(S, BTt, BTT0, BTP, BTe);
-                    eval++;
-                    if(yt>yh){
-                        for (int j=0; j<n+1; j++){
-                            for (int i=0; i<n; i++){
-                                Pm[j][i]=Pm[Pl][i]+btot*(Pm[j][i]-Pm[Pl][i]); //total contraction
-                                X[i]=Pm[j][i];
-                            }
-                            y[j]=BTfunction(X, BTt, BTT0, BTP, BTe);
-                            eval++;
-                        }
-                    }
-
-                    if(yt<=yh){
-                        for(int i=0; i<n; i++){
-                            Pm[Ph][i]=S[i];
-                        }
-                        eval++;
-                        y[Ph]=BTfunction(S, BTt, BTT0, BTP, BTe);
-                    }
-                }
-            }
-
-        }//end main loop
-
-        //looking for highest value
-        yh=y[0];
-        for (int j=0; j<n+1; j++){
-            if(y[j]>=yh){
-                yh = y[j];
-                Ph = j;
+        while(diff>10e-12){
+            Estart=(Estart+RE)/2;
+            RE=2*M_PI*(BTt-BTT0)/BTP+BTe*sin(Estart);
+            diff=abs(Estart-RE);
+            ++fcount;
+            if(fcount>200){
+                diff=0.0;
             }
         }
 
-        //looking for smallest value
-        yl=yh;
-        for (int j=0; j<n+1; j++){
-            if(y[j]<yl){
-                yl=y[j];
-                Pl = j;
-            }
-        }
-
-        //looking for second highest value
-        ysh=yl;
-        for (int j=0; j<n+1; j++){
-            if(y[j]>ysh & (y[j]<yh)){
-                ysh=y[j];
-                Psh=j;
-            }
-        }
-
-        BTE=Pm[Pl][0];
+        BTE=RE;
 
 }
-
-// load orbital parameters
-void BinaryTool::on_pushButton_7_clicked()
-{
-    int dey=ui->comboBox_2->currentIndex();
-    ui->doubleSpinBox_17->setValue(PERa[dey]);
-    ui->doubleSpinBox_3->setValue(ECCa[dey]);
-    ui->doubleSpinBox_6->setValue(AMPAa[dey]);
-    ui->doubleSpinBox_7->setValue(AMPBa[dey]);
-    ui->doubleSpinBox_8->setValue(GAMa[dey]);
-    ui->doubleSpinBox_5->setValue(PERIa[dey]);
-    ui->doubleSpinBox_4->setValue(LPERIa[dey]);
-}
-
 
 void BinaryTool::on_checkBox_12_clicked()
 {
@@ -1858,5 +1674,99 @@ void BinaryTool::on_checkBox_12_clicked()
         ui->spinBox_6->setEnabled(false);
         ui->spinBox_7->setEnabled(false);
         ui->lineEdit_11->setEnabled(false);
+    }
+}
+
+//**************************
+// load binary parameters
+//**************************
+void BinaryTool::on_comboBox_2_currentIndexChanged()
+{
+    if(blindex==0){
+        int dey=ui->comboBox_2->currentIndex();
+        ui->doubleSpinBox_17->setValue(PERa[dey]);
+        ui->doubleSpinBox_3->setValue(ECCa[dey]);
+        ui->doubleSpinBox_6->setValue(AMPAa[dey]);
+        ui->doubleSpinBox_7->setValue(AMPBa[dey]);
+        ui->doubleSpinBox_8->setValue(GAMa[dey]);
+        ui->doubleSpinBox_5->setValue(PERIa[dey]);
+        ui->doubleSpinBox_4->setValue(LPERIa[dey]);
+    }
+}
+
+//***************************
+// load binary database
+//***************************
+void BinaryTool::on_pushButton_7_clicked()
+{
+    string ssbin = (ui->lineEdit_3->text()+"/"+ui->lineEdit_14->text()).toUtf8().constData();
+    ostringstream input11NameStream(ssbin);
+    input11NameStream<<ssbin;
+    string sbin = input11NameStream.str();
+
+    QFile qBin(sbin.c_str());
+
+    if(!qBin.exists()){
+        qDebug()<<"No data base file for orbits of binaries present.";
+        QMessageBox::information(this, "Error", "Data base "+qBin.fileName()+" of orbital elements not present.");
+        return;
+    }
+
+
+    else{
+        blindex=1;
+        ifstream binaries(sbin.c_str());
+        ui->comboBox_2->clear();
+
+        int lines=0;
+        string zeile1, eins1, zwei1, drei1, vier1, fuenf1, sechs1, sieben1, acht1;
+
+        while(std::getline(binaries, zeile1))
+            ++lines;
+
+        binaries.clear();
+        binaries.seekg(0, ios::beg);
+
+        QVector<string> names(lines);
+
+        PERa.resize(lines);
+        ECCa.resize(lines);
+        AMPAa.resize(lines);
+        AMPBa.resize(lines);
+        GAMa.resize(lines);
+        PERIa.resize(lines);
+        LPERIa.resize(lines);
+
+        for(int i=0; i < lines; i++){
+            binaries >> eins1 >> zwei1 >> drei1 >> vier1 >> fuenf1 >> sechs1 >> sieben1 >> acht1;
+            istringstream str1(eins1);
+            str1 >> names[i];
+            istringstream str2(zwei1);
+            str2 >> PERa[i];
+            istringstream str3(drei1);
+            str3 >> ECCa[i];
+            istringstream str4(vier1);
+            str4 >> AMPAa[i];
+            istringstream str5(fuenf1);
+            str5 >> AMPBa[i];
+            istringstream str6(sechs1);
+            str6 >> GAMa[i];
+            istringstream str7(sieben1);
+            str7 >> PERIa[i];
+            istringstream str8(acht1);
+            str8 >> LPERIa[i];
+            QString qstr = QString::fromStdString(str1.str());
+            ui->comboBox_2->addItem(qstr);
+        }
+        binaries.close();
+        blindex=0;
+
+        ui->doubleSpinBox_17->setValue(PERa[0]);
+        ui->doubleSpinBox_3->setValue(ECCa[0]);
+        ui->doubleSpinBox_6->setValue(AMPAa[0]);
+        ui->doubleSpinBox_7->setValue(AMPBa[0]);
+        ui->doubleSpinBox_8->setValue(GAMa[0]);
+        ui->doubleSpinBox_5->setValue(PERIa[0]);
+        ui->doubleSpinBox_4->setValue(LPERIa[0]);
     }
 }

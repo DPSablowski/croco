@@ -68,38 +68,37 @@ void MapPlot::on_pushButton_2_clicked()
 
         number=0;
 
-    QString plot1=ui->lineEdit->text();
-    string plot11 = plot1.toUtf8().constData();
-    std::ostringstream datNameStream(plot11);
-    datNameStream<<MPath<<"/"<<plot11<<min+i<<".txt";
-    std::string datName = datNameStream.str();
-    ifstream toplot1(datName.c_str());
+        QString plot1=ui->lineEdit->text();
+        string plot11 = plot1.toUtf8().constData();
+        std::ostringstream datNameStream(plot11);
+        datNameStream<<MPath<<"/"<<plot11<<min+i<<".txt";
+        std::string datName = datNameStream.str();
 
-    QFile checkfile(datName.c_str());
+        QFile checkfile(datName.c_str());
 
-    if(!checkfile.exists()){
-        qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
-        QString Cfile = QString::number(min+1);
-        QMessageBox::information(this, "Error", "File "+qMPath+ "/"+plot1+Cfile+".txt does not exist!");
-        this->setCursor(QCursor(Qt::ArrowCursor));
-       return;
-    }
+        if(!checkfile.exists()){
+            qDebug()<<"The file "<<checkfile.fileName()<<" does not exist.";
+            QString Cfile = QString::number(min+1);
+            QMessageBox::information(this, "Error", "File "+qMPath+ "/"+plot1+Cfile+".txt does not exist!");
+            this->setCursor(QCursor(Qt::ArrowCursor));
+            return;
+        }
+        ifstream toplot1(datName.c_str());
 
-    while(std::getline(toplot1, zeile)){
-        ++lines;
-        ++number;
-    }
+        while(std::getline(toplot1, zeile)){
+            ++lines;
+            ++number;
+        }
 
-    toplot1.clear();
-    toplot1.seekg(0, ios::beg);
+        toplot1.clear();
+        toplot1.seekg(0, ios::beg);
 
-    length[i]=number;
+        length[i]=number;
 
-    if(number>lly){
-        lly=number;
-        maxi=i;
-    }
-
+        if(number>lly){
+            lly=number;
+            maxi=i;
+        }
     }
 
 
@@ -113,6 +112,14 @@ void MapPlot::on_pushButton_2_clicked()
         std::ostringstream datNameStream(plot11);
         datNameStream<<MPath<<"/"<<plot11<<min+i<<".txt";
         std::string datName = datNameStream.str();
+
+        QFile checkfile(datName.c_str());
+
+        if(!checkfile.exists()){
+            QMessageBox::information(this, "Error", "The file "+checkfile.fileName()+" does not exist.");
+            return;
+        }
+
         ifstream toplot1(datName.c_str());
 
         for(int e=0; e<length[i]; e++){

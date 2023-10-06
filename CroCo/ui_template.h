@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'template.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.1
+** Created by: Qt User Interface Compiler version 5.15.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -737,39 +737,39 @@ public:
 
     void retranslateUi(QDialog *Template)
     {
-        Template->setWindowTitle(QApplication::translate("Template", "Dialog", nullptr));
-        label_3->setText(QApplication::translate("Template", "x1:", nullptr));
-        label_4->setText(QApplication::translate("Template", "x2:", nullptr));
-        label_5->setText(QApplication::translate("Template", "y1:", nullptr));
-        label_6->setText(QApplication::translate("Template", "y2:", nullptr));
-        pushButton_2->setText(QApplication::translate("Template", "find values", nullptr));
-        pushButton_3->setText(QApplication::translate("Template", "Plot", nullptr));
-        label_2->setText(QApplication::translate("Template", "work path", nullptr));
-        label_7->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#0f22e5;\">File 1:</span></p></body></html>", nullptr));
-        label_9->setText(QApplication::translate("Template", "RV:", nullptr));
-        checkBox->setText(QApplication::translate("Template", "log(x)", nullptr));
-        checkBox_4->setText(QApplication::translate("Template", "y +", nullptr));
-        label_8->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#ea1010;\">File 2:</span></p></body></html>", nullptr));
-        label_10->setText(QApplication::translate("Template", "RV:", nullptr));
-        checkBox_2->setText(QApplication::translate("Template", "log(x)", nullptr));
-        checkBox_5->setText(QApplication::translate("Template", "y +", nullptr));
-        pushButton->setText(QApplication::translate("Template", "Close", nullptr));
-        label_12->setText(QApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600;\">File 3:</span></p></body></html>", nullptr));
-        label_22->setText(QApplication::translate("Template", "Offset", nullptr));
-        checkBox_3->setText(QApplication::translate("Template", "log(x)", nullptr));
-        checkBox_6->setText(QApplication::translate("Template", "y +", nullptr));
-        label_13->setText(QApplication::translate("Template", "Line list comp A:", nullptr));
-        label_14->setText(QApplication::translate("Template", "Line list comp B:", nullptr));
-        label_17->setText(QApplication::translate("Template", "V*sin(i) [km/s] comp A:", nullptr));
-        label_18->setText(QApplication::translate("Template", "V*sin(i)[km/s] comp B:", nullptr));
-        label_15->setText(QApplication::translate("Template", "Wavelength range [A]:", nullptr));
-        label_21->setText(QApplication::translate("Template", "to", nullptr));
-        label_16->setText(QApplication::translate("Template", "Sampling [A/pix]:", nullptr));
-        label_11->setText(QApplication::translate("Template", "Gaussian noise:", nullptr));
-        label_19->setText(QApplication::translate("Template", "Template A:", nullptr));
-        label_20->setText(QApplication::translate("Template", "Template B:", nullptr));
-        pushButton_4->setText(QApplication::translate("Template", "Do It", nullptr));
-        checkBox_7->setText(QApplication::translate("Template", "Sum *", nullptr));
+        Template->setWindowTitle(QCoreApplication::translate("Template", "Dialog", nullptr));
+        label_3->setText(QCoreApplication::translate("Template", "x1:", nullptr));
+        label_4->setText(QCoreApplication::translate("Template", "x2:", nullptr));
+        label_5->setText(QCoreApplication::translate("Template", "y1:", nullptr));
+        label_6->setText(QCoreApplication::translate("Template", "y2:", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Template", "find values", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("Template", "Plot", nullptr));
+        label_2->setText(QCoreApplication::translate("Template", "work path", nullptr));
+        label_7->setText(QCoreApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#0f22e5;\">File 1:</span></p></body></html>", nullptr));
+        label_9->setText(QCoreApplication::translate("Template", "RV:", nullptr));
+        checkBox->setText(QCoreApplication::translate("Template", "log(x)", nullptr));
+        checkBox_4->setText(QCoreApplication::translate("Template", "y +", nullptr));
+        label_8->setText(QCoreApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600; color:#ea1010;\">File 2:</span></p></body></html>", nullptr));
+        label_10->setText(QCoreApplication::translate("Template", "RV:", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("Template", "log(x)", nullptr));
+        checkBox_5->setText(QCoreApplication::translate("Template", "y +", nullptr));
+        pushButton->setText(QCoreApplication::translate("Template", "Close", nullptr));
+        label_12->setText(QCoreApplication::translate("Template", "<html><head/><body><p><span style=\" font-weight:600;\">File 3:</span></p></body></html>", nullptr));
+        label_22->setText(QCoreApplication::translate("Template", "Offset", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("Template", "log(x)", nullptr));
+        checkBox_6->setText(QCoreApplication::translate("Template", "y +", nullptr));
+        label_13->setText(QCoreApplication::translate("Template", "Line list comp A:", nullptr));
+        label_14->setText(QCoreApplication::translate("Template", "Line list comp B:", nullptr));
+        label_17->setText(QCoreApplication::translate("Template", "V*sin(i) [km/s] comp A:", nullptr));
+        label_18->setText(QCoreApplication::translate("Template", "V*sin(i)[km/s] comp B:", nullptr));
+        label_15->setText(QCoreApplication::translate("Template", "Wavelength range [A]:", nullptr));
+        label_21->setText(QCoreApplication::translate("Template", "to", nullptr));
+        label_16->setText(QCoreApplication::translate("Template", "Sampling [A/pix]:", nullptr));
+        label_11->setText(QCoreApplication::translate("Template", "Gaussian noise:", nullptr));
+        label_19->setText(QCoreApplication::translate("Template", "Template A:", nullptr));
+        label_20->setText(QCoreApplication::translate("Template", "Template B:", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("Template", "Do It", nullptr));
+        checkBox_7->setText(QCoreApplication::translate("Template", "Sum *", nullptr));
     } // retranslateUi
 
 };

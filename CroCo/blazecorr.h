@@ -34,6 +34,8 @@ private slots:
 
     void on_checkBox_3_clicked();
 
+    void on_pushButton_3_clicked();
+
 private:
     Ui::BlazeCorr *ui;
 };

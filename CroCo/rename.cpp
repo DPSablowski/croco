@@ -26,7 +26,7 @@ Rename::Rename(QWidget *parent) :
     this->setWindowTitle("Renumerate & Rename Files");
 
     ui->lineEdit->setText("/home/daniels/Observations/Capella/Set_13/spectra");
-    ui->lineEdit_3->setText(".dat");
+    ui->lineEdit_3->setText("dat");
     ui->lineEdit_4->setText("table.dat");
 
     ui->lineEdit_5->setText("DataVector");
@@ -89,23 +89,22 @@ void Rename::on_pushButton_clicked()
 
     const char * OLDNAME, * NEWNAME;
 
-    while (pent = readdir(pdir))
+    while(pent=readdir(pdir))
     {
         if(ui->checkBox->isChecked()){
 
-            if(i!=ui->spinBox_2->value()-1 & (i!=ui->spinBox_3->value()-1) & (i!=ui->spinBox_4->value()-1)){
+            if((i!=ui->spinBox_2->value()-1) & (i!=ui->spinBox_3->value()-1) & (i!=ui->spinBox_4->value()-1)){
 
-            // convert int i to str s
-            string s = to_string(e);
+                // convert int i to str s
+                string s = to_string(e);
 
-            oldname = (std::string(DIRECTORY)+pent->d_name).c_str();
+                oldname = (std::string(DIRECTORY)+pent->d_name).c_str();
 
-            OLDNAME = oldname.c_str();
-            QString qold = QString::fromStdString(pent->d_name);
+                OLDNAME = oldname.c_str();
+                QString qold = QString::fromStdString(pent->d_name);
 
-            ui->tableWidget->setItem(e, 0, new QTableWidgetItem(qold));
-            e+=1;
-
+                ui->tableWidget->setItem(e, 0, new QTableWidgetItem(qold));
+                e+=1;
             }
         }
 
@@ -127,11 +126,14 @@ void Rename::on_pushButton_clicked()
     }
 
     ui->tableWidget->sortItems(0, Qt::AscendingOrder);
+    int start=ui->spinBox_11->value();
+    int counter=0;
 
-    for(int l =0; l<e; l++){
-        QString qi = QString::number(l);
-        QString qNew = ui->lineEdit_2->text()+qi+qRExt;
+    for(int l =start; l<e; l++){
+        QString qi = QString::number(counter);
+        QString qNew = ui->lineEdit_2->text()+qi+"."+qRExt;
         ui->tableWidget->setItem(l, 1, new QTableWidgetItem(qNew));
+        ++counter;
     }
 }
 
@@ -236,30 +238,30 @@ void Rename::on_spinBox_5_valueChanged()
 
     if(ui->comboBox->currentIndex()==0){
 
-    string one, two, zeile;
+        string one, two, zeile;
 
-    int number_of_lines =0;
+        int number_of_lines =0;
 
-    while(std::getline(plot, zeile))
-       ++ number_of_lines;
+        while(std::getline(plot, zeile))
+           ++ number_of_lines;
 
-    plot.clear();
-    plot.seekg(0, ios::beg);
+        plot.clear();
+        plot.seekg(0, ios::beg);
 
-    a.resize(number_of_lines);
-    b.resize(number_of_lines);
+        a.resize(number_of_lines);
+        b.resize(number_of_lines);
 
-    for (int i=0; i<number_of_lines; i++){
-    plot >> one >>two;
-    istringstream ist(one);
-    ist >> a[i];
-    istringstream ist2(two);
-    ist2 >> b[i];
+        for (int i=0; i<number_of_lines; i++){
+            plot >> one >>two;
+            istringstream ist(one);
+            ist >> a[i];
+            istringstream ist2(two);
+            ist2 >> b[i];
+        }
+        plot.close();
     }
-    plot.close();
-    }
 
-    if(ui->comboBox->currentIndex()==1){
+    else if(ui->comboBox->currentIndex()==1){
 
         QString qspExtension, qspWavecol, qspIntenscol;
         string spExtension, spWavecol, spIntenscol;
@@ -297,19 +299,15 @@ void Rename::on_spinBox_5_valueChanged()
               b.resize(bini);
 
               for(int i=0; i<bini; i++){
-              b[i]=spintens[i];
-              a[i]=spwave[i];
+                b[i]=spintens[i];
+                a[i]=spwave[i];
               }
-
-
         }
             catch (CCfits::FitsException&)
 
              {
               std::cerr << " Fits Exception Thrown by test function \n";
               }
-
-
            // return;
 
     }
@@ -339,7 +337,6 @@ void Rename::on_pushButton_4_clicked()
 
     const char *OLD, *NEW;
 
-
     int minf = ui->spinBox_6->value();
     int maxf = ui->spinBox_7->value();
     int nstart = ui->spinBox_8->value();
@@ -348,13 +345,12 @@ void Rename::on_pushButton_4_clicked()
     if(nstart>minf){
         for(int i = 0; i<maxf-minf+1; i++){
 
-
                  qf = maxf-i;
                  QString ila = QString::number(qf);
-                 const QString qfi1 = direc+"/"+qRFil+ila+qRExt;
+                 const QString qfi1 = direc+"/"+qRFil+ila+"."+qRExt;
                  qf = nstart+maxf-i-minf;
                  ila = QString::number(qf);
-                 const QString qfi2 = direc+"/"+qRFil+ila+qRExt;
+                 const QString qfi2 = direc+"/"+qRFil+ila+"."+qRExt;
                  QFile::rename(qfi1,qfi2);
 
 
@@ -366,10 +362,10 @@ void Rename::on_pushButton_4_clicked()
             qf = minf+i;
             QString ila = QString::number(qf);
 
-                const QString qfi1 = direc+"/"+qRFil+ila+qRExt;
+                const QString qfi1 = direc+"/"+qRFil+ila+"."+qRExt;
                 qf = nstart+i;
                 ila = QString::number(qf);
-                const QString qfi2 = direc+"/"+qRFil+ila+qRExt;
+                const QString qfi2 = direc+"/"+qRFil+ila+"."+qRExt;
                 QFile::rename(qfi1,qfi2);
 
         }

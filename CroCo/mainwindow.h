@@ -174,6 +174,16 @@ private slots:
 
     void on_actionLine_List_Tool_triggered();
 
+    void on_checkBox_9_clicked();
+
+    void on_pushButton_17_clicked();
+
+    void SaveAs(QString str);
+
+    void Load(QString str2);
+
+    void on_pushButton_18_clicked();
+
 private:
     Ui::MainWindow *ui;
     PlotSpec *pSpec;

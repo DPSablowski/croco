@@ -391,7 +391,7 @@ public:
         MainWindow->setFont(font);
         MainWindow->setMouseTracking(false);
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/new/background/logo.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QString::fromUtf8(":/new/prefix1/logo.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
         MainWindow->setStyleSheet(QString::fromUtf8(""));
         MainWindow->setIconSize(QSize(20, 20));
@@ -489,7 +489,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1530, 712));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1530, 710));
         horizontalLayout_27 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_27->setSpacing(6);
         horizontalLayout_27->setContentsMargins(11, 11, 11, 11);
